@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: litter-web-app
+build:
+  artifacts:
+    - image: gitlab.lnu.se:5050/2dv013/student//team-2024-04-snorlax/litter-mono/frontend
+      docker:
+        dockerfile: ./frontend/Dockerfile.production
+      context: ./frontend
+manifests:
+  rawYaml:
+    - ./frontend/k8s/*.yaml # TODO might need to make more granular
+profiles:
+  - name: production
+    patches:
+     - op: replace
+       path: /metadata/namespace
+       value: production
+  - name: staging
+    patches:
+      - op: replace
+        path: /metadata/namespace
+        value: staging

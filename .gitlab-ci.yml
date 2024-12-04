@@ -4,6 +4,7 @@ stages:
   - build
   - deploy
 
+# TODO include the docker registry secret here?
 setup_kubectl_dependencies:
   stage: setup
   image:
@@ -16,6 +17,14 @@ setup_kubectl_dependencies:
   only:
     - staging
     - main
+
+test:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+   - echo "Running tests"
+   # TODO might want to make different jobs per application...
 
 setup_staging_secrets:
   stage: setup
@@ -53,20 +62,93 @@ build:
     #  --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
     #  --no-push
 
-publish:
+publish_staging:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:v1.9.0-debug
     entrypoint: [""]
   script:
-  - echo "Rebuilding and publishing images"
+  - echo "Rebuilding and publishing images for staging"
+   # - /kaniko/executor
+   #   --context "${CI_PROJECT_DIR}/taskit"
+   #   --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
+   #   --destination "${CI_REGISTRY_IMAGE}/taskit:staging-${CI_COMMIT_SHA}"
+   #   --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-staging-latest}"
+  only:
+    - staging 
+  needs:
+    - build
+
+publish_production:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
+   - echo "Rebuilding and publishing images for }/taskit/Dockerfile.production"
    # - /kaniko/executor
    #   --context "${CI_PROJECT_DIR}/taskit"
    #   --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
    #   --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_SHA}"
    #   --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-latest}"
   only:
-    - main
-    - staging 
+    - staging
   needs:
-    - build
+   - build
+
+deploy_production:
+  stage: deploy
+  image:
+    name: gcr.io/k8s-skaffold/skaffold:v2.8.0
+    entrypoint: [""]
+  environment:
+    name: production
+    url: $TASKIT_URL # Should point to our load balancer
+  when: manual
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context $K8S_CONTEXT
+    - kubectl delete secret regcred || true
+    # Authenticate to docker, requires a specifically named deploy token
+    - kubectl create secret docker-registry regcred --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
+    # Use the images created from the publish_production step
+    # TODO how do I make this deploy only to namespace production? Maybe need to do that in skaffold/yaml config...
+    # Also the image names and paths need to be replaced
+    - |
+      skaffold deploy --profile production \
+      --images ${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-latest} \
+        --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-latest}
+    # Debugging
+    - kubectl get deployments -n production
+    - kubectl get pods -n production
+    - kubectl get services -n production
+  only:
+    - main
+
+deploy_staging:
+  stage: deploy
+  image:
+    name: gcr.io/k8s-skaffold/skaffold:v2.8.0
+    entrypoint: [""]
+  environment:
+    name: staging
+    url: $TASKIT_URL # TODO - Should this point to our load balancer? Not sure how we'll access the staging version from the web
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context $K8S_CONTEXT
+    - kubectl delete secret regcred || true
+    # Authenticate to docker, requires a specifically named deploy token
+    - kubectl create secret docker-registry regcred --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
+    # Use the images created from the publish_production step
+    # TODO how do I make this deploy only to namespace staging? Maybe need to do that in skaffold/yaml config...
+    # Also the image names and paths need to be replaced
+    - |
+      skaffold deploy --profile production \
+      --images ${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-staging-latest} \
+        --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-staging-latest}
+    # Debugging
+    - kubectl get deployments -n staging
+    - kubectl get pods -n staging
+    - kubectl get services -n staging
+  only:
+    - staging

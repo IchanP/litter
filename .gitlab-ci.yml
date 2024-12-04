@@ -4,7 +4,6 @@ stages:
   - build
   - deploy
 
-# TODO include the docker registry secret here?
 setup_kubectl_dependencies:
   stage: setup
   image:
@@ -26,6 +25,7 @@ test:
    - echo "Running tests"
    # TODO might want to make different jobs per application...
 
+
 setup_staging_secrets:
   stage: setup
   image:
@@ -34,6 +34,14 @@ setup_staging_secrets:
   script:
     - kubectl config use-context $K8S_CONTEXT
     - kubectl create namespace staging --dry-run=client -o yaml | kbuectl apply -f -
+    # TODO maybe mvoe these to own files
+    - |
+      kubectl create secret docker-registry regcred -n staging \
+        --docker-server="${DOCKER_SERVER}" \
+        --docker-username="${DOCKER_USERNAME}" \
+        --docker-password="${DOCKER_PASSWORD}" \
+        --docker-email="${DOCKER_EMAIL}" \
+        --dry-run=client -o yaml | kubectl apply -f -
     # TODO pull secrets from folders?
   
   only:
@@ -47,6 +55,14 @@ setup_production_secrets:
   script:
     - kubectl config use-context $K8S_CONTEXT
     - kubectl create namespace production --dry-run=client -o yaml | kbuectl apply -f -
+      # TODO maybe mvoe these to own files
+    - |
+      kubectl create secret docker-registry regcred -n production \
+        --docker-server="${DOCKER_SERVER}" \
+        --docker-username="${DOCKER_USERNAME}" \
+        --docker-password="${DOCKER_PASSWORD}" \
+        --docker-email="${DOCKER_EMAIL}" \
+        --dry-run=client -o yaml | kubectl apply -f -
 
 build:
   stage: build
@@ -116,8 +132,9 @@ deploy_production:
     # Also the image names and paths need to be replaced
     - |
       skaffold deploy --profile production \
+      --namespace production \
       --images ${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-latest} \
-        --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-latest}
+      --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-latest}
     # Debugging
     - kubectl get deployments -n production
     - kubectl get pods -n production
@@ -143,9 +160,10 @@ deploy_staging:
     # TODO how do I make this deploy only to namespace staging? Maybe need to do that in skaffold/yaml config...
     # Also the image names and paths need to be replaced
     - |
-      skaffold deploy --profile production \
+      skaffold deploy --profile staging \
+      --namespace staging \
       --images ${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-staging-latest} \
-        --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-staging-latest}
+      --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-staging-latest}
     # Debugging
     - kubectl get deployments -n staging
     - kubectl get pods -n staging

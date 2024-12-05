@@ -11,8 +11,8 @@ setup_kubectl_dependencies:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
-    - kubectl create namespace staging --dry-run=client -o yaml
-    - kubectl create namespace production --dry-run=client -o yaml
+    - kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
     
 
     - export NAMESPACE=staging

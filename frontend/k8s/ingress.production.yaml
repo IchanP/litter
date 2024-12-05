@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: taskit
+                name: litter
                 port:
                   number: 8888

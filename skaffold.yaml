@@ -6,13 +6,15 @@ build:
   artifacts:
     - image: frontend
       docker:
-        dockerfile: ./frontend/Dockerfile.production
+        dockerfile: Dockerfile.production
       context: ./frontend
 manifests:
   rawYaml:
     - ./frontend/k8s/litter.yaml
-    - ./frontend/ingress.production.ymal
-
+    - ./frontend/k8s/ingress.production.yaml
+deploy:
+  kubectl: {}
+  
 profiles:
   - name: production
     build:

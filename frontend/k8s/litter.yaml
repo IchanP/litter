@@ -32,12 +32,12 @@ spec:
       - name: litter
         image: frontend
         env:
-        - name: AUTH0_DOMAIN
+        - name: REACT_APP_AUTH0_DOMAIN
           valueFrom:
             secretKeyRef:
               name: auth0-litter-secrets
               key: AUTH0_DOMAIN
-        - name: AUTH0_CLIENT_ID
+        - name: REACT_APP_AUTH0_CLIENT_ID
           valueFrom:
             secretKeyRef:
               name: auth0-litter-secrets

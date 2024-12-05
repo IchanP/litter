@@ -11,14 +11,19 @@ setup_kubectl_dependencies:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
+    - echo $K8S_CONTEXT
+    
+    # Create namespaces and verify they exist
     - kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
     - kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl get namespace staging
+    - kubectl get namespace production
     
-
+    # Then create secrets
     - export NAMESPACE=staging
     - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
     - export NAMESPACE=production
-    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f - 
+    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
 
     # TODO install operators and other things
   # TODO change this to use rules

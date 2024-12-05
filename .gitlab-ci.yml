@@ -39,7 +39,7 @@ test:
 setup_staging_secrets:
   stage: setup
   image:
-    name: bitname/kubectl:latest
+    name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
@@ -53,7 +53,7 @@ setup_staging_secrets:
 setup_production_secrets:
   stage: setup
   image:
-    name: bitname/kubectl:latest
+    name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT

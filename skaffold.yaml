@@ -21,9 +21,11 @@ profiles:
       kustomize:
         paths:
           - k8s/overlays/production  # Points to central overlay
+    build: {}
 
   - name: staging
     manifests:
       kustomize:
         paths: 
           - k8s/overlays/staging
+    build: {}

@@ -10,22 +10,30 @@ setup_kubectl_dependencies:
     name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
+    # First verify which context we're using
+    - echo "Current context:"
+    - kubectl config get-contexts
+    
     - kubectl config use-context $K8S_CONTEXT
-    - kubectl create namespace staging --dry-run=client -o yaml
-    - kubectl create namespace production --dry-run=client -o yaml 
-      # TODO maybe mvoe these to own files
+    - echo "After setting context:"
+    - kubectl config current-context
+    
+    # Create namespaces with context verification
     - |
-      kubectl create secret docker-registry regcred -n staging \
-        --docker-server="${DOCKER_SERVER}" \
-        --docker-username="${DOCKER_USERNAME}" \
-        --docker-password="${DOCKER_PASSWORD}" \
-        --docker-email="${DOCKER_EMAIL}" \
-        --dry-run=client -o yaml
+      CURRENT_CONTEXT=$(kubectl config current-context)
+      echo "Creating resources in context: $CURRENT_CONTEXT"
+      
+      kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+      kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
+      
+      echo "Creating secrets in context: $CURRENT_CONTEXT"
+      export NAMESPACE=staging
+      envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
+      export NAMESPACE=production
+      envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
+
     # TODO install operators and other things
   # TODO change this to use rules
-  only:
-    - staging
-    - main
 
 test:
   stage: test
@@ -72,10 +80,10 @@ build:
    - echo "Building Image"
    # TODO - This is a template for future images
    # Build taskit image without pushing
-   # - /kaniko/executor
-    #  --context "${CI_PROJECT_DIR}/taskit"
-    #  --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
-    #  --no-push
+   - /kaniko/executor
+     --context "${CI_PROJECT_DIR}/frontend"
+     --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile.production"
+     --no-push
 
 publish_staging:
   stage: build
@@ -83,12 +91,12 @@ publish_staging:
     name: gcr.io/kaniko-project/executor:v1.9.0-debug
     entrypoint: [""]
   script:
-  - echo "Rebuilding and publishing images for staging"
-   # - /kaniko/executor
-   #   --context "${CI_PROJECT_DIR}/taskit"
-   #   --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
-   #   --destination "${CI_REGISTRY_IMAGE}/taskit:staging-${CI_COMMIT_SHA}"
-   #   --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-staging-latest}"
+    - echo "Rebuilding and publishing images for staging"
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/frontend"
+      --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile.production"
+      --destination "${CI_REGISTRY_IMAGE}/frontend:staging-${CI_COMMIT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest}"
   only:
     - staging 
   needs:
@@ -132,8 +140,8 @@ deploy_production:
     - |
       skaffold deploy --profile production \
       --namespace production \
-      --images ${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-latest} \
-      --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-latest}
+      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-latest} \
+
     # Debugging
     - kubectl get deployments -n production
     - kubectl get pods -n production
@@ -161,8 +169,8 @@ deploy_staging:
     - |
       skaffold deploy --profile staging \
       --namespace staging \
-      --images ${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-staging-latest} \
-      --images ${CI_REGISTRY_IMAGE}/notif:${CI_COMMIT_TAG:-staging-latest}
+      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest} \
+
     # Debugging
     - kubectl get deployments -n staging
     - kubectl get pods -n staging

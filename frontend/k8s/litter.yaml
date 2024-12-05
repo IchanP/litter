@@ -17,33 +17,33 @@ status:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: taskit
+  name: litter
 spec:
   replicas: 1 # Should update to 3 later to make sure that session management works
   selector:
     matchLabels:
       deployment.name: litter
-    template:
-      metadata:
-        labels:
-          deployment.name: litter
-      spec:
-        containers:
-          - name: litter
-            image: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/litter
-            env:
-            - name: AUTH0_DOMAIN
-              valueFrom:
-              secretKeyRef:
-                name: auth0-litter-secrets
-                key: AUTH0_DOMAIN
-            - name: AUTH0_CLIENT_ID
-              valueFrom:
-              secretKeyRef:
-                name: auth0-litter-secrets
-                key: AUTH0_CLIENT_ID
-            ports:
-              - containerPort: 3000 # TODO - Is this needed?
-                name: litter-http
-        imagePullSecrets:
-        - name: regcred
+  template:
+    metadata:
+      labels:
+        deployment.name: litter
+    spec:
+      containers:
+      - name: litter
+        image: frontend
+        env:
+        - name: AUTH0_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: auth0-litter-secrets
+              key: AUTH0_DOMAIN
+        - name: AUTH0_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: auth0-litter-secrets
+              key: AUTH0_CLIENT_ID
+        ports:
+          - containerPort: 3000 # TODO - Is this needed?
+            name: litter-http
+      imagePullSecrets:
+      - name: regcred

@@ -4,29 +4,48 @@ metadata:
   name: litter-web-app
 build:
   artifacts:
-    - image: gitlab.lnu.se:5050/2dv013/student//team-2024-04-snorlax/litter-mono/frontend
+    - image: frontend
       docker:
         dockerfile: ./frontend/Dockerfile.production
       context: ./frontend
 manifests:
   rawYaml:
-    - ./frontend/k8s/*.yaml
+    - ./frontend/k8s/litter.yaml
+    - ./frontend/ingress.production.ymal
 
 profiles:
   - name: production
+    build:
+      artifacts:
+        - image: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
+          docker:
+            dockerfile: ./frontend/Dockerfile.production
+          context: ./frontend
     patches:
      - op: replace
-       path: /metadata/namespace
+       path: /manifests/rawYaml/*/metadata/namespace
        value: production
+     - op: replace
+       path: /manifests/rawYaml/0/spec/template/spec/containers/0/image
+       value: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
      - op: add
-       path: /spec/ingressClassName
+       path: /manifests/rawYaml/1/spec/ingressClassName
        value: nginx
 
   - name: staging
+    build:
+      artifacts:
+        - image: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/staging-frontend
+          docker:
+            dockerfile: ./frontend/Dockerfile.production
+          context: ./frontend
     patches:
       - op: replace
-        path: /metadata/namespace
+        path: /manifests/rawYaml/*/metadata/namespace
         value: staging
+      - op: replace
+        path: /manifests/rawYaml/0/spec/template/spec/containers/0/image
+        value: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/staging-frontend
       - op: add
-        path: /spec/ingressClassName
+        path: /manifests/rawYaml/1/spec/ingressClassName
         value: nginx

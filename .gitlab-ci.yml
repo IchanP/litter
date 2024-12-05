@@ -10,15 +10,27 @@ setup_kubectl_dependencies:
     name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
-    - kubectl config use-context $K8S_CONTEXT
-    - kubectl create namespace staging --dry-run=client -o yaml
-    - kubectl create namespace production --dry-run=client -o yaml
+    # First verify which context we're using
+    - echo "Current context:"
+    - kubectl config current-context
     
-
-    - export NAMESPACE=staging
-    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
-    - export NAMESPACE=production
-    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f - 
+    - kubectl config use-context $K8S_CONTEXT
+    - echo "After setting context:"
+    - kubectl config current-context
+    
+    # Create namespaces with context verification
+    - |
+      CURRENT_CONTEXT=$(kubectl config current-context)
+      echo "Creating resources in context: $CURRENT_CONTEXT"
+      
+      kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+      kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
+      
+      echo "Creating secrets in context: $CURRENT_CONTEXT"
+      export NAMESPACE=staging
+      envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
+      export NAMESPACE=production
+      envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
 
     # TODO install operators and other things
   # TODO change this to use rules

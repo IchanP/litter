@@ -13,14 +13,13 @@ setup_kubectl_dependencies:
     - kubectl config use-context $K8S_CONTEXT
     - kubectl create namespace staging --dry-run=client -o yaml
     - kubectl create namespace production --dry-run=client -o yaml 
-      # TODO maybe mvoe these to own files
-    - |
-      kubectl create secret docker-registry regcred -n staging \
-        --docker-server="${DOCKER_SERVER}" \
-        --docker-username="${DOCKER_USERNAME}" \
-        --docker-password="${DOCKER_PASSWORD}" \
-        --docker-email="${DOCKER_EMAIL}" \
-        --dry-run=client -o yaml
+    
+    
+    - export NAMESPACE=staging
+    - envsubst < secrets/shared/docker-registry.yaml | kubectl apply -f -
+    - export NAMESPACE=production
+    - envsubst < secrets/shared/docker-registry.yaml | kubectl apply -f - 
+
     # TODO install operators and other things
   # TODO change this to use rules
   only:
@@ -133,7 +132,7 @@ deploy_production:
       skaffold deploy --profile production \
       --namespace production \
       --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-latest} \
-      
+
     # Debugging
     - kubectl get deployments -n production
     - kubectl get pods -n production

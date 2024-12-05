@@ -16,9 +16,9 @@ setup_kubectl_dependencies:
     
 
     - export NAMESPACE=staging
-    - envsubst < secrets/shared/docker-registry.yaml | kubectl apply -f -
+    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
     - export NAMESPACE=production
-    - envsubst < secrets/shared/docker-registry.yaml | kubectl apply -f - 
+    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f - 
 
     # TODO install operators and other things
   # TODO change this to use rules

@@ -3,9 +3,15 @@ kind: Secret
 metadata:
   name: regcred
   namespace: ${NAMESPACE}
-type: Opaque
+type: kubernetes.io/dockerconfigjson
 stringData:
-  docker-server: "${DOCKER_SERVER}"
-  docker-username: "${DOCKER_USERNAME}"
-  docker-password: "${DOCKER_PASSWORD}"
-  docker-email: "${DOCKER_EMAIL}"
+  .dockerconfigjson: |
+    {
+      "auths": {
+        "${DOCKER_SERVER}": {
+          "username": "${DOCKER_USERNAME}",
+          "password": "${DOCKER_PASSWORD}",
+          "email": "${DOCKER_EMAIL}"
+        }
+      }
+    }

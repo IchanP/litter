@@ -1,0 +1,11 @@
+.pedigree-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.pedigree-chart h1 {
+color: #333;
+margin-bottom: 20px;
+}

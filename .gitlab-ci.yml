@@ -168,7 +168,7 @@ deploy_staging:
     # Use the images created from the publish_production step
     # TODO how do I make this deploy only to namespace staging? Maybe need to do that in skaffold/yaml config...
     # Also the image names and paths need to be replaced
-    - skaffold deploy --profile staging --namespace staging
+    - skaffold deploy --profile staging --namespace staging -v debug --digest-source none
   
     # Debugging
     - kubectl get deployments -n staging

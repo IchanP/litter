@@ -20,7 +20,7 @@ setup_kubectl_dependencies:
         --docker-username="${DOCKER_USERNAME}" \
         --docker-password="${DOCKER_PASSWORD}" \
         --docker-email="${DOCKER_EMAIL}" \
-        --dry-run=client -o yaml | kubectl apply -f -
+        --dry-run=client -o yaml
     # TODO install operators and other things
   # TODO change this to use rules
   only:

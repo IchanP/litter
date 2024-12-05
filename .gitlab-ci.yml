@@ -160,6 +160,10 @@ deploy_staging:
   script:
     - kubectl config get-contexts
     - kubectl config use-context $K8S_CONTEXT
+    - echo "Registry $CI_REGISTRY"
+    - echo "Username $CI_DEPLOY_USER"
+    - echo "Password exists $(if [ ! -z "$CI_DEPLOY_PASSWORD" ]; then echo 'yes'; else echo 'no'; fi)"
+  
     - kubectl delete secret regcred -n staging || true
     # Authenticate to docker, requires a specifically named deploy token
     - kubectl create secret docker-registry regcred -n staging --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
@@ -170,7 +174,7 @@ deploy_staging:
       skaffold deploy --profile staging \
       --namespace staging \
       --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest} \
-
+  
     # Debugging
     - kubectl get deployments -n staging
     - kubectl get pods -n staging

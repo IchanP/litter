@@ -11,6 +11,9 @@ setup_kubectl_dependencies:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
+    - kubectl create namespace staging --dry-run=client -o yaml | kbuectl apply -f -
+    - kubectl create namespace production --dry-run=client -o yaml | kbuectl apply -f -
+      # TODO maybe mvoe these to own files
     - |
       kubectl create secret docker-registry regcred -n staging \
         --docker-server="${DOCKER_SERVER}" \
@@ -40,10 +43,10 @@ setup_staging_secrets:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
-    - kubectl create namespace staging --dry-run=client -o yaml | kbuectl apply -f -
-    # TODO maybe mvoe these to own files
-    # TODO pull secrets from folders?
-  
+    # TODO maybe move these to own files
+    # TODO pull secrets from folders
+  dependencies:
+    - setup_kubectl_dependencies
   only:
     - staging
 
@@ -54,15 +57,9 @@ setup_production_secrets:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
-    - kubectl create namespace production --dry-run=client -o yaml | kbuectl apply -f -
-      # TODO maybe mvoe these to own files
-    - |
-      kubectl create secret docker-registry regcred -n production \
-        --docker-server="${DOCKER_SERVER}" \
-        --docker-username="${DOCKER_USERNAME}" \
-        --docker-password="${DOCKER_PASSWORD}" \
-        --docker-email="${DOCKER_EMAIL}" \
-        --dry-run=client -o yaml | kubectl apply -f -
+    # TODO pull secrets from folders
+  dependencies:
+    - setup_kubectl_dependencies
   only:
     - main
 

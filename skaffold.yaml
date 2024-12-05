@@ -2,6 +2,10 @@ apiVersion: skaffold/v4beta7
 kind: Config
 metadata:
   name: litter-web-app
+manifests:      # Add default manifest config
+  kustomize:
+    paths: 
+      - k8s/overlays/staging
 deploy:
   kubectl: {}
 

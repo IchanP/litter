@@ -2,16 +2,6 @@ apiVersion: skaffold/v4beta7
 kind: Config
 metadata:
   name: litter-web-app
-build:
-  artifacts:
-    - image: frontend
-      docker:
-        dockerfile: Dockerfile.production
-      context: ./frontend
-manifests:
-  rawYaml:  # Use raw yaml for local dev
-    - frontend/k8s/base/litter.yaml
-    - frontend/k8s/base/ingress.production.yaml
 deploy:
   kubectl: {}
 
@@ -21,11 +11,19 @@ profiles:
       kustomize:
         paths:
           - k8s/overlays/production  # Points to central overlay
-    build: {}
-
+  - name: dev
+    build:
+      artifacts:
+        - image: frontend
+          docker:
+            dockerfile: Dockerfile.production
+          context: ./frontend
+    manifests:
+      rawYaml:  # Use raw yaml for local dev
+        - frontend/k8s/base/litter.yaml
+        - frontend/k8s/base/ingress.production.yaml
   - name: staging
     manifests:
       kustomize:
         paths: 
           - k8s/overlays/staging
-    build: {}

@@ -57,6 +57,7 @@ setup_staging_secrets:
     - setup_kubectl_dependencies
   only:
     - staging
+    - pipeline/staging
 
 setup_production_secrets:
   stage: setup
@@ -97,7 +98,8 @@ publish_staging:
       --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile.production"
       --destination "${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest}"
   only:
-    - staging 
+    - staging
+    - pipeline/staging
   needs:
     - build
 
@@ -174,3 +176,4 @@ deploy_staging:
     - kubectl get services -n staging
   only:
     - staging
+    - pipeline/staging

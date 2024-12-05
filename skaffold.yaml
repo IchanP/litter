@@ -21,21 +21,9 @@ profiles:
       kustomize:
         paths:
           - k8s/overlays/production  # Points to central overlay
-    build:
-      artifacts:
-        - image: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
-          docker:
-            dockerfile: ./frontend/Dockerfile.production
-          context: ./frontend
 
   - name: staging
     manifests:
       kustomize:
         paths: 
           - k8s/overlays/staging
-    build:
-      artifacts:
-        - image: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/staging-frontend
-          docker:
-            dockerfile: ./frontend/Dockerfile.production
-          context: ./frontend

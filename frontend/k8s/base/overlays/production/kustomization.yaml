@@ -5,6 +5,7 @@ resources:
 images:
   - name: frontend
     newName: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
+    newTag: latest
 patches:
   - patch: |
       - op: add

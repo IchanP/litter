@@ -27,10 +27,6 @@ profiles:
           docker:
             dockerfile: ./frontend/Dockerfile.production
           context: ./frontend
-    patches:
-     - op: add
-       path: /manifests/rawYaml/1/spec/ingressClassName
-       value: nginx
 
   - name: staging
     manifests:
@@ -43,7 +39,3 @@ profiles:
           docker:
             dockerfile: ./frontend/Dockerfile.production
           context: ./frontend
-    patches:
-      - op: add
-        path: /manifests/rawYaml/1/spec/ingressClassName
-        value: nginx

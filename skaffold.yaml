@@ -10,7 +10,7 @@ build:
       context: ./frontend
 manifests:
   rawYaml:
-    - ./frontend/k8s/*.yaml # TODO might need to make more granular
+    - ./frontend/k8s/*.yaml
 profiles:
   - name: production
     patches:

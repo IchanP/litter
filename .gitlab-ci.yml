@@ -63,6 +63,8 @@ setup_production_secrets:
         --docker-password="${DOCKER_PASSWORD}" \
         --docker-email="${DOCKER_EMAIL}" \
         --dry-run=client -o yaml | kubectl apply -f -
+  only:
+    - main
 
 build:
   stage: build

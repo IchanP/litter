@@ -160,9 +160,6 @@ deploy_staging:
   script:
     - kubectl config get-contexts
     - kubectl config use-context $K8S_CONTEXT
-    - echo "Registry $CI_REGISTRY"
-    - echo "Username $CI_DEPLOY_USER"
-    - echo "Password exists $(if [ ! -z "$CI_DEPLOY_PASSWORD" ]; then echo 'yes'; else echo 'no'; fi)"
   
     # - kubectl delete secret regcred -n staging || true
     # Authenticate to docker, requires a specifically named deploy token

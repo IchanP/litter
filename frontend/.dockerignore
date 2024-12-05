@@ -1,0 +1,10 @@
+# Exclude all files and directories
+
+*
+
+# Explicitly include
+
+!public
+!src
+!package-lock.json
+!package.json

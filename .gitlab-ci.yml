@@ -11,6 +11,13 @@ setup_kubectl_dependencies:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
+    - |
+      kubectl create secret docker-registry regcred -n staging \
+        --docker-server="${DOCKER_SERVER}" \
+        --docker-username="${DOCKER_USERNAME}" \
+        --docker-password="${DOCKER_PASSWORD}" \
+        --docker-email="${DOCKER_EMAIL}" \
+        --dry-run=client -o yaml | kubectl apply -f -
     # TODO install operators and other things
   # TODO change this to use rules
   only:
@@ -35,13 +42,6 @@ setup_staging_secrets:
     - kubectl config use-context $K8S_CONTEXT
     - kubectl create namespace staging --dry-run=client -o yaml | kbuectl apply -f -
     # TODO maybe mvoe these to own files
-    - |
-      kubectl create secret docker-registry regcred -n staging \
-        --docker-server="${DOCKER_SERVER}" \
-        --docker-username="${DOCKER_USERNAME}" \
-        --docker-password="${DOCKER_PASSWORD}" \
-        --docker-email="${DOCKER_EMAIL}" \
-        --dry-run=client -o yaml | kubectl apply -f -
     # TODO pull secrets from folders?
   
   only:

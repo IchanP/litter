@@ -131,16 +131,16 @@ deploy_production:
   script:
     - kubectl config get-contexts
     - kubectl config use-context $K8S_CONTEXT
-    - kubectl delete secret regcred -n production || true
+    # - kubectl delete secret regcred -n production || true
     # Authenticate to docker, requires a specifically named deploy token
-    - kubectl create secret docker-registry regcred -n production --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
+    # - kubectl create secret docker-registry regcred -n production --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
     # Use the images created from the publish_production step
     # TODO how do I make this deploy only to namespace production? Maybe need to do that in skaffold/yaml config...
     # Also the image names and paths need to be replaced
     - |
       skaffold deploy --profile production \
       --namespace production \
-      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-latest} \
+      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-latest} 
 
     # Debugging
     - kubectl get deployments -n production
@@ -170,7 +170,7 @@ deploy_staging:
     - |
       skaffold deploy --profile staging \
       --namespace staging \
-      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest} \
+      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest} 
   
     # Debugging
     - kubectl get deployments -n staging

@@ -11,14 +11,22 @@ build:
 manifests:
   rawYaml:
     - ./frontend/k8s/*.yaml
+
 profiles:
   - name: production
     patches:
      - op: replace
        path: /metadata/namespace
        value: production
+     - op: add
+       path: /spec/ingressClassName
+       value: nginx
+
   - name: staging
     patches:
       - op: replace
         path: /metadata/namespace
         value: staging
+      - op: add
+        path: /spec/ingressClassName
+        value: nginx

@@ -12,9 +12,9 @@ setup_kubectl_dependencies:
   script:
     - kubectl config use-context $K8S_CONTEXT
     - kubectl create namespace staging --dry-run=client -o yaml
-    - kubectl create namespace production --dry-run=client -o yaml 
+    - kubectl create namespace production --dry-run=client -o yaml
     
-    
+
     - export NAMESPACE=staging
     - envsubst < secrets/shared/docker-registry.yaml | kubectl apply -f -
     - export NAMESPACE=production
@@ -22,9 +22,6 @@ setup_kubectl_dependencies:
 
     # TODO install operators and other things
   # TODO change this to use rules
-  only:
-    - staging
-    - main
 
 test:
   stage: test

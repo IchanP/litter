@@ -12,7 +12,7 @@ setup_kubectl_dependencies:
   script:
     # First verify which context we're using
     - echo "Current context:"
-    - kubectl config current-context
+    - kubectl config get-contexts
     
     - kubectl config use-context $K8S_CONTEXT
     - echo "After setting context:"

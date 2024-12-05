@@ -1,0 +1,15 @@
+# Specifies a base image, a specific version of the Node.js image.
+FROM node:20.8.0-bullseye-slim
+
+# Creates a working directory in the Docker image. The application will be placed here.
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci --omit=dev
+
+COPY . .
+
+USER node
+
+CMD ["npm run start"]

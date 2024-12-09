@@ -29,8 +29,8 @@ const Profile = () => {
             </div>
 
             <div className="bottom-div">
-                <span>{followers_count} followers</span>
-                <span>{following_count} following</span>
+                <span>{followers_count} leashers</span>
+                <span>{following_count} leashing</span>
             </div>
         </div>
     );

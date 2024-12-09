@@ -1,0 +1,19 @@
+/* Home */
+
+.home {
+  display: flex;
+}
+
+.left-column {
+  width: 20%;
+  border-right: 1px solid black;
+}
+
+.middle-column {
+  width: 60%;
+  border-right: 1px solid black;
+}
+
+.right-column {
+  width: 20%;
+}

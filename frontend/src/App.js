@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./components/Loading";
 import Landing from "./views/Landing";
 import PedigreeChart from "./views/PedigreeChart";
+import Home from "./views/Home";
 
 // style
 import "./style/App.css"
@@ -19,6 +20,16 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route
+          path="/home"
+          element={
+            isAuthenticated ? (
+              <Home />
+            ) : (
+              <div>You are not authorized to view this page.</div>
+            )
+          }
+        />
         <Route
           path="/pedigree-chart"
           element={

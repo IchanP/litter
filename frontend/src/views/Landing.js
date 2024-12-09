@@ -5,18 +5,20 @@ import LoginButton from "../components/LoginButton";
 // style
 import "../style/Landing.css"; 
 
-const Home = () => {
+const Landing = () => {
     return (
-        <div className="landing">
-            <div className="logo">
-                <img src={logo} alt="litter-logo" />
-                <h1>litter</h1>
-            </div>
+        <div className="container">
+            <div className="landing">
+                <div className="logo">
+                    <img src={logo} alt="litter-logo" />
+                    <h1>litter</h1>
+                </div>
 
-            <h2>Welcome, please log in.</h2>
-            <LoginButton />
+                <h2>Welcome, please log in.</h2>
+                <LoginButton />
+            </div>
         </div>
     );
 };
 
-export default Home;
+export default Landing;

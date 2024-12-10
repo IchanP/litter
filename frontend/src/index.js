@@ -11,7 +11,7 @@ const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
 // omdirigering hit efter inlogg
-const redirectUri = `${window.location.origin}/pedigree-chart`;
+const redirectUri = `${window.location.origin}/home`;
 
 const root = createRoot(document.getElementById('root'));
 

@@ -1,23 +1,23 @@
 import React from "react";
 import Menu from "../components/Menu";
-import Profile from "../components/Profile";
+import CreateLit from "../components/CreateLit";
+import LitterBox from "../components/LitterBox";
 import Search from "../components/Search";
-import MyOwnLitterBox from "../components/MyOwnLitterBox";
 
 // style
-import "../style/PedigreeChart.css"
+import "../style/Home.css"
 
-const PedigreeChart = () => {
+const Home = () => {
     return (
         <div className="container">
-            <div className="pedigree-chart">
+            <div className="home">
                 <div className="left-column">
                     <Menu />
                 </div>
 
                 <div className="middle-column">
-                    <Profile />
-                    <MyOwnLitterBox />
+                    <CreateLit />
+                    <LitterBox />
                 </div>
 
                 <div className="right-column">
@@ -28,4 +28,4 @@ const PedigreeChart = () => {
     );
 };
 
-export default PedigreeChart;
+export default Home;

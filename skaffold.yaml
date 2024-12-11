@@ -2,10 +2,6 @@ apiVersion: skaffold/v4beta7
 kind: Config
 metadata:
   name: litter-web-app
-manifests:      # Add default manifest config
-  kustomize:
-    paths: 
-      - k8s/overlays/staging
 deploy:
   kubectl: {}
 
@@ -26,6 +22,7 @@ profiles:
       rawYaml:  # Use raw yaml for local dev
         - frontend/k8s/base/litter.yaml
         - frontend/k8s/base/ingress.production.yaml
+  # TODO - this might cause problems since we don't have a top level manifest
   - name: staging
     manifests:
       kustomize:

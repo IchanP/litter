@@ -59,6 +59,7 @@ setup_staging_secrets:
     - setup_kubectl_dependencies
   only:
     - staging
+    - pipeline/staging
 
 setup_production_secrets:
   stage: setup

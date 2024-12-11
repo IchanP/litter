@@ -51,6 +51,8 @@ setup_staging_secrets:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
+    - export NAMESPACE=staging
+    - envsubst < ./frontend/k8s/secrets/auth0-litter.yaml
     # TODO maybe move these to own files
     # TODO pull secrets from folders
   dependencies:
@@ -65,6 +67,8 @@ setup_production_secrets:
     entrypoint: [""]
   script:
     - kubectl config use-context $K8S_CONTEXT
+    - export NAMESPACE=production
+    - envsubst < ./frontend/k8s/secrets/auth0-litter.yaml
     # TODO pull secrets from folders
   dependencies:
     - setup_kubectl_dependencies

@@ -3,7 +3,7 @@ import React from 'react';
 // style
 import "../style/MyOwnLitterBox.css";
 
-// exempeldata att visa upp
+// exempeldata
 const myPosts = [
     {
         postId: 1,

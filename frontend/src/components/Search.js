@@ -5,14 +5,27 @@ import "../style/Search.css";
 
 const Search = () => {
     const [query, setQuery] = useState("");
+    const [results, setResults] = useState([]);
 
-    const handleSearch = () => {
-        if (query.trim()) {
-            alert(`Searching for: ${query.trim()}`);
+    // exempeldata
+    const search_database = ["johndoe", "jamescooper", "hannahwest", "haroldfischer"];
 
+    const handleInputChange = (e) => {
+        const input = e.target.value;
+        setQuery(input);
+
+        if (input.trim()) {
+            const filteredResults = search_database.filter((name) =>
+                name.toLowerCase().includes(input.trim().toLowerCase())
+            );
+            setResults(filteredResults);
         } else {
-            alert("Please enter a search term.");
+            setResults([]);
         }
+    };
+
+    const handleResultClick = (username) => {
+        alert(`Navigating to pedigree-chart for user: @${username}`);
     };
 
     return (
@@ -20,9 +33,25 @@ const Search = () => {
             <input
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                />
-                <button onClick={handleSearch} className="search-button">Search</button>
+                onChange={handleInputChange}
+                placeholder="Search..."
+            />
+            <div className="search-results">
+                {results && results.length > 0 ? (
+                    <ul>
+                        {results.map((result, index) => (
+                            <li
+                                key={index}
+                                onClick={() => handleResultClick(result)}
+                            >
+                                @{result}
+                            </li>
+                        ))}
+                    </ul>
+                ) : query.trim() ? (
+                    <p className="no-result">No results found</p>
+                ) : null}
+            </div>
         </div>
     );
 };

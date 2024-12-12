@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 // style
 import "../style/Profile.css";
 
+// exempeldata
 const followers_count = 112;
 const following_count = 98;
 const user_joined = "August 2024"
@@ -13,7 +14,7 @@ const Profile = () => {
     console.log(user);
 
     const handleLeach = () => {
-        alert(`Leach user: ${user.nickname}`);
+        alert(`Leash user: ${user.nickname}`);
     };
 
     return (

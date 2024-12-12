@@ -21,7 +21,7 @@ const Menu = () => {
                     <button onClick={() => handleNavigate("/home")}>Home</button>
                 </li>
                 <li>
-                    <button onClick={() => handleNavigate("/pedigree-chart")}>Pedeigree Chart</button>
+                    <button onClick={() => handleNavigate("/pedigree-chart")}>Pedigree Chart</button>
                 </li>
                 <li>
                     <LogoutButton />

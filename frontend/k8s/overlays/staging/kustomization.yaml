@@ -25,10 +25,11 @@ patches:
     target:
       kind: Service
       name: litter
+      namespace: staging
   - patch: |
       - op: replace
         path: /spec/template/spec/containers/0/env/2/value
         value: /staging
     target:
       kind: Deployment
-      name: litter
+      namespace: staging

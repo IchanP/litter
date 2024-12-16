@@ -24,7 +24,7 @@ patches:
         value: litter-staging
   - patch: |
       - op: replace
-        path: /spec/template/spec/containers/0/env/0/value
+        path: /spec/template/spec/containers/0/env/2/value
         value: /staging
     target:
       kind: Service

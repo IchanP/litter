@@ -1,3 +1,5 @@
+# frontend/overlays/staging
+
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
@@ -7,17 +9,26 @@ images:
     newName: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
     newTag: staging-latest
 patches:
- - path: ./ingress-patch.yaml
- - path: ./deployment-patch.yaml
-   target:
-    kind: Deployment
-  # NOTE - JSON patch is required to change teh name of the service.
- - patch: |
+  - patch: |
+      - op: add
+        path: /spec/ingressClassName
+        value: nginx
+      - op: replace
+        path: /metadata/namespace
+        value: ingress-system
+    target:
+      kind: Ingress
+  - patch: |
       - op: replace
         path: /metadata/name
         value: litter-staging
-   target:
+    target:
       kind: Service
-
-
-  
+      name: litter
+  - patch: |
+      - op: replace
+        path: /spec/template/spec/containers/0/env/2/value
+        value: /staging
+    target:
+      kind: Deployment
+      name: litter

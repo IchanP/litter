@@ -11,5 +11,8 @@ patches:
       - op: add
         path: /spec/ingressClassName
         value: nginx
+      - op: replace
+        path: /metadata/namespace
+        value: ingress-system
     target:
       kind: Ingress

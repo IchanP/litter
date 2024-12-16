@@ -19,13 +19,15 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: litter.staging.svc.cluster.local
+                name: litter
+                namespace: staging
                 port:
                   number: 8888
           - path: /(.*)
             pathType: Prefix
             backend:
               service:
-                name: litter.production.svc.cluster.local
+                name: litter
+                namespace: production
                 port:
                   number: 8888

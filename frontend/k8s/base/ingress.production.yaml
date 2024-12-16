@@ -20,7 +20,6 @@ spec:
             backend:
               service:
                 name: litter-staging
-                namespace: staging
                 port:
                   number: 8888
           - path: /(.*)
@@ -28,6 +27,5 @@ spec:
             backend:
               service:
                 name: litter-production
-                namespace: production
                 port:
                   number: 8888

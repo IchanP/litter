@@ -23,12 +23,13 @@ patches:
         path: /metadata/name
         value: litter-staging
     target:
-      kind: Deployment
+      kind: Service
       name: litter
+      namespace: staging
   - patch: |
       - op: replace
         path: /spec/template/spec/containers/0/env/2/value
         value: /staging
     target:
-      kind: Service
-      name: litter-staging
+      kind: Deployment
+      namespace: staging

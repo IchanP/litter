@@ -19,7 +19,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: litter
+                name: litter-staging
                 namespace: staging
                 port:
                   number: 8888
@@ -27,7 +27,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: litter
+                name: litter-production
                 namespace: production
                 port:
                   number: 8888

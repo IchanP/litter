@@ -16,3 +16,9 @@ patches:
         value: ingress-system
     target:
       kind: Ingress
+  - patch: |
+      - op: replace
+        path: /metadata/name
+        value: litter-production
+    target:
+      kind: Service

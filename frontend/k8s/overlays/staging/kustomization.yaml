@@ -24,7 +24,6 @@ patches:
         value: litter-staging
     target:
       kind: Service
-      name: litter
       namespace: staging
   - patch: |
       - op: replace

@@ -9,26 +9,6 @@ images:
     newName: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
     newTag: staging-latest
 patches:
-  - patch: |
-      - op: add
-        path: /spec/ingressClassName
-        value: nginx
-      - op: replace
-        path: /metadata/namespace
-        value: ingress-system
-    target:
-      kind: Ingress
-  - patch: |
-      - op: replace
-        path: /metadata/name
-        value: litter-staging
-    target:
-      kind: Service
-      namespace: staging
-  - patch: |
-      - op: replace
-        path: /spec/template/spec/containers/0/env/2/value
-        value: /staging
-    target:
-      kind: Deployment
-      namespace: staging
+  - path: ingress-patch.yaml
+  - path: litter-service-patch.yaml
+  - path: deployment-patch.yaml

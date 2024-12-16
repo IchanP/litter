@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    op: add
+    path: /spec/ingressClassName
+    value: nginx
+spec:
+  ingressClassName: nginx

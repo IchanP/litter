@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: litter
+  namespace: staging
+spec:
+  template:
+    spec:
+      containers:
+        - name: litter
+          env:
+            - name: PUBLIC_URL
+              value: /staging

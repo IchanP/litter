@@ -7,19 +7,5 @@ images:
     newName: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
     newTag: latest
 patches:
-  - patch: |
-      - op: add
-        path: /spec/ingressClassName
-        value: nginx
-      - op: replace
-        path: /metadata/namespace
-        value: ingress-system
-    target:
-      kind: Ingress
-  - patch: |
-      - op: replace
-        path: /metadata/name
-        value: litter-production
-    target:
-      kind: Service
-      namespace: production
+  - path: ingress-patch.yaml
+  - path: litter-service-patch.yaml

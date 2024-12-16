@@ -6,7 +6,18 @@ images:
   - name: frontend
     newName: gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/frontend
     newTag: staging-latest
-patchesStrategicMerge:
-  - ./ingress-patch.yaml
-  - ./litter-service-patch.yaml
-  - ./deployment-patch.yaml
+patches:
+ - path: ./ingress-patch.yaml
+ - path: ./deployment-patch.yaml
+   target:
+    kind: Deployment
+  # NOTE - JSON patch is required to change teh name of the service.
+ - patch: |
+      - op: replace
+        path: /metadata/name
+        value: litter-staging
+   target:
+      kind: Service
+
+
+  

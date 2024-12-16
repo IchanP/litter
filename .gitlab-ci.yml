@@ -25,6 +25,7 @@ setup_kubectl_dependencies:
       
       kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
       kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
+      kubectl create namespace ingress-system --dry-run=client -o yaml | kubectl apply -f -
       
       echo "Creating secrets in context: $CURRENT_CONTEXT"
       export NAMESPACE=staging

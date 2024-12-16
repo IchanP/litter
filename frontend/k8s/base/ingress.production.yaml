@@ -20,13 +20,13 @@ spec:
                 name: litter-staging
                 port:
                   number: 8888
-          - path: /static/(.*)    # Handle production static files
-            pathType: Prefix
-            backend:
-              service:
-                name: litter-production
-                port:
-                  number: 8888
+      #    - path: /static/(.*)    # Handle production static files
+      #      pathType: Prefix
+      #      backend:
+      #        service:
+      #          name: litter-production
+      #          port:
+      #            number: 8888
           - path: /staging(/|$)(.*)
             pathType: Prefix
             backend:
@@ -34,10 +34,10 @@ spec:
                 name: litter-staging
                 port:
                   number: 8888
-          - path: /(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: litter-production
-                port:
-                  number: 8888
+         # - path: /(.*)
+         #   pathType: Prefix
+        #  backend:
+        #      service:
+        #        name: litter-production
+        #        port:
+        #          number: 8888

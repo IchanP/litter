@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: litter-web-app
+manifests:
+  rawYaml:
+    - ./frontend/k8s/ingress.yaml
+    - ./frontend/k8s/litter.yaml
+deploy:
+  kubectl: {}
+
+profiles:
+  - name: production
+    patches:
+      - op: replace
+        path: /manifests/rawYaml/0
+        value: ./frontend/k8s/ingress.production.yaml

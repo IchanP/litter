@@ -4,6 +4,7 @@ metadata:
   name: ingress
   annotations:
 spec:
+#  ingressClassName: nginx # Only in production.
   rules:
     - http:
         paths:
@@ -11,6 +12,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: litter
+                name: taskit
                 port:
-                  number: 8888
+                  number: 8888 # This matches the exposed service port in taskit.yaml

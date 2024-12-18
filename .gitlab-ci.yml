@@ -180,8 +180,9 @@ deploy_staging:
     # Use the images created from the publish_production step
     # TODO how do I make this deploy only to namespace staging? Maybe need to do that in skaffold/yaml config...
     # Also the image names and paths need to be replaced
-    - skaffold deploy --profile production -v debug \
-      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest}
+    - |
+      skaffold deploy --profile production \
+        --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest}
   
     # Debugging
     - kubectl get deployments

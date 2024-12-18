@@ -4,34 +4,28 @@ stages:
   - build
   - deploy
 
+variables:
+  STAGING_CONTEXT: # TODO
+  PROD_CONTEXT: # TODO
+
 setup_kubectl_dependencies:
   stage: setup
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
-    # First verify which context we're using
     - echo "Current context:"
     - kubectl config get-contexts
-    
+    - |
+      if [[ $CI_COMMIT_BRANCH == "staging" ]]; then
+        export K8S_CONTEXT=$STAGING_CONTEXT
+      else
+        export K8S_CONTEXT=$PROD_CONTEXT
+      fi
     - kubectl config use-context $K8S_CONTEXT
     - echo "After setting context:"
     - kubectl config current-context
-    
-    # Create namespaces with context verification
-    - |
-      CURRENT_CONTEXT=$(kubectl config current-context)
-      echo "Creating resources in context: $CURRENT_CONTEXT"
-      
-      kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
-      kubectl create namespace production --dry-run=client -o yaml | kubectl apply -f -
-      kubectl create namespace ingress-system --dry-run=client -o yaml | kubectl apply -f -
-      
-      echo "Creating secrets in context: $CURRENT_CONTEXT"
-      export NAMESPACE=staging
-      envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
-      export NAMESPACE=production
-      envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
+    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
 
     # TODO install operators and other things
   # TODO change this to use rules
@@ -50,27 +44,29 @@ setup_staging_secrets:
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
+  variables:
+    K8S_CONTEXT: $STAGING_CONTEXT
   script:
     - kubectl config use-context $K8S_CONTEXT
-    - export NAMESPACE=staging
-    - envsubst < ./frontend/k8s/secrets/auth0-litter.yaml | kubectl apply -f -
+    - envsubst < ./frontend/k8s/secrets/auth0-litter-staging.yaml | kubectl apply -f -
     # TODO maybe move these to own files
     # TODO pull secrets from folders
   needs:
     - setup_kubectl_dependencies
   only:
     - staging
-    - pipeline/staging
+   # - pipeline/staging
 
 setup_production_secrets:
   stage: setup
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
+  variables:
+    K8S_CONTEXT: $PROD_CONTEXT
   script:
     - kubectl config use-context $K8S_CONTEXT
-    - export NAMESPACE=production
-    - envsubst < ./frontend/k8s/secrets/auth0-litter.yaml | kubectl apply -f -
+    - envsubst < ./frontend/k8s/secrets/auth0-litter-prod.yaml | kubectl apply -f -
     # TODO pull secrets from folders
   needs:
     - setup_kubectl_dependencies
@@ -113,12 +109,12 @@ publish_production:
     name: gcr.io/kaniko-project/executor:v1.9.0-debug
     entrypoint: [""]
   script:
-   - echo "Rebuilding and publishing images for }/taskit/Dockerfile.production"
-   # - /kaniko/executor
-   #   --context "${CI_PROJECT_DIR}/taskit"
-   #   --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
-   #   --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_SHA}"
-   #   --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-latest}"
+   - echo "Rebuilding and publishing images for }/frontend/Dockerfile.production"
+   - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/taskit"
+      --dockerfile "${CI_PROJECT_DIR}/taskit/Dockerfile.production"
+      --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}/taskit:${CI_COMMIT_TAG:-latest}"
   only:
     - main
   needs:
@@ -129,28 +125,34 @@ deploy_production:
   image:
     name: gcr.io/k8s-skaffold/skaffold:v2.8.0
     entrypoint: [""]
+  variables:
+    K8S_CONTEXT: $PROD_CONTEXT
   environment:
     name: production
-    url: $TASKIT_URL # Should point to our load balancer
+    url: $PROD_URL # Should point to our load balancer
   when: manual
   script:
     - kubectl config get-contexts
     - kubectl config use-context $K8S_CONTEXT
-    # - kubectl delete secret regcred -n production || true
-    # Authenticate to docker, requires a specifically named deploy token
-    # - kubectl create secret docker-registry regcred -n production --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
-    # Use the images created from the publish_production step
-    # TODO how do I make this deploy only to namespace production? Maybe need to do that in skaffold/yaml config...
-    # Also the image names and paths need to be replaced
+
+    - kubectl delete secret regcred || true
     - |
-      skaffold deploy --profile production \
-      --namespace production \
+        kubectl create secret docker-registry regcred \
+          --docker-server=$CI_REGISTRY \
+          --docker-username=$CI_REGISTRY_USER \
+          --docker-password=$CI_REGISTRY_PASSWORD
+
+    # Use the images created from the publish_production step
+    # Also the image names and paths need to be replaced
+
+    - |
+      skaffold deploy --profile production -v debug \
       --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-latest} 
 
     # Debugging
-    - kubectl get deployments -n production
-    - kubectl get pods -n production
-    - kubectl get services -n production
+    - kubectl get deployments
+    - kubectl get pods
+    - kubectl get services
   only:
     - main
 
@@ -159,16 +161,18 @@ deploy_staging:
   image:
     name: gcr.io/k8s-skaffold/skaffold:v2.8.0
     entrypoint: [""]
+  variables:
+    K8S_CONTEXT: $STAGING_CONTEXT
   environment:
     name: staging
-    url: $TASKIT_URL # TODO - Should this point to our load balancer? Not sure how we'll access the staging version from the web
+    url: $STAGING_URL # TODO - Should point to our staging load balancer? Not sure how we'll access the staging version from the web
   script:
     - kubectl config get-contexts
     - kubectl config use-context $K8S_CONTEXT
   
-    - kubectl delete secret regcred -n staging || true
+    - kubectl delete secret regcred || true
     - |
-        kubectl create secret docker-registry regcred -n staging \
+        kubectl create secret docker-registry regcred \
           --docker-server=$CI_REGISTRY \
           --docker-username=$CI_REGISTRY_USER \
           --docker-password=$CI_REGISTRY_PASSWORD
@@ -176,12 +180,13 @@ deploy_staging:
     # Use the images created from the publish_production step
     # TODO how do I make this deploy only to namespace staging? Maybe need to do that in skaffold/yaml config...
     # Also the image names and paths need to be replaced
-    - skaffold deploy --profile staging --namespace staging -v debug
+    - skaffold deploy --profile production -v debug \
+      --images ${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest}
   
     # Debugging
-    - kubectl get deployments -n staging
-    - kubectl get pods -n staging
-    - kubectl get services -n staging
+    - kubectl get deployments
+    - kubectl get pods
+    - kubectl get services
   only:
     - staging
-    - pipeline/staging
+  # - pipeline/staging

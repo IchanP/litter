@@ -42,8 +42,6 @@ spec:
             secretKeyRef:
               name: auth0-litter-secrets
               key: AUTH0_CLIENT_ID
-        - name: PUBLIC_URL
-          value: ""
         ports:
           - containerPort: 3000 # TODO - Is this needed?
             name: litter-http

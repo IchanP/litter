@@ -5,8 +5,8 @@ stages:
   - deploy
 
 variables:
-  STAGING_CONTEXT: # TODO
-  PROD_CONTEXT: # TODO
+  STAGING_CONTEXT: $STAGING_AGENT
+  PROD_CONTEXT: $PROD_AGENT
 
 setup_kubectl_dependencies:
   stage: setup
@@ -55,7 +55,7 @@ setup_staging_secrets:
     - setup_kubectl_dependencies
   only:
     - staging
-   # - pipeline/staging
+    - pipeline/staging
 
 setup_production_secrets:
   stage: setup
@@ -189,4 +189,4 @@ deploy_staging:
     - kubectl get services
   only:
     - staging
-  # - pipeline/staging
+    - pipeline/staging

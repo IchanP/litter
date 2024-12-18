@@ -14,4 +14,4 @@ profiles:
     patches:
       - op: replace
         path: /manifests/rawYaml/0
-        value: ./taskit/k8s/ingress.production.yaml
+        value: ./frontend/k8s/ingress.production.yaml

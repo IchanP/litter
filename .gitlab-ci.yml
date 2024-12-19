@@ -16,12 +16,14 @@ setup_kubectl_dependencies:
   script:
     - echo "Current context:"
     - kubectl config get-contexts
+    
     - |
       if [[ $CI_COMMIT_BRANCH == "staging" || $CI_COMMIT_BRANCH == "pipeline/staging" ]]; then
         export K8S_CONTEXT=$STAGING_CONTEXT
       else
         export K8S_CONTEXT=$PROD_CONTEXT
       fi
+    
     - kubectl config use-context $K8S_CONTEXT
     - echo "After setting context:"
     - kubectl config current-context

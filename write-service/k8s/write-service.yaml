@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service.name: write-service
+  name: write-service
+spec:
+  ports:
+    - name: "write-service-port"
+      port: 8888
+      targetPort: "write-svc-http"
+  selector:
+    deployment.name: write-service
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: write-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment.name: write-service
+  template:
+    metadata:
+      labels:
+        deployment.name: write-service
+    spec:
+      containers:
+      - name: write-service
+        image:  write-service # NOTE - This is base one for dev, the "real one" is set in pipeline
+        env:
+        - name: PORT
+          value: "5000"
+        ports:
+          - containerPort: 5000
+            name: write-svc-http
+      imagePullSecrets:
+      - name: regcred

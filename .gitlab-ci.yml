@@ -26,7 +26,7 @@ setup_kubectl_dependencies:
     - |
         if ! kubectl get deployment strimzi-cluster-operator -n default &> /dev/null; then
           echo "Strimzi operator not found. Installing..."
-          kubectl apply -f ./message-broker/k8s/strimzi-cluster-operator-0.31.1.yaml
+          kubectl apply -f ./message-broker/k8s/strimzi-cluster-operator-0.31.1.yaml --validate=false
           kubectl wait --for=condition=available --timeout=300s deployment/strimzi-cluster-operator -n default
         else
           echo "strimzi oeprator already exists"

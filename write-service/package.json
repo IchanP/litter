@@ -1,0 +1,32 @@
+{
+  "name": "write-service",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon --inspect --env-file=.env src/server.js",
+    "test": "echo TODO ADD JEST?"
+  },
+  "keywords": [],
+  "contributors": [
+    "Pontus Grandin",
+    "Christopher Schnell"
+  ],
+  "license": "ISC",
+  "private": true,
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "inversify": "^6.2.1",
+    "mongoose": "^8.9.2",
+    "morgan": "^1.10.0",
+    "reflect-metadata": "^0.2.2",
+    "winston": "^3.17.0",
+    "write-service": "file:"
+  },
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.10"
+  }
+}

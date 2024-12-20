@@ -8,6 +8,10 @@ build:
       context: ./frontend
       docker:
         dockerfile: Dockerfile.production
+    - image: write-service
+      context: ./write-service
+      docker:
+        dockerfile: Dockerfile.production
 manifests:
   rawYaml:
     # NOTE - Frontend deployments 
@@ -16,6 +20,8 @@ manifests:
     # NOTE - Message Broker deployments
     - ./message-broker/k8s/strimzi-kafka-zookeeper.yaml
     - ./message-broker/k8s/test-topic.yaml
+    # NOTE - Write Service
+    - ./write-service/k8s/write-service.yaml
 deploy:
   kubectl: {}
 

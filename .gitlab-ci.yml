@@ -23,6 +23,11 @@ setup_kubectl_dependencies:
       else
         export K8S_CONTEXT=$PROD_CONTEXT
       fi
+    
+    - kubectl config use-context $K8S_CONTEXT
+    - echo "After setting context:"
+    - kubectl config current-context
+    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
     - |
         if ! kubectl get deployment strimzi-cluster-operator -n default &> /dev/null; then
           echo "Strimzi operator not found. Installing..."
@@ -31,12 +36,6 @@ setup_kubectl_dependencies:
         else
           echo "strimzi oeprator already exists"
         fi
-    
-    - kubectl config use-context $K8S_CONTEXT
-    - echo "After setting context:"
-    - kubectl config current-context
-    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
-
     # TODO install operators and other things
 
 test:

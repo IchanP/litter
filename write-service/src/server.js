@@ -1,6 +1,6 @@
 import express from 'express'
 import helmet from 'helmet'
-import morgan from 'morgan'
+import morganLogger from 'morgan'
 import { logger } from './config/winston-logger.js'
 import { container } from './config/inversify.config.js'
 
@@ -10,8 +10,8 @@ try {
   // await connectDB(process.env.WRITE_DB_CONNECTION_STRING)
   // await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING)
   app.use(helmet())
-  app.use(morgan('dev'))
-  app.use('container', container)
+  app.use(morganLogger('dev'))
+  app.set('container', container)
 
   // Error handling
   app.use(function (err, req, res, next) {
@@ -32,6 +32,6 @@ try {
     logger.info('Press Ctrl-C to terminate...')
   })
 } catch (e) {
-  logger.error(e)
+  logger.error(e.message)
   process.exitCode = 1
 }

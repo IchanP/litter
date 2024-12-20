@@ -2,12 +2,6 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: my-kafka-cluster
-  annotations:
-    # This ensures the operator CRDs are available before creating this resource
-    "helm.sh/hook-weight": "1"
-    "kubectl.kubernetes.io/wait": "true"
-    # Wait for the operator deployment to be ready
-    "kubectl.kubernetes.io/wait-for": "condition=Available apiVersion=apps/v1 kind=Deployment name=strimzi-cluster-operator-v0.31.1 namespace=default"
 spec:
   kafka:
     version: 3.2.3

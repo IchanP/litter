@@ -4,9 +4,6 @@ metadata:
   name: my-topic
   labels:
     strimzi.io/cluster: my-kafka-cluster
-  annotations:
-    # This ensures the Kafka cluster is ready before creating topics
-    "kubectl.kubernetes.io/wait-for": "condition=Ready apiVersion=kafka.strimzi.io/v1beta2 kind=Kafka name=my-cluster namespace=default"
 spec:
   partitions: 1
   replicas: 1

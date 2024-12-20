@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Container } from 'inversify'
-import { TYPES } from './types'
+import { TYPES } from './types.js'
 
 const container = new Container()
 

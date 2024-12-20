@@ -1,0 +1,17 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: my-topic
+  labels:
+    strimzi.io/cluster: my-kafka-cluster
+  annotations:
+    # This ensures the Kafka cluster is ready before creating topics
+    "kubectl.kubernetes.io/wait-for": "condition=Ready apiVersion=kafka.strimzi.io/v1beta2 kind=Kafka name=my-cluster namespace=default"
+spec:
+  partitions: 1
+  replicas: 1
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1048588
+    cleanup.policy: delete
+    min.insync.replicas: 1

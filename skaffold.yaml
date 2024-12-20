@@ -14,7 +14,6 @@ manifests:
     - ./frontend/k8s/ingress.yaml
     - ./frontend/k8s/litter.yaml
     # NOTE - Message Broker deployments
-    - ./message-broker/k8s/strimzi-cluster-operator-0.31.1.yaml
     - ./message-broker/k8s/strimzi-kafka-zookeeper.yaml
     - ./message-broker/k8s/test-topic.yaml
 deploy:

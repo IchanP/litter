@@ -10,12 +10,11 @@ variables:
 
 setup_kubectl_dependencies:
   stage: setup
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: [""]
+  image: google/cloud-sdk:latest  # This comes with kubectl, curl, and other tools
   script:
     - echo "Current context:"
     - kubectl config get-contexts
+    - apt-get update && apt-get install -y gettext-base
     
     - |
       if [[ $CI_COMMIT_BRANCH == "staging" || $CI_COMMIT_BRANCH == "pipeline/staging" ]]; then
@@ -23,12 +22,22 @@ setup_kubectl_dependencies:
       else
         export K8S_CONTEXT=$PROD_CONTEXT
       fi
-    
+    # Set the context
     - kubectl config use-context $K8S_CONTEXT
     - echo "After setting context:"
     - kubectl config current-context
-    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
 
+    # Apply docker secrets
+    - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
+    # Apply operator
+    - |
+        if ! kubectl get deployment strimzi-cluster-operator -n default &> /dev/null; then
+          echo "Strimzi operator not found. Installing..."
+          curl -L https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.31.1/strimzi-cluster-operator-0.31.1.yaml | sed 's/namespace: myproject/namespace: default/g' | kubectl apply -f -
+          kubectl wait --for=condition=available --timeout=300s deployment/strimzi-cluster-operator -n default
+        else
+          echo "strimzi operator already exists"
+        fi
     # TODO install operators and other things
 
 test:

@@ -33,8 +33,8 @@ profiles:
         path: /manifests/rawYaml/0
         value: ./frontend/k8s/ingress.production.yaml
       - op: replace
-        path: /manifest/rawYaml/4
+        path: /manifests/rawYaml/4
         value: ./write-service/k8s/write-service.prod.yaml
       - op: replace
-        path: /manifest/rawYaml/5
+        path: /manifests/rawYaml/5
         value: ./write-service/k8s/write-db.prod.yaml

@@ -1,0 +1,49 @@
+# Had to reconfigure the volumes for development as it was trying to create all 3 on the same node (minikube)
+apiVersion: v1
+kind: Service
+metadata:
+  name: write-db-headless
+  labels:
+    app: write-db
+spec:
+  ports:
+    - port: 27017
+      name: mongo
+  clusterIP: None  # Headless service
+  selector:
+    app: write-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: write-db
+  labels:
+    app: write-db
+spec:
+  serviceName: "write-db-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: write-db
+  template:
+    metadata:
+      labels:
+        app: write-db
+    spec:
+      containers:
+        - name: mongodwrite-dbb
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: writedb-storage
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: writedb-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 500Mi

@@ -13,7 +13,7 @@
     "Pontus Grandin",
     "Christopher Schnell"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "private": true,
   "description": "",
   "dependencies": {

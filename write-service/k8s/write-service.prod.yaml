@@ -31,6 +31,7 @@ spec:
       containers:
       - name: write-service
         image:  write-service # NOTE - This is base one for dev, the "real one" is set in pipeline
+        imagePullPolicy: Always
         env:
         - name: PORT
           value: "5000"

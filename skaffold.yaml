@@ -3,6 +3,8 @@ kind: Config
 metadata:
   name: litter-web-app
 build:
+  tagPolicy:
+    sha256: {}
   artifacts:
     - image: frontend
       context: ./frontend

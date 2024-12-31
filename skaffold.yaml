@@ -39,5 +39,5 @@ profiles:
       - op: replace
         path: /manifests/rawYaml/6
         value: ./write-service/k8s/write-db.prod.yaml
-      - op: delete
+      - op: remove
         path: /manifests/rawYaml/4

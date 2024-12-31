@@ -4,19 +4,43 @@ import { logger } from './winston-logger.js'
 let producer
 
 /**
+ * General sleep function that waits the specified number of milliseconds.
+ *
+ * @param {number} ms - Nubmer of miliseconds to wait.
+ * @returns {Promise} - Returns a promise that resolves after the speciified amount of miliseconds.
+ */
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+/**
  * Connects to the Kafka producer.
  *
  * @param {string} connectionString - The DNS of the Kafka service running.
  */
 export async function connectBroker (connectionString) {
-  const kafka = new Kafka({ clientId: 'write-service', brokers: ['my-kafka-cluster-kafka-bootstrap:9092'] })
+  const brokers = connectionString.includes(',')
+    ? connectionString.split(',')
+    : [connectionString]
+
+  const kafka = new Kafka({ clientId: 'write-service', brokers })
   producer = kafka.producer()
 
-  logger.info('Connecting to Kafka service.')
-  producer.connect() // Automatically handles reconnects
-
+  while (true) {
+    try {
+      logger.info('Attempting to connect to Kafka service...')
+      await producer.connect()
+      break
+    } catch (error) {
+      logger.warn(`Failed to connect to Kafka: ${error.message}`)
+      logger.info('Retrying in 5 seconds...')
+      await sleep(5000)
+    }
+  }
   producer.on('producer.connect', () => {
     logger.info('Write service connected to Kafka service')
+  })
+
+  producer.on('producer.disconnect', () => {
+    console.log('Producer disconnected from Kafka')
   })
 
   process.on('SIGTERM', async () => {

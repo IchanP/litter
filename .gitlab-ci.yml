@@ -192,8 +192,8 @@ deploy_staging:
     - |
         kubectl create secret docker-registry regcred \
           --docker-server=$CI_REGISTRY \
-          --docker-username=$DOCKER_USERNAME \
-          --docker-password=$DOCKER_PASSWORD \
+          --docker-username=$CI_REGISTRY_USER  \
+          --docker-password=$CI_REGISTRY_PASSWORD \
           --docker-email=$DOCKER_EMAIL
   
     # Use the images created from the publish_production step

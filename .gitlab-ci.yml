@@ -105,10 +105,12 @@ publish_staging:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}/frontend"
       --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile.production"
+      --destination "${CI_REGISTRY_IMAGE}/frontend:-staging-${CI_COMMIT_SHA}
       --destination "${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_TAG:-staging-latest}"
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}/write-service"
       --dockerfile "${CI_PROJECT_DIR}/write-service/Dockerfile.production"
+      --destination "${CI_REGISTRY_IMAGE}/write-service:-staging-${CI_COMMIT_SHA}"
       --destination "${CI_REGISTRY_IMAGE}/write-service:${CI_COMMIT_TAG:-staging-latest}"
   only:
     - staging
@@ -201,8 +203,8 @@ deploy_staging:
     # Also the image names and paths need to be replaced
     - |
       skaffold deploy --profile production \
-        --images frontend=${CI_REGISTRY_IMAGE}/frontend:${CI_COMMIT_SHA} \
-        --images write-service=${CI_REGISTRY_IMAGE}/write-service:${CI_COMMIT_SHA} 
+        --images frontend=${CI_REGISTRY_IMAGE}/frontend:-staging-${CI_COMMIT_SHA} \
+        --images write-service=${CI_REGISTRY_IMAGE}/write-service:-staging-${CI_COMMIT_SHA} 
   
     # Debugging
     - kubectl get deployments

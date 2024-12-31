@@ -22,7 +22,7 @@ metadata:
   labels:
     app: write-db
 spec:
-  serviceName: "mongodb-headless"
+  serviceName: "write-db-headless"
   replicas: 1
   selector:
     matchLabels:

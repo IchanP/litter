@@ -4,12 +4,13 @@ import morganLogger from 'morgan'
 import { logger } from './config/winston-logger.js'
 import { container } from './config/inversify.config.js'
 import { connectToDatabase } from './config/mongoose.js'
+import { connectBroker } from './config/kafka.js'
 
 try {
   const app = express()
   // TODO connect to database here
   await connectToDatabase(process.env.WRITE_DB_CONNECTION_STRING)
-  // await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING)
+  await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING)
   app.use(helmet())
   app.use(morganLogger('dev'))
   app.set('container', container)

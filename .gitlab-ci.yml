@@ -203,8 +203,8 @@ deploy_staging:
     # Also the image names and paths need to be replaced
     - |
       skaffold deploy --profile production \
-        --images frontend=${CI_REGISTRY_IMAGE}/frontend:-staging-${CI_COMMIT_SHA} \
-        --images write-service=${CI_REGISTRY_IMAGE}/write-service:-staging-${CI_COMMIT_SHA} 
+        --images frontend=${CI_REGISTRY_IMAGE}/frontend:staging-${CI_COMMIT_SHA} \
+        --images write-service=${CI_REGISTRY_IMAGE}/write-service:staging-${CI_COMMIT_SHA} 
   
     # Debugging
     - kubectl get deployments

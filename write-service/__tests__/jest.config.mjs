@@ -15,7 +15,7 @@ const config = {
   // cacheDirectory: "C:\\Users\\Pasha\\AppData\\Local\\Temp\\jest",
 
   // Automatically clear mock calls, instances, contexts and results before every test
-  clearMocks: true,
+  clearMocks: true
 
   // Indicates whether the coverage information should be collected while executing the test
   // collectCoverage: false,
@@ -32,7 +32,7 @@ const config = {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: 'v8'
+  // coverageProvider: "babel",
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -195,4 +195,4 @@ const config = {
   // watchman: true,
 }
 
-module.exports = config
+export default config

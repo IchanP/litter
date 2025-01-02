@@ -40,13 +40,15 @@ setup_kubectl_dependencies:
         fi
     # TODO install operators and other things
 
-test:
+write_service_tests:
   stage: test
   image:
     name: node:20-slim
   script:
-   - echo "Running tests"
-   # TODO might want to make different jobs per application...
+   - echo "Running write-service tests"
+   - cd write-service
+   - npm ci
+   - npm run tests
 
 
 setup_staging_secrets:

@@ -18,6 +18,7 @@ describe('Kafka Export', () => {
   let connectBroker
   let Kafka
   let kafkaImport
+
   // Set up the imports in beforeAll
   beforeAll(async () => {
     kafkaImport = await import('../src/config/kafka')

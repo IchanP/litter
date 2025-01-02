@@ -28,6 +28,7 @@ export async function connectBroker (connectionString) {
     try {
       logger.info('Attempting to connect to Kafka service...')
       await producer.connect()
+      logger.info('Kafka successfully connected!')
       break
     } catch (error) {
       logger.warn(`Failed to connect to Kafka: ${error.message}`)
@@ -35,13 +36,6 @@ export async function connectBroker (connectionString) {
       await sleep(5000)
     }
   }
-  producer.on('producer.connect', () => {
-    logger.info('Write service connected to Kafka service')
-  })
-
-  producer.on('producer.disconnect', () => {
-    console.log('Producer disconnected from Kafka')
-  })
 
   process.on('SIGTERM', async () => {
     await producer.disconnect()

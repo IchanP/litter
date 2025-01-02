@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon --inspect --env-file=.env src/server.js",
-    "test": "echo TODO ADD JEST?"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config __tests__/jest.config.mjs"
   },
   "keywords": [],
   "contributors": [
@@ -28,6 +28,9 @@
     "write-service": "file:"
   },
   "devDependencies": {
-    "@lnu/eslint-config": "^1.1.10"
+    "@babel/preset-env": "^7.26.0",
+    "@lnu/eslint-config": "^1.1.10",
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0"
   }
 }

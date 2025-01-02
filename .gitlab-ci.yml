@@ -48,7 +48,7 @@ write_service_tests:
    - echo "Running write-service tests"
    - cd write-service
    - npm ci
-   - npm run tests
+   - npm run test
 
 
 setup_staging_secrets:

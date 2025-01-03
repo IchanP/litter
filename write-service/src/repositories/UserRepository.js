@@ -1,7 +1,7 @@
 import { UserModel } from '../model/UserSchema.js'
-import { DuplicateError } from '../../Utils/Errors/DuplicateError.js'
+import { DuplicateError } from '../util/Errors/DuplicateError.js'
 import { Error } from 'mongoose'
-import { BadDataError } from '../Errors/BadDataError.js'
+import { BadDataError } from '../util/Errors/BadDataError.js'
 
 /**
  * Handles interactions with mongoose to write and find data pertaining to users.

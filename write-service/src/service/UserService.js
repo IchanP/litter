@@ -1,4 +1,4 @@
-import { UserRepository } from '../repositories/UserRepository'
+import { UserRepository } from '../repositories/UserRepository.js'
 import { validateNotUndefined } from '../util/validate.js'
 
 /**

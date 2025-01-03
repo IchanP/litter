@@ -1,7 +1,7 @@
 import express from 'express'
-import { UserController } from '../controller/UserController'
-import { UserService } from '../service/UserService'
-import { UserRepository } from '../repositories/UserRepository'
+import { UserController } from '../controller/UserController.js'
+import { UserService } from '../service/UserService.js'
+import { UserRepository } from '../repositories/UserRepository.js'
 export const router = express.Router()
 
 // NOTE - Should really use inversify but can't set it up using javascript.

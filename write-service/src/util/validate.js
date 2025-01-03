@@ -1,4 +1,4 @@
-import { BadDataError } from '../Errors/BadDataError'
+import { BadDataError } from './Errors/BadDataError.js'
 
 /**
  * Validates that the passed variable is not undefined or null and throws an error if it is.

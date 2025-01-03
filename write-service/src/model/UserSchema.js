@@ -65,9 +65,6 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.addb(BASE_SCHEMA)
-
-// Improve lookup performance on emails
-userSchema.index({ email: 1 })
+userSchema.add(BASE_SCHEMA)
 
 export const UserModel = model('User', userSchema)

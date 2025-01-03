@@ -1,4 +1,4 @@
-import { BadDataError } from '../Errors/BadDataError.js'
+import { BadDataError } from '../util/Errors/BadDataError.js'
 import { UserService } from '../service/UserService.js'
 import createError from 'http-errors'
 

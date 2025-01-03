@@ -1,5 +1,5 @@
 import { UserRepository } from '../repositories/UserRepository'
-import { validateNotUndefined } from '../util/validate'
+import { validateNotUndefined } from '../util/validate.js'
 
 /**
  * Manages interactions between repositories concerning Users.
@@ -24,5 +24,7 @@ export class UserService {
     validateNotUndefined(registrationData.username, 'Username')
     const email = registrationData.email
     const username = registrationData.username
+    const userData = { email, username }
+    await this.userRepo.createDocument(userData)
   }
 }

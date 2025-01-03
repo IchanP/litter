@@ -39,7 +39,7 @@ const postSchema = new Schema({
     },
     timestamp: Date
   }]
-})
+}, {})
 
 postSchema.add(BASE_SCHEMA)
 postSchema.index({ authorId: 1 })

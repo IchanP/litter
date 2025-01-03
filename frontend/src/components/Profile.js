@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 // style
@@ -10,12 +10,29 @@ const following_count = 98;
 const user_joined = "August 2024"
 
 const Profile = () => {
-    const { user } = useAuth0();
-    console.log(user);
+    const { user, getAccessTokenSilently } = useAuth0();
+    const [accessToken, setAccessToken] = useState("");
+
+    useEffect(() => {
+        const fetchToken = async () => {
+            try {
+                const token = await getAccessTokenSilently();
+                setAccessToken(token);
+                // Använd token för att göra API-anrop
+            } catch (error) {
+                console.error("Fel vid hämtning av access token:", error);
+            }
+        };
+    
+        fetchToken();
+    }, [getAccessTokenSilently]);
 
     const handleLeach = () => {
         alert(`Leash user: ${user.nickname}`);
     };
+
+    console.log(accessToken);
+    console.log(user.sub);
 
     return (
         <div className="profile">

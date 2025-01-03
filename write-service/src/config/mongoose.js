@@ -23,6 +23,9 @@ export const connectToDatabase = async (connectionString) => {
   // Turn on strict mode for query filters.
   mongoose.set('strictQuery', true)
 
+  // NOTE - Recommended for production
+  mongoose.set('autoIndex', false)
+
   // Bind connection to events (to get notifications).
   connection.on('connected', () => logger.info('Mongoose connected to MongoDB.'))
   connection.on('error', (err) => logger.info(`Mongoose connection error: ${err}`))

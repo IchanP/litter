@@ -15,7 +15,7 @@
   ],
   "license": "MIT",
   "private": true,
-  "description": "",
+  "description": "The service which talks to the write-db which acts as the source of truth for the entire litter project.",
   "dependencies": {
     "express": "^4.21.2",
     "helmet": "^8.0.0",
@@ -31,6 +31,7 @@
     "@babel/preset-env": "^7.26.0",
     "@lnu/eslint-config": "^1.1.10",
     "@types/jest": "^29.5.14",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "validator": "^13.12.0"
   }
 }

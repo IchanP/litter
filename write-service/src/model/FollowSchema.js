@@ -10,7 +10,7 @@ const followSchema = new Schema({
     type: String,
     required: true
   }
-})
+}, {})
 
 followSchema.add(BASE_SCHEMA)
 

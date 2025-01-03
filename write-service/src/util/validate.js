@@ -1,3 +1,5 @@
+import { BadDataError } from '../Errors/BadDataError'
+
 /**
  * Validates that the passed variable is not undefined or null and throws an error if it is.
  *
@@ -6,6 +8,6 @@
  */
 export function validateNotUndefined (variable, eType) {
   if (variable === undefined || null) {
-    throw new Error(`${variable} is undefined or null.`)
+    throw new BadDataError(`${variable} is undefined or null.`)
   }
 }

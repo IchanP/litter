@@ -1,4 +1,6 @@
+import { BadDataError } from '../Errors/BadDataError'
 import { UserService } from '../service/UserService'
+import createError from 'http-errors'
 
 /**
  * Controller for managing the user relevant operations for MongoDB.
@@ -37,8 +39,10 @@ export class UserController {
    * @param {Function} next - The next middleware function.
    */
   #handleError (e, next) {
-    const err = e
-    // TODO - return different codes depending on the error
+    let err = e
+    if (e instanceof BadDataError) {
+      err = createError(403, e.message)
+    }
     next(err)
   }
 }

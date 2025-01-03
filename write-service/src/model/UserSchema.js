@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose'
-import { BASE_SCHEMA } from './BaseSchema'
-import { Counter } from './Counter.'
+import { BASE_SCHEMA } from './BaseSchema.js'
+import { Counter } from './Counter.js'
 import validator from 'validator'
 
 const userSchema = new Schema({
@@ -66,5 +66,8 @@ userSchema.pre('save', async function (next) {
 })
 
 userSchema.addb(BASE_SCHEMA)
+
+// Improve lookup performance on emails
+userSchema.index({ email: 1 })
 
 export const UserModel = model('User', userSchema)

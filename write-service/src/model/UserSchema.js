@@ -50,11 +50,7 @@ const userSchema = new Schema({
       newValue: String
     },
     timestamp: Date
-  }],
-  version: {
-    type: Number,
-    default: 0
-  }
+  }]
 }, {})
 
 userSchema.add(BASE_SCHEMA)

@@ -41,4 +41,19 @@ export class UserRepository {
       throw error
     }
   }
+
+  /**
+   * Finds a user based on the passed filter.
+   *
+   * @param {object} filter - Should be an object type matching either:
+   * {email: email}
+   * {userId: userId}
+   * {username: username}
+   * userId queries are preferred.
+   * @returns {object | undefined} - Returns a user matching the UserModel definition or undefined if no user exists.
+   */
+  async getOneMatching (filter) {
+    const user = await UserModel.findOne(filter)
+    return user?.toObject()
+  }
 }

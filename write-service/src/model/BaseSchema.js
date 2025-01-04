@@ -6,7 +6,6 @@ import mongoose, { Schema } from 'mongoose'
 
 const conversionOptions = {
   virtuals: true,
-  versionKey: false,
 
   /**
    * Executed when toJson or toObject is called on the document.
@@ -17,7 +16,6 @@ const conversionOptions = {
   transform: (doc, ret) => {
     delete ret._id
     delete ret.id
-    delete ret.createdAt
     delete ret.updatedAt
   }
 }

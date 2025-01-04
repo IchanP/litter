@@ -33,10 +33,6 @@ const postSchema = new Schema({
     }
   },
   // For if the post is edited.
-  version: {
-    type: Number,
-    default: 0
-  },
   events: [{
     type: String,
     payload: {

@@ -21,15 +21,23 @@ export class UserService {
    * @returns {object} - Returns an object containing the created data.
    */
   async registerUser (registrationData) {
-    console.log(registrationData)
-    validateNotUndefined(registrationData?.email, 'Email')
-    validateNotUndefined(registrationData?.username, 'Username')
-    validateNotUndefined(registrationData?.userId, 'userId')
-    const email = registrationData.email
-    const username = registrationData.username
-    const userId = registrationData.userId
-    const userData = { email, username, userId }
-    const createdData = await this.userRepo.createDocument(userData)
+    this.#performUserValidations(registrationData)
+    const userData = { email: registrationData.email, username: registrationData.username, userId: registrationData.userId }
+
+    await this.userRepo.createDocument(userData)
+    const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
+    console.log(createdData)
     return createdData
+  }
+
+  /**
+   * Performs validation on expected User fields.
+   *
+   * @param {object} userData - Object containing the expected user fields.
+   */
+  #performUserValidations (userData) {
+    validateNotUndefined(userData?.email, 'Email')
+    validateNotUndefined(userData?.username, 'Username')
+    validateNotUndefined(userData?.userId, 'userId')
   }
 }

@@ -353,3 +353,79 @@ POST /follow/user123
     "followedId": "user123"
 }
 ```
+
+## DELETE /follow/:id
+
+Removes a follow relationship between two users.
+
+### Request
+
+#### Endpoint
+
+```
+DELETE /follow/:id
+```
+
+#### URL Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | ID of the user to be unfollowed |
+
+#### Request Body
+
+```json
+{
+    "followerId": "string"
+}
+```
+
+#### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| followerId | string | Yes | ID of the user doing the unfollowing |
+
+### Responses
+
+#### 204 No Content
+
+Follow relationship was successfully removed. No response body.
+
+#### 404 Not Found
+
+Returned when the follow relationship does not exist.
+
+```json
+{
+    "status": 404,
+    "message": "Follow relationship not found",
+    "followerId": "string",
+    "followedId": "string"
+}
+```
+
+### Example
+
+#### Request
+
+```
+DELETE /follow/user123
+```
+
+```json
+{
+    "followerId": "user456"
+}
+```
+
+#### Error Response (Not Found)
+
+```json
+{
+    "status": 404,
+    "message": "Follow relationship not found",
+    "followerId": "user456",
+    "followedId": "user123"
+}
+```

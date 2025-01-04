@@ -6,6 +6,7 @@ Documentation over endpoints and explains the backend models of the different re
 
 - [user/register](#post-postscreate)
 - [posts/create](#post-userregister)
+- []
 
 ## POST /user/register
 

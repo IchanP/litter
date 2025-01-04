@@ -7,11 +7,11 @@ const postSchema = new Schema({
   postId: {
     type: String,
     required: true,
-    unique: true
+    index: { unique: true, background: true }
   },
   authorId: {
     type: String,
-    required: true
+    index: { unique: true, background: true }
   },
   content: {
     required: true,
@@ -56,6 +56,5 @@ postSchema.pre('save', async function (next) {
 })
 
 postSchema.add(BASE_SCHEMA)
-postSchema.index({ authorId: 1 })
 
-export const postModel = model('Posts', postSchema)
+export const PostModel = model('Posts', postSchema)

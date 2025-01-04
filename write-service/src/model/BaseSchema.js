@@ -17,6 +17,7 @@ const conversionOptions = {
     delete ret._id
     delete ret.id
     delete ret.updatedAt
+    delete ret.__v
   }
 }
 

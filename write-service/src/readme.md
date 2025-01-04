@@ -6,7 +6,7 @@ Documentation over endpoints and explains the backend models of the different re
 
 Endpoint for registering new users in the system.
 
-```
+```json
 POST /user/register
 ```
 

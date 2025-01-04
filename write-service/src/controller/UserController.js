@@ -1,4 +1,5 @@
 import { BadDataError } from '../util/Errors/BadDataError.js'
+import { DuplicateError } from '../util/Errors/DuplicateError.js'
 import { UserService } from '../service/UserService.js'
 import createError from 'http-errors'
 
@@ -42,6 +43,8 @@ export class UserController {
     let err = e
     if (e instanceof BadDataError) {
       err = createError(403, e.message)
+    } else if (e instanceof DuplicateError) {
+      err = createError(409, e.message)
     }
     next(err)
   }

@@ -32,7 +32,9 @@ export class UserRepository {
     } catch (e) {
       const error = e
       if (error.code === 11000) {
-        throw new DuplicateError()
+        const keyPattern = error.keyPattern
+        const duplicateField = Object.keys(keyPattern)[0]
+        throw new DuplicateError(`${duplicateField} already exists.`)
       } else if (error instanceof Error.ValidationError) {
         throw new BadDataError(error.message)
       }

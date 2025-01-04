@@ -22,6 +22,7 @@ export class UserService {
   async registerUser (registrationData) {
     validateNotUndefined(registrationData.email, 'Email')
     validateNotUndefined(registrationData.username, 'Username')
+    validateNotUndefined(registrationData.userId, 'userId')
     const email = registrationData.email
     const username = registrationData.username
     const userId = registrationData.userId

@@ -7,6 +7,7 @@
 
 import mongoose from 'mongoose'
 import { logger } from './winston-logger.js'
+import { UserModel } from '../model/UserSchema.js'
 
 /**
  * Establishes a connection to a database.
@@ -22,9 +23,8 @@ export const connectToDatabase = async (connectionString) => {
 
   // Turn on strict mode for query filters.
   mongoose.set('strictQuery', true)
-
-  // NOTE - Recommended for production
-  mongoose.set('autoIndex', false)
+  logger.info('Syncing indexes...')
+  UserModel.syncIndexes()
 
   // Bind connection to events (to get notifications).
   connection.on('connected', () => logger.info('Mongoose connected to MongoDB.'))

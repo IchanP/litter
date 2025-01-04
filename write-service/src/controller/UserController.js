@@ -22,12 +22,20 @@ export class UserController {
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - The next call function.
+   * @returns {Response} - Returns an express response object with status 201 containign the created user data.
    */
   async register (req, res, next) {
     try {
-      await this.userService.registerUser()
+      console.log(req.body)
+      const body = req.body
+      const userData = await this.userService.registerUser(body)
       req.body.status = 201
-      next()
+      req.body.responseData = userData
+      req.body.message = 'User created successfully'
+      return res.status(req.body.status).json({
+        message: req.body.message,
+        data: req.body.responseData
+      })
     } catch (e) {
       this.#handleError(e, next)
     }

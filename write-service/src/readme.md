@@ -32,7 +32,7 @@ POST /user/register
 
 #### Success Response
 
-**Code**: 200 OK
+**Code**: 201 OK
 
 ```json
 {

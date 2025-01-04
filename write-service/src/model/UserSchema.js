@@ -6,12 +6,12 @@ const userSchema = new Schema({
   userId: {
     type: String,
     required: true,
-    unique: true
+    index: { unique: true, background: true }
   },
   email: {
     type: String,
     required: [true, 'Email address is required'],
-    unique: true,
+    index: { unique: true, background: true },
     lowercase: true,
     maxLength: 254, // NOTE - should this be lower?
     trim: true,
@@ -37,7 +37,7 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: [true, 'Username is required'],
-    unique: true,
+    index: { unique: true, background: true },
     lowercase: true,
     minLength: [3, 'The username must be a minimum length of 3 characters.'],
     maxLength: [40, 'The username must be a maximum length of 40 characters.'],

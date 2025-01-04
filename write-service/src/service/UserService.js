@@ -18,15 +18,18 @@ export class UserService {
    * Handles the registration of a user by contacting relevant repositories and sending out kafka messages to other services.
    *
    * @param {object} registrationData - Object containing the user data.
+   * @returns {object} - Returns an object containing the created data.
    */
   async registerUser (registrationData) {
-    validateNotUndefined(registrationData.email, 'Email')
-    validateNotUndefined(registrationData.username, 'Username')
-    validateNotUndefined(registrationData.userId, 'userId')
+    console.log(registrationData)
+    validateNotUndefined(registrationData?.email, 'Email')
+    validateNotUndefined(registrationData?.username, 'Username')
+    validateNotUndefined(registrationData?.userId, 'userId')
     const email = registrationData.email
     const username = registrationData.username
     const userId = registrationData.userId
     const userData = { email, username, userId }
-    await this.userRepo.createDocument(userData)
+    const createdData = await this.userRepo.createDocument(userData)
+    return createdData
   }
 }

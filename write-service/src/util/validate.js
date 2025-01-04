@@ -8,6 +8,6 @@ import { BadDataError } from './Errors/BadDataError.js'
  */
 export function validateNotUndefined (variable, eType) {
   if (variable === undefined || null) {
-    throw new BadDataError(`${variable} is missing.`)
+    throw new BadDataError(`${eType} is missing.`)
   }
 }

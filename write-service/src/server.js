@@ -12,6 +12,7 @@ try {
   await connectToDatabase(process.env.WRITE_DB_CONNECTION_STRING)
   await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING)
 
+  app.use(express.json())
   app.use(helmet())
   app.use(morganLogger('dev'))
   app.use('/', router)

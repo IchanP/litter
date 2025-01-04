@@ -50,7 +50,7 @@ export class UserController {
   #handleError (e, next) {
     let err = e
     if (e instanceof BadDataError) {
-      err = createError(403, e.message)
+      err = createError(400, e.message)
     } else if (e instanceof DuplicateError) {
       err = createError(409, e.message)
     }

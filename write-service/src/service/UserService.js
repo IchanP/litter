@@ -1,5 +1,6 @@
 import { UserRepository } from '../repositories/UserRepository.js'
 import { validateNotUndefined } from '../util/validate.js'
+import { sendMessage } from './kafka.js'
 
 /**
  * Manages interactions between repositories concerning Users.
@@ -26,7 +27,8 @@ export class UserService {
 
     await this.userRepo.createDocument(userData)
     const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
-    console.log(createdData)
+    // TODO - THIS NEEDS TO BE REPLACED WITH A REAL TOPIC ALSO NEEDS BETTER ERROR HANDLING...
+    sendMessage('test-topic', createdData)
     return createdData
   }
 

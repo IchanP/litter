@@ -17,12 +17,13 @@ export class UserRepository {
   /**
    * Creates a document with the passed userData.
    *
-   * @param {object} userData - UserData that has an email and username field.
+   * @param {object} userData - UserData that has an email, userId and username field.
    * @returns {object} - Returns an object with fields, userId, email and username
    */
   async createDocument (userData) {
     try {
       const user = new UserModel({
+        userId: userData.userId,
         email: userData.email,
         username: userData.username
       })

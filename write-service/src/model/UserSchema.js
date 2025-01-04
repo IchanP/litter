@@ -1,9 +1,13 @@
 import { model, Schema } from 'mongoose'
 import { BASE_SCHEMA } from './BaseSchema.js'
-import { Counter } from './Counter.js'
 import validator from 'validator'
 
 const userSchema = new Schema({
+  userId: {
+    type: String,
+    required: true,
+    unique: true
+  },
   email: {
     type: String,
     required: [true, 'Email address is required'],
@@ -52,18 +56,6 @@ const userSchema = new Schema({
     default: 0
   }
 }, {})
-
-userSchema.pre('save', async function (next) {
-  if (this.isNew) { // Check if the document is new
-    const count = await Counter.findByIdAndUpdate(
-      { _id: 'userId' },
-      { $inc: { seq: 1 } },
-      { new: true, upsert: true }
-    )
-    this.userId = count.seq
-  }
-  next()
-})
 
 userSchema.add(BASE_SCHEMA)
 

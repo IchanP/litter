@@ -24,7 +24,8 @@ export class UserService {
     validateNotUndefined(registrationData.username, 'Username')
     const email = registrationData.email
     const username = registrationData.username
-    const userData = { email, username }
+    const userId = registrationData.userId
+    const userData = { email, username, userId }
     await this.userRepo.createDocument(userData)
   }
 }

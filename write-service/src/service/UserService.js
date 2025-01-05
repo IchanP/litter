@@ -1,4 +1,6 @@
+import { logger } from '../config/winston-logger.js'
 import { UserRepository } from '../repositories/UserRepository.js'
+import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { sendMessage } from './kafka.js'
 
@@ -22,14 +24,28 @@ export class UserService {
    * @returns {object} - Returns an object containing the created data.
    */
   async registerUser (registrationData) {
-    this.#performUserValidations(registrationData)
-    const userData = { email: registrationData.email, username: registrationData.username, userId: registrationData.userId }
+    let userData
+    try {
+      this.#performUserValidations(registrationData)
+      userData = { email: registrationData.email, username: registrationData.username, userId: registrationData.userId }
 
-    await this.userRepo.createDocument(userData)
-    const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
-    // TODO - THIS NEEDS TO BE REPLACED WITH A REAL TOPIC ALSO NEEDS BETTER ERROR HANDLING...
-    sendMessage('test-topic', createdData)
-    return createdData
+      await this.userRepo.createDocument(userData)
+      const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
+      // TODO - THIS NEEDS TO BE REPLACED WITH A REAL TOPIC ALSO NEEDS BETTER ERROR HANDLING...
+      sendMessage('test-topic', createdData)
+      return createdData
+    } catch (e) {
+      if (e instanceof KafkaDeliveryError && userData) {
+        try {
+        // TODO delete the record and rethrow error
+        await this.userRepo.deleteOneRecord({ userId: userData.userId })
+        logger.info("Succesfully cleaned up Kafka registration...")
+      } catch (e) {
+        logger.error("Failed to cleanup Kafka registration...")
+      }
+      throw e
+    } 
+    throw e // Still rethrow the error if it's not KafkaDeliveryError.
   }
 
   /**

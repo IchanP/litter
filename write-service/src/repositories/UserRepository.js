@@ -43,6 +43,21 @@ export class UserRepository {
   }
 
   /**
+   * Finds a user based on the passed filter and deletes the entry.
+   *
+   * @param {object} filter - Should be an object type matching either:
+   * {email: email}
+   * {userId: userId}
+   * {username: username}
+   */
+  async deleteOneRecord (filter) {
+    const result = await UserModel.deleteOne(filter)
+    if (result.deletedCount === 0) {
+      throw new Error(`No user found to delete with filter: ${JSON.stringify(filter)}`)
+    }
+  }
+
+  /**
    * Finds a user based on the passed filter.
    *
    * @param {object} filter - Should be an object type matching either:

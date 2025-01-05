@@ -9,12 +9,12 @@ import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
  * @param {object} message - The data to send.
  */
 export async function sendMessage (topic, message) {
+  // TODO implement retries
   try {
     await producer.send({
       topic,
       messages: [{ value: message }]
     })
-    // TODO - need handling of error in controller
   } catch (e) {
     logger.info('Failed to send Kafka message: ', e)
     throw new KafkaDeliveryError()

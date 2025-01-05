@@ -2,7 +2,7 @@ import { logger } from '../config/winston-logger.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { validateNotUndefined } from '../util/validate.js'
-import { sendMessage } from './kafka.js'
+import { MessageBroker } from './MessageBroker.js'
 
 /**
  * Manages interactions between repositories concerning Users.
@@ -12,9 +12,11 @@ export class UserService {
    * Constructs a UserService object.
    *
    * @param {UserRepository} userRepo - Class responsible for handling fetching and writing of data concerning users.
+   * @param {MessageBroker} broker - The broker responsible for sending events across services.
    */
-  constructor (userRepo) {
+  constructor (userRepo, broker) {
     this.userRepo = userRepo
+    this.broker = broker
   }
 
   /**
@@ -32,7 +34,7 @@ export class UserService {
       await this.userRepo.createDocument(userData)
       const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
       // Need to await this, else it will return a 201 even if Kafka fails to send
-      await sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
+      await this.broker.sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
       return createdData
     } catch (e) {
       if (e instanceof KafkaDeliveryError && userData) {

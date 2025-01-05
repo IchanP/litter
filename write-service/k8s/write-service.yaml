@@ -31,6 +31,13 @@ spec:
       containers:
       - name: write-service
         image:  write-service # NOTE - This is base one for dev, the "real one" is set in pipeline
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
         env:
         - name: PORT
           value: "5000"
@@ -38,6 +45,11 @@ spec:
           value: "mongodb://write-db-0.write-db-headless:27017"
         - name: MESSAGE_BROKER_CONNECTION_STRING
           value: my-kafka-cluster-kafka-bootstrap:9092 # TODO - put this as a CI/CD variable?
+        - name: USER_REGISTER_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: USER_REGISTER_TOPIC
         ports:
           - containerPort: 5000
             name: write-svc-http

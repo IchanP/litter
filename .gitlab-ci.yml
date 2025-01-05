@@ -27,8 +27,10 @@ setup_kubectl_dependencies:
     - echo "After setting context:"
     - kubectl config current-context
 
-    # Apply docker secrets
+    # Apply shared secrets
     - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
+    - envsubst < ./shared-secrets/k8s/secrets/topic-names.yaml | kubectl apply -f -
+
     # Apply operator
     - |
         if ! kubectl get deployment strimzi-cluster-operator -n default &> /dev/null; then

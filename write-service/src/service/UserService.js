@@ -31,21 +31,20 @@ export class UserService {
 
       await this.userRepo.createDocument(userData)
       const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
-      // TODO - THIS NEEDS TO BE REPLACED WITH A REAL TOPIC ALSO NEEDS BETTER ERROR HANDLING...
-      sendMessage('test-topic', createdData)
+      sendMessage(process.env.USER_REGISTER_TOPIC, createdData)
       return createdData
     } catch (e) {
       if (e instanceof KafkaDeliveryError && userData) {
         try {
-        // TODO delete the record and rethrow error
-        await this.userRepo.deleteOneRecord({ userId: userData.userId })
-        logger.info("Succesfully cleaned up Kafka registration...")
-      } catch (e) {
-        logger.error("Failed to cleanup Kafka registration...")
+          await this.userRepo.deleteOneRecord({ userId: userData.userId })
+          logger.info('Succesfully cleaned up Kafka registration...')
+        } catch (e) {
+          logger.error('Failed to cleanup Kafka registration...')
+        }
+        throw e
       }
-      throw e
-    } 
-    throw e // Still rethrow the error if it's not KafkaDeliveryError.
+      throw e // Still rethrow the error if it's not KafkaDeliveryError.
+    }
   }
 
   /**

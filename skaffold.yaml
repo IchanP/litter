@@ -23,7 +23,7 @@ manifests:
     - ./message-broker/k8s/strimzi-kafka-zookeeper.yaml
     - ./message-broker/k8s/test-topic.yaml
     - ./message-broker/k8s/kafka-ui.yaml
-    - ./mesasge-broker/k8s/user-registration-topic.yaml
+    - ./message-broker/k8s/user-registration-topic.yaml
     # NOTE - Write Service
     - ./write-service/k8s/write-service.yaml
     - ./write-service/k8s/write-db.yaml

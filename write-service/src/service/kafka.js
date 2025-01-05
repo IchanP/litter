@@ -15,6 +15,7 @@ export async function sendMessage (topic, message) {
       topic,
       messages: [{ value: message }]
     })
+    logger.info(`Successfully sent message in ${topic}`)
   } catch (e) {
     logger.info('Failed to send Kafka message: ', e)
     throw new KafkaDeliveryError()

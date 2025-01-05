@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+ name: topic-names
+type: Opaque
+stringData:
+ USER_REGISTER_TOPIC: ${USER_REGISTER_TOPIC}

@@ -1,13 +1,17 @@
 import { model, Schema } from 'mongoose'
 import { BASE_SCHEMA } from './BaseSchema.js'
-import { Counter } from './Counter.js'
 import validator from 'validator'
 
 const userSchema = new Schema({
+  userId: {
+    type: String,
+    required: true,
+    index: { unique: true, background: true }
+  },
   email: {
     type: String,
     required: [true, 'Email address is required'],
-    unique: true,
+    index: { unique: true, background: true },
     lowercase: true,
     maxLength: 254, // NOTE - should this be lower?
     trim: true,
@@ -33,7 +37,7 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: [true, 'Username is required'],
-    unique: true,
+    index: { unique: true, background: true },
     lowercase: true,
     minLength: [3, 'The username must be a minimum length of 3 characters.'],
     maxLength: [40, 'The username must be a maximum length of 40 characters.'],
@@ -46,28 +50,9 @@ const userSchema = new Schema({
       newValue: String
     },
     timestamp: Date
-  }],
-  version: {
-    type: Number,
-    default: 0
-  }
+  }]
 }, {})
 
-userSchema.pre('save', async function (next) {
-  if (this.isNew) { // Check if the document is new
-    const count = await Counter.findByIdAndUpdate(
-      { _id: 'userId' },
-      { $inc: { seq: 1 } },
-      { new: true, upsert: true }
-    )
-    this.userId = count.seq
-  }
-  next()
-})
-
-userSchema.addb(BASE_SCHEMA)
-
-// Improve lookup performance on emails
-userSchema.index({ email: 1 })
+userSchema.add(BASE_SCHEMA)
 
 export const UserModel = model('User', userSchema)

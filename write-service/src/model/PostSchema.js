@@ -1,11 +1,17 @@
 import { model, Schema } from 'mongoose'
 import { BASE_SCHEMA } from './BaseSchema.js'
 import validator from 'validator'
+import { Counter } from './Counter.js'
 
 const postSchema = new Schema({
+  postId: {
+    type: String,
+    required: true,
+    index: { unique: true, background: true }
+  },
   authorId: {
     type: String,
-    required: true
+    index: { unique: true, background: true }
   },
   content: {
     required: true,
@@ -27,10 +33,6 @@ const postSchema = new Schema({
     }
   },
   // For if the post is edited.
-  version: {
-    type: Number,
-    default: 0
-  },
   events: [{
     type: String,
     payload: {
@@ -41,7 +43,18 @@ const postSchema = new Schema({
   }]
 }, {})
 
-postSchema.add(BASE_SCHEMA)
-postSchema.index({ authorId: 1 })
+postSchema.pre('save', async function (next) {
+  if (this.isNew) { // Check if the document is new
+    const count = await Counter.findByIdAndUpdate(
+      { _id: 'postId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    )
+    this.postId = count.seq
+  }
+  next()
+})
 
-export const postModel = model('Posts', postSchema)
+postSchema.add(BASE_SCHEMA)
+
+export const PostModel = model('Posts', postSchema)

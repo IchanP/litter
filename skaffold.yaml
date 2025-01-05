@@ -23,6 +23,7 @@ manifests:
     - ./message-broker/k8s/strimzi-kafka-zookeeper.yaml
     - ./message-broker/k8s/test-topic.yaml
     - ./message-broker/k8s/kafka-ui.yaml
+    - ./message-broker/k8s/user-registration-topic.yaml
     # NOTE - Write Service
     - ./write-service/k8s/write-service.yaml
     - ./write-service/k8s/write-db.yaml
@@ -36,10 +37,10 @@ profiles:
         path: /manifests/rawYaml/0
         value: ./frontend/k8s/ingress.production.yaml
       - op: replace
-        path: /manifests/rawYaml/5
+        path: /manifests/rawYaml/6
         value: ./write-service/k8s/write-service.prod.yaml
       - op: replace
-        path: /manifests/rawYaml/6
+        path: /manifests/rawYaml/7
         value: ./write-service/k8s/write-db.prod.yaml
       - op: remove
         path: /manifests/rawYaml/4

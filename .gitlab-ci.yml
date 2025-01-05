@@ -17,10 +17,10 @@ setup_kubectl_dependencies:
     - apt-get update && apt-get install -y gettext-base
     
     - |
-      if [[ $CI_COMMIT_BRANCH == "staging" || $CI_COMMIT_BRANCH == "pipeline/staging" ]]; then
-        export K8S_CONTEXT=$STAGING_CONTEXT
-      else
+      if [[ $CI_COMMIT_BRANCH == "main" ]]; then
         export K8S_CONTEXT=$PROD_CONTEXT
+      else
+        export K8S_CONTEXT=$STAGING_CONTEXT
       fi
     # Set the context
     - kubectl config use-context $K8S_CONTEXT
@@ -29,7 +29,7 @@ setup_kubectl_dependencies:
 
     # Apply shared secrets
     - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
-    - envsubst < ./shared-secrets/k8s/secrets/topic-names.yaml | kubectl apply -f -
+    - envsubst < shared-secrets/topic-names.yaml | kubectl apply -f -
 
     # Apply operator
     - |

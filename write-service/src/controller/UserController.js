@@ -2,6 +2,7 @@ import { BadDataError } from '../util/Errors/BadDataError.js'
 import { DuplicateError } from '../util/Errors/DuplicateError.js'
 import { UserService } from '../service/UserService.js'
 import createError from 'http-errors'
+import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 
 /**
  * Controller for managing the user relevant operations for MongoDB.
@@ -53,6 +54,8 @@ export class UserController {
       err = createError(400, e.message)
     } else if (e instanceof DuplicateError) {
       err = createError(409, e.message)
+    } else if (e instanceof KafkaDeliveryError) {
+      err = createError(500)
     }
     next(err)
   }

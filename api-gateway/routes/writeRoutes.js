@@ -1,40 +1,39 @@
-import express from 'express';
-import { validateJWT } from '../middleware/authMiddleware.js';
+import express from 'express'
+import { validateJWT } from '../middleware/authMiddleware.js'
 
-const router = express.Router();
+const router = express.Router()
 
 // POST: Skapa en ny skrivning
-router.post('/', validateJWT, async (req, res) => {
-    try {
-        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/writes`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: req.headers.authorization
-            },
-            body: JSON.stringify(req.body)
-        });
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to create write' });
-    }
-});
+router.post('/register', validateJWT, async (req, res) => {
+  console.log(req.body)
+  try {
+    const response = await fetch(`${process.env.WRITE_SERVICE_URL}/user/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body)
+    })
+    const data = await response.json()
+    res.json(data)
+  } catch (error) {
+    // TODO - Better error handling
+    res.status(500).json({ message: 'Failed to create write' })
+  }
+})
 
-// DELETE: Radera en skrivning
-router.delete('/:id', validateJWT, async (req, res) => {
-    try {
-        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/writes/${req.params.id}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: req.headers.authorization
-            }
-        });
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to delete write' });
-    }
-});
+// DELETE: Radera en post
+router.delete('posts/:id', validateJWT, async (req, res) => {
+  try {
+    const response = await fetch(`${process.env.WRITE_SERVICE_URL}/posts/${req.params.id}`, {
+      method: 'DELETE'
+    })
+    const data = await response.json()
+    res.json(data)
+  } catch (error) {
+    // TODO - Better error handling
+    res.status(500).json({ message: 'Failed to delete write' })
+  }
+})
 
-export default router;
+export default router

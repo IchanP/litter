@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service.name: api-gateway
+  name: api-gateway
+spec:
+  ports:
+    - name: "api-gateway-port"
+      port: 9000
+      targetPort: "gateway-http"
+  selector:
+    deployment.name: api-gateway
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1 # TODO needs to be minmax on ALL services.
+  selector:
+    matchLabels:
+      deployment.name: api-gateway
+  template:
+    metadata:
+      labels:
+        deployment.name: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: api-gateway
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        env:
+        - name: GATEWAY_PORT
+          value: "5000"
+        - name: WRITE_SERVICE_URL
+          valueFrom:
+            secretKeyRef:
+              name: service-dns-secrets
+              key: WRITE_SERVICE_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: JWT_SECRET
+        ports:
+          - containerPort: 5000
+            name: gateway-http
+      imagePullSecrets:
+      - name: regcred      

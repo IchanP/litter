@@ -14,6 +14,10 @@ build:
       context: ./write-service
       docker:
         dockerfile: Dockerfile.production
+    - image: api-gateway
+      context: ./api-gateway
+      docker:
+        dockerfile: Dockerfile.production
 manifests:
   rawYaml:
     # NOTE - Frontend deployments 
@@ -27,6 +31,8 @@ manifests:
     # NOTE - Write Service
     - ./write-service/k8s/write-service.yaml
     - ./write-service/k8s/write-db.yaml
+    # NOTE - Gateway Service
+    - ./api-gateway/k8s/api-gateway.yaml
 deploy:
   kubectl: {}
 

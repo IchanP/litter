@@ -27,6 +27,7 @@ export class UserController {
    */
   async register (req, res, next) {
     try {
+      console.log(req.body)
       const body = req.body
       const userData = await this.userService.registerUser(body)
 

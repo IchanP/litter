@@ -17,13 +17,13 @@ RUN npm ci --omit=dev
 COPY . .
 
 # Create the log directory
-RUN mkdir -p /var/log/write-service
+RUN mkdir -p /var/log/api-gateway
 
 # Change the owner of the log directory to the node user
-RUN chown -R node:node /var/log/write-service
+RUN chown -R node:node /var/log/api-gateway
 
 # Sets the user that the Docker container runs as. In this case, it's set to 'node' to avoid running as root for security reasons.
 USER node
 
 # Defines the command to run the application. In this case, the Node.js server is started.
-CMD [ "node", "src/server.js"]
+CMD [ "node", "gateway.js"]

@@ -19,7 +19,7 @@ kind: Deployment
 metadata:
   name: write-service
 spec:
-  replicas: 1
+  replicas: 1 # TODO make this minmax
   selector:
     matchLabels:
       deployment.name: write-service
@@ -31,7 +31,6 @@ spec:
       containers:
       - name: write-service
         image:  write-service # NOTE - This is base one for dev, the "real one" is set in pipeline
-        # TODO might need to up or lower this?
         resources:
           limits:
             memory: "512Mi"

@@ -4,9 +4,9 @@ import { validateJWT } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // POST: Skapa en ny skrivning
-router.post('/', validateJWT, async (req, res) => {
+router.post('/register', validateJWT, async (req, res) => {
     try {
-        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/writes`, {
+        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,14 +17,15 @@ router.post('/', validateJWT, async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (error) {
+        // TODO - Better error handling
         res.status(500).json({ message: 'Failed to create write' });
     }
 });
 
 // DELETE: Radera en skrivning
-router.delete('/:id', validateJWT, async (req, res) => {
+router.delete('posts/:id', validateJWT, async (req, res) => {
     try {
-        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/writes/${req.params.id}`, {
+        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/posts/${req.params.id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: req.headers.authorization

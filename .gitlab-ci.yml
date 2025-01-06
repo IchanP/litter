@@ -30,7 +30,7 @@ setup_kubectl_dependencies:
     # Apply shared secrets
     - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
     - envsubst < shared-secrets/topic-names.yaml | kubectl apply -f -
-    # - envsubst < shared-secrets/service-dns.yaml | kubectl apply -f -
+    - envsubst < shared-secrets/service-dns.yaml | kubectl apply -f -
 
     # Apply operator
     - |

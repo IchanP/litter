@@ -79,4 +79,20 @@ describe('UserRegistration', () => {
     expect(mockUserRepo.createDocument).not.toHaveBeenCalled()
     expect(mockBroker.sendMessage).not.toHaveBeenCalled()
   })
+
+  it('should throw through non-Kafka errors without cleanup', async () => {
+    const testData = {
+      email: 'test@example.com',
+      username: 'testuser',
+      userId: '123'
+    }
+
+    const dbError = new Error('Database connection failed')
+    mockUserRepo.createDocument.mockRejectedValue(dbError)
+
+    await expect(userRegistration.registerUser(testData)).rejects.toThrow(dbError)
+
+    // Verify no cleanup was attempted
+    expect(mockUserRepo.deleteOneRecord).not.toHaveBeenCalled()
+  })
 })

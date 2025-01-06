@@ -3,10 +3,10 @@ import { validateJWT } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// POST: Skapa ett nytt inlägg
+// POST: Skapa en ny skrivning
 router.post('/', validateJWT, async (req, res) => {
     try {
-        const response = await fetch(`${process.env.POST_SERVICE_URL}/posts`, {
+        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/writes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,14 +17,14 @@ router.post('/', validateJWT, async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (error) {
-        res.json({ message: 'Failed to post post' });
+        res.status(500).json({ message: 'Failed to create write' });
     }
 });
 
-// DELETE: Radera ett inlägg
+// DELETE: Radera en skrivning
 router.delete('/:id', validateJWT, async (req, res) => {
     try {
-        const response = await fetch(`${process.env.POST_SERVICE_URL}/posts/${req.params.id}`, {
+        const response = await fetch(`${process.env.WRITE_SERVICE_URL}/writes/${req.params.id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: req.headers.authorization
@@ -33,7 +33,7 @@ router.delete('/:id', validateJWT, async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (error) {
-        res.json({ message: 'Failed to delete post' });
+        res.status(500).json({ message: 'Failed to delete write' });
     }
 });
 

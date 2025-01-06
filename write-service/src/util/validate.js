@@ -7,7 +7,7 @@ import { BadDataError } from './Errors/BadDataError.js'
  * @param {string} eType - Variable or object name which cannot be undefined.
  */
 export function validateNotUndefined (variable, eType) {
-  if (variable === undefined || null) {
+  if (variable === undefined || variable === null || variable === '') {
     throw new BadDataError(`${eType} is missing.`)
   }
 }

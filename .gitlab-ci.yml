@@ -64,6 +64,7 @@ setup_staging_secrets:
   script:
     - kubectl config use-context $K8S_CONTEXT
     - envsubst < ./frontend/k8s/secrets/auth0-litter-staging.yaml | kubectl apply -f -
+  #  - envsubst < ./api-gateway/k8s/secrets/jwt-secret-staging.yaml | kubectl apply -f -
   needs:
     - setup_kubectl_dependencies
   only:
@@ -80,6 +81,7 @@ setup_production_secrets:
   script:
     - kubectl config use-context $K8S_CONTEXT
     - envsubst < ./frontend/k8s/secrets/auth0-litter-prod.yaml | kubectl apply -f -
+  #  - envsubst < ./api-gateway/k8s/secrets/jwt-secret.yaml | kubectl apply -f -
   needs:
     - setup_kubectl_dependencies
   only:

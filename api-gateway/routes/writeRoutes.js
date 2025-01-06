@@ -5,9 +5,13 @@ const router = express.Router()
 
 // POST: Skapa en ny skrivning
 router.post('/register', validateJWT, async (req, res) => {
+  console.log(req.body)
   try {
     const response = await fetch(`${process.env.WRITE_SERVICE_URL}/user/register`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(req.body)
     })
     const data = await response.json()

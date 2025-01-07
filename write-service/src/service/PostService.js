@@ -33,12 +33,10 @@ export class PostService {
       if (!foundUser) {
         throw new BadDataError('No user with that id.')
       }
-
-      console.log(foundUser)
       await this.postRepo.createDocument(postData)
     } catch (e) {
       // TODO handle
-      logger.error('Error on creating User Post')
+      logger.error(`Error on creating User Post: ${e.message}`)
       throw e
     }
   }

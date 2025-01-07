@@ -4,8 +4,8 @@ Documentation over endpoints and explains the backend models of the different re
 
 ## Index
 
-- [POST user/register](#post-postscreate)
-- [POST posts/create](#post-userregister)
+- [POST user/register](#post-userregister)
+- [POST posts/create](#post-postscreate)
 - [DELETE posts/:id](#delete-postsid)
 - [POST follow/:id](#post-followid)
 - [DELETE follow/:id](#delete-followid)

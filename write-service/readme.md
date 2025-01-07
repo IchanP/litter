@@ -125,12 +125,13 @@ Successful creation of the post.
 
 ```json
 {
-  "success": bool,
   "message": "string",  
+  "data": {
   "id": "string",
   "authorId": "string",
   "content": "string",
   "createdAt": "string"
+  }
 }
 ```
 
@@ -176,12 +177,14 @@ Returned when the content length exceeds the maximum allowed.
 
 ```json
 {
-  "success": true,
   "message": "Post created successfully",
+  
+  "data": {
   "id": "post456",
   "authorId": "user123",
   "content": "Hello, world!",
-  "createdAt": "2025-01-04T12:00:00Z"
+  "createdAt": "2025-01-04"
+  }
 }
 ```
 

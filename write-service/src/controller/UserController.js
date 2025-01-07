@@ -27,12 +27,11 @@ export class UserController {
    */
   async register (req, res, next) {
     try {
-      console.log(req.body)
       const body = req.body
       const userData = await this.userService.registerUser(body)
 
       req.body.status = 201
-      req.body.responseData = userData
+      req.body.responseData = { userId: userData.userId, email: userData.email, username: userData.username, createdAt: userData.createdAt }
       req.body.message = 'User created successfully'
       return res.status(req.body.status).json({
         message: req.body.message,

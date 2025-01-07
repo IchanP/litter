@@ -25,7 +25,6 @@ manifests:
     - ./frontend/k8s/litter.yaml
     # NOTE - Message Broker deployments
     - ./message-broker/k8s/strimzi-kafka-zookeeper.yaml
-    - ./message-broker/k8s/test-topic.yaml
     - ./message-broker/k8s/kafka-ui.yaml
     - ./message-broker/k8s/user-registration-topic.yaml
     # NOTE - Write Service
@@ -33,6 +32,8 @@ manifests:
     - ./write-service/k8s/write-db.yaml
     # NOTE - Gateway Service
     - ./api-gateway/k8s/api-gateway.yaml
+    # To be removed
+    - ./message-broker/k8s/test-topic.yaml
 deploy:
   kubectl: {}
 
@@ -49,4 +50,4 @@ profiles:
         path: /manifests/rawYaml/7
         value: ./write-service/k8s/write-db.prod.yaml
       - op: remove
-        path: /manifests/rawYaml/4
+        path: /manifests/rawYaml/9

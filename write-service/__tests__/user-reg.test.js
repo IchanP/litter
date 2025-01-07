@@ -7,7 +7,6 @@ describe('UserRegistration', () => {
   let userRegistration
   let mockUserRepo
   let mockBroker
-
   beforeEach(() => {
     mockBroker = {
       sendMessage: jest.fn()
@@ -28,7 +27,7 @@ describe('UserRegistration', () => {
       userId: '123'
     }
 
-    const expectedCreatedData = { ...testData, _id: 'someId' }
+    const expectedCreatedData = { ...testData, createdAt: '2025-01-06T23:57:29.846Z' }
 
     mockUserRepo.createDocument.mockResolvedValue(undefined)
     mockUserRepo.getOneMatching.mockResolvedValue(expectedCreatedData)
@@ -52,11 +51,12 @@ describe('UserRegistration', () => {
       username: 'testuser',
       userId: '123'
     }
+    const expectedCreatedData = { ...testData, createdAt: '2025-01-06T23:57:29.846Z' }
 
     const kafkaError = new KafkaDeliveryError('Failed to deliver')
 
     mockUserRepo.createDocument.mockResolvedValue(undefined)
-    mockUserRepo.getOneMatching.mockResolvedValue(testData)
+    mockUserRepo.getOneMatching.mockResolvedValue(expectedCreatedData)
     mockBroker.sendMessage.mockRejectedValue(kafkaError)
     mockUserRepo.deleteOneRecord.mockResolvedValue(undefined)
 

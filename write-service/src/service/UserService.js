@@ -1,6 +1,7 @@
 import { logger } from '../config/winston-logger.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
+import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { MessageBroker } from './MessageBroker.js'
 
@@ -34,6 +35,7 @@ export class UserService {
       await this.userRepo.createDocument(userData)
       const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
       // Need to await this, else it will return a 201 even if Kafka fails to send
+      createdData.createdAt = convertMongoCreateAtToISOdate(createdData.createdAt)
       await this.broker.sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
       return createdData
     } catch (e) {

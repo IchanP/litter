@@ -35,9 +35,8 @@ export class UserService {
       await this.userRepo.createDocument(userData)
       const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
       // Need to await this, else it will return a 201 even if Kafka fails to send
-      await this.broker.sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
-
       createdData.createdAt = convertMongoCreateAtToISOdate(createdData.createdAt)
+      await this.broker.sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
       return createdData
     } catch (e) {
       if (e instanceof KafkaDeliveryError && userData) {

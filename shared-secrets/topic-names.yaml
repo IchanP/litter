@@ -5,3 +5,4 @@ metadata:
 type: Opaque
 stringData:
  USER_REGISTER_TOPIC: ${USER_REGISTER_TOPIC}
+ NEW_POST_TPIC: ${NEW_POST_TOPIC}

@@ -26,7 +26,7 @@ export class PostRepository {
         content: postData.content
       })
       await post.save()
-      return { authorId: post.authorId, content: post.content }
+      return post.toObject()
     } catch (e) {
       if (e instanceof Error.ValidationError) {
         throw new BadDataError(e.message)

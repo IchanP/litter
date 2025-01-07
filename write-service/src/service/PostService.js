@@ -3,6 +3,7 @@ import { PostRepository } from '../repositories/PostRepository.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { validateNotUndefined } from '../util/validate.js'
+import { MessageBroker } from './MessageBroker.js'
 
 /**
  * Service for managing the creation, deletion and updates of Posts.
@@ -13,10 +14,12 @@ export class PostService {
    *
    * @param {PostRepository} postRepo - The repository responsible for managing Posts.
    * @param {UserRepository} userRepo - The repository responsible for managing users.
+   * @param {MessageBroker} broker - The broker responsible for sending events across services.
    */
-  constructor (postRepo, userRepo) {
+  constructor (postRepo, userRepo, broker) {
     this.postRepo = postRepo
     this.userRepo = userRepo
+    this.broker = broker
   }
 
   /**
@@ -33,7 +36,8 @@ export class PostService {
       if (!foundUser) {
         throw new BadDataError('No user with that id.')
       }
-      await this.postRepo.createDocument(postData)
+      const createdPost = await this.postRepo.createDocument(postData)
+      await this.broker.sendMessage(process.env.NEW_POST_TOPIC, JSON.stringify(createdPost))
     } catch (e) {
       // TODO handle
       logger.error(`Error on creating User Post: ${e.message}`)

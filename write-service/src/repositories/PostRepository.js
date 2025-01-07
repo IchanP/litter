@@ -10,4 +10,14 @@ export class PostRepository {
   constructor () {
     this.model = PostModel
   }
+
+  /**
+   * Creates a document with the passed postData.
+   *
+   * @param {object} postData - PostData that has an authorId and content field.
+   * @returns {object} - Returns an object with fields, authorId and content
+   */
+  async createDocument (postData) {
+
+  }
 }

@@ -2,10 +2,12 @@ import express from 'express'
 import { PostController } from '../controller/PostController.js'
 import { PostService } from '../service/PostService.js'
 import { PostRepository } from '../repositories/PostRepository.js'
+import { UserRepository } from '../repositories/UserRepository.js'
 export const router = express.Router()
 
 const postRepo = new PostRepository()
-const postService = new PostService(postRepo)
+const userRepo = new UserRepository()
+const postService = new PostService(postRepo, userRepo)
 const controller = new PostController(postService)
 
 router.post('/create', (req, res, next) => controller.createPost(req, res, next))

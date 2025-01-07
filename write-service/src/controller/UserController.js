@@ -56,6 +56,8 @@ export class UserController {
       err = createError(409, e.message)
     } else if (e instanceof KafkaDeliveryError) {
       err = createError(500)
+    } else {
+      err = createError(500)
     }
     next(err)
   }

@@ -5,4 +5,4 @@ import { router as postRouter } from './PostRoutes.js'
 export const router = express.Router()
 
 router.use('/user', userRouter)
-router.use('posts', postRouter)
+router.use('/posts', postRouter)

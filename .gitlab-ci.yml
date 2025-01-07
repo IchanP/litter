@@ -95,7 +95,7 @@ build:
   script:
    - echo "Building Image"
 
-   # Build frontend image without pushing
+   # TODO - Include the other images without pushing
    - /kaniko/executor
      --context "${CI_PROJECT_DIR}/frontend"
      --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile.production"

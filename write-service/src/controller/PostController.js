@@ -1,5 +1,7 @@
 import { PostService } from '../service/PostService.js'
 import createError from 'http-errors'
+import { TooMuchDataError } from '../util/Errors/TooMuchDataError.js'
+import { BadDataError } from '../util/Errors/BadDataError.js'
 
 /**
  * Controller for managing the post relevant operations for MongoDB.
@@ -25,6 +27,7 @@ export class PostController {
   async createPost (req, res, next) {
     try {
       const body = req.body
+      const postData = await this.service.createPost()
     } catch (e) {
       this.#handleError(e, next)
     }
@@ -37,15 +40,12 @@ export class PostController {
    * @param {Function} next - The next middleware function.
    */
   #handleError (e, next) {
-    const err = e
-    // TODO - set this up for correct routes
-    /* if (e instanceof BadDataError) {
+    let err = e
+    if (e instanceof BadDataError) {
       err = createError(400, e.message)
-    } else if (e instanceof DuplicateError) {
+    } else if (e instanceof TooMuchDataError) {
       err = createError(409, e.message)
-    } else if (e instanceof KafkaDeliveryError) {
-      err = createError(500)
-    } */
+    }
     next(err)
   }
 }

@@ -127,10 +127,10 @@ Successful creation of the post.
 {
   "message": "string",  
   "data": {
-  "id": "string",
-  "authorId": "string",
-  "content": "string",
-  "createdAt": "string"
+    "id": "string",
+    "authorId": "string",
+    "content": "string",
+    "createdAt": "string"
   }
 }
 ```
@@ -180,10 +180,10 @@ Returned when the content length exceeds the maximum allowed.
   "message": "Post created successfully",
   
   "data": {
-  "id": "post456",
-  "authorId": "user123",
-  "content": "Hello, world!",
-  "createdAt": "2025-01-04"
+    "id": "2",
+    "authorId": "user123",
+    "content": "Hello, world!",
+    "createdAt": "2025-01-04"
   }
 }
 ```

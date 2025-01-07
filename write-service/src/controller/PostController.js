@@ -29,6 +29,13 @@ export class PostController {
     try {
       const body = req.body
       const postData = await this.service.createPost(body)
+      req.body.status = 201
+      req.body.message = 'Post created successfully'
+      req.body.responseData = { id: postData.postId, authorId: postData.authorId, content: postData.content, createdAt: postData.createdAt }
+      return res.status(req.body.status).json({
+        message: req.body.message,
+        data: req.body.responseData
+      })
     } catch (e) {
       this.#handleError(e, next)
     }

@@ -11,7 +11,7 @@ export class UserService {
      * @param {string} userId - The user's unique ID.
      * @returns {Promise<Object>} The user's profile data.
      */
-    async getUserProfile(userId) {
+    async getUser(userId) {
         const user = await this.userRepository.findUserById(userId);
         if (!user) {
             throw new Error('User not found');

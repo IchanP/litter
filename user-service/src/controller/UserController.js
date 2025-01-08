@@ -12,10 +12,10 @@ export class UserController {
      * @param {Object} res - Express response object.
      * @param {Function} next - Express next middleware function.
      */
-    async getUserProfile(req, res, next) {
+    async getUser(req, res, next) {
         try {
             const userId = req.params.id;
-            const user = await this.userService.getUserProfile(userId);
+            const user = await this.userService.getUser(userId);
             res.status(200).json({
                 success: true,
                 data: user 

@@ -58,9 +58,9 @@ export class PostController {
       }
       await this.service.deletePost(Number(id))
       req.body.status = 203
-      return res.status(req.body.status)
+      return res.status(req.body.status).send()
     } catch (e) {
-      this.#handleError()
+      this.#handleError(e, next)
     }
   }
 

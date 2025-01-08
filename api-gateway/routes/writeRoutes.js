@@ -32,14 +32,18 @@ router.post('/register', async (req, res) => {
 })
 
 // POST: Skapa en post
-router.delete('posts/create', validateJWT, async (req, res) => {
+router.post('/posts/create', async (req, res) => {
   let status
   try {
+    console.log(req.body)
     const response = await fetch(
-      `${process.env.WRITE_SERVICE_URL}/posts/${req.params.id}`,
+      `${process.env.WRITE_SERVICE_URL}/posts/create`,
       {
         method: 'POST',
-        boyd: JSON.stringify(req.body)
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req.body)
       }
     )
 
@@ -56,7 +60,7 @@ router.delete('posts/create', validateJWT, async (req, res) => {
 })
 
 // DELETE: Radera en post
-router.delete('posts/:id', validateJWT, async (req, res) => {
+router.delete('/posts/:id', async (req, res) => {
   let status
   try {
     const response = await fetch(
@@ -72,7 +76,7 @@ router.delete('posts/:id', validateJWT, async (req, res) => {
       throw new Error(errDAta.message)
     }
 
-    res.status(203)
+    res.status(203).send()
   } catch (error) {
     res.status(status || 500).json({ message: error.message })
   }

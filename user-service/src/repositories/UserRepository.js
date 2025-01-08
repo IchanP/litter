@@ -1,4 +1,4 @@
-import { UserModel } from '../model/UserSchema.js';
+import { UserModel } from '../model/userSchema.js';
 
 /**
  * Repository for interacting with the User collection in MongoDB.

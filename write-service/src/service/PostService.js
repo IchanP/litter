@@ -33,7 +33,6 @@ export class PostService {
   async createPost (postData) {
     let createdPost
     try {
-      console.log(postData)
       this.#performPostValidation(postData)
       const foundUser = await this.userRepo.getOneMatching({ userId: postData?.authorId })
 

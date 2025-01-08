@@ -27,21 +27,19 @@ export class UserService {
    * @returns {object} - Returns an object containing the created data.
    */
   async registerUser (registrationData) {
-    let userData
     try {
       this.#performUserValidations(registrationData)
-      userData = { email: registrationData.email, username: registrationData.username, userId: registrationData.userId }
 
-      await this.userRepo.createDocument(userData)
-      const createdData = await this.userRepo.getOneMatching({ userId: userData.userId })
+      await this.userRepo.createDocument(registrationData)
+      const createdData = await this.userRepo.getOneMatching({ userId: registrationData?.userId })
       // Need to await this, else it will return a 201 even if Kafka fails to send
       createdData.createdAt = convertMongoCreateAtToISOdate(createdData.createdAt)
       await this.broker.sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
       return createdData
     } catch (e) {
-      if (e instanceof KafkaDeliveryError && userData) {
+      if (e instanceof KafkaDeliveryError && registrationData) {
         try {
-          await this.userRepo.deleteOneRecord({ userId: userData.userId })
+          await this.userRepo.deleteOneRecord({ userId: registrationData?.userId })
           logger.info('Succesfully cleaned up Kafka registration...')
         } catch (e) {
           logger.error('Failed to cleanup Kafka registration...')
@@ -55,7 +53,7 @@ export class UserService {
   /**
    * Performs validation on expected User fields.
    *
-   * @param {object} userData - Object containing the expected user fields.
+   * @param {object} userData - Object that should contain the expected user fields.
    */
   #performUserValidations (userData) {
     validateNotUndefined(userData?.email, 'Email')

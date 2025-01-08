@@ -28,7 +28,7 @@ export class UserRepository {
         username: userData.username
       })
       await user.save()
-      return { userId: user.userId, email: user.email, username: user.username }
+      return user.toObject()
     } catch (e) {
       const error = e
       if (error.code === 11000) {

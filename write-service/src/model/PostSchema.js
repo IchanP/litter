@@ -5,13 +5,11 @@ import { Counter } from './Counter.js'
 
 const postSchema = new Schema({
   postId: {
-    type: String,
-    required: true,
+    type: Number,
     index: { unique: true, background: true }
   },
   authorId: {
-    type: String,
-    index: { unique: true, background: true }
+    type: String
   },
   content: {
     required: true,

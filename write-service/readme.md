@@ -4,8 +4,8 @@ Documentation over endpoints and explains the backend models of the different re
 
 ## Index
 
-- [POST user/register](#post-postscreate)
-- [POST posts/create](#post-userregister)
+- [POST user/register](#post-userregister)
+- [POST posts/create](#post-postscreate)
 - [DELETE posts/:id](#delete-postsid)
 - [POST follow/:id](#post-followid)
 - [DELETE follow/:id](#delete-followid)
@@ -127,10 +127,10 @@ Successful creation of the post.
 {
   "message": "string",  
   "data": {
-  "id": "string",
-  "authorId": "string",
-  "content": "string",
-  "createdAt": "string"
+    "id": "string",
+    "authorId": "string",
+    "content": "string",
+    "createdAt": "string"
   }
 }
 ```
@@ -180,10 +180,10 @@ Returned when the content length exceeds the maximum allowed.
   "message": "Post created successfully",
   
   "data": {
-  "id": "post456",
-  "authorId": "user123",
-  "content": "Hello, world!",
-  "createdAt": "2025-01-04"
+    "id": "2",
+    "authorId": "user123",
+    "content": "Hello, world!",
+    "createdAt": "2025-01-04"
   }
 }
 ```

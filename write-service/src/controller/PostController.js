@@ -1,38 +1,37 @@
-import { BadDataError } from '../util/Errors/BadDataError.js'
-import { DuplicateError } from '../util/Errors/DuplicateError.js'
-import { UserService } from '../service/UserService.js'
+import { PostService } from '../service/PostService.js'
 import createError from 'http-errors'
+import { TooMuchDataError } from '../util/Errors/TooMuchDataError.js'
+import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 
 /**
- * Controller for managing the user relevant operations for MongoDB.
+ * Controller for managing the post relevant operations for MongoDB.
  */
-export class UserController {
+export class PostController {
   /**
-   * Sets up inversify plugin.
+   * Constructs a PostController object.
    *
-   * @param {UserService}  userService - The service which orchestrates and communicates with MongoDB repositories.
+   * @param {PostService} postService - The service which is responsible for creating a post.
    */
-  constructor (userService) {
-    this.userService = userService
+  constructor (postService) {
+    this.service = postService
   }
 
   /**
-   * Handles the operations of creating a new user in the database.
+   * Handles the operations of creating a new post in the database and managing the return error codes.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
    * @param {Function} next - The next call function.
    * @returns {Response} - Returns an express response object with status 201 containign the created user data.
    */
-  async register (req, res, next) {
+  async createPost (req, res, next) {
     try {
       const body = req.body
-      const userData = await this.userService.registerUser(body)
-
+      const postData = await this.service.createPost(body)
       req.body.status = 201
-      req.body.responseData = { userId: userData.userId, email: userData.email, username: userData.username, createdAt: userData.createdAt }
-      req.body.message = 'User created successfully'
+      req.body.message = 'Post created successfully'
+      req.body.responseData = { id: postData.postId, authorId: postData.authorId, content: postData.content, createdAt: postData.createdAt }
       return res.status(req.body.status).json({
         message: req.body.message,
         data: req.body.responseData
@@ -52,7 +51,7 @@ export class UserController {
     let err = e
     if (e instanceof BadDataError) {
       err = createError(400, e.message)
-    } else if (e instanceof DuplicateError) {
+    } else if (e instanceof TooMuchDataError) {
       err = createError(409, e.message)
     } else if (e instanceof KafkaDeliveryError) {
       err = createError(500)

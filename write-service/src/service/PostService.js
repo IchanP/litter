@@ -3,6 +3,7 @@ import { PostRepository } from '../repositories/PostRepository.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
+import { NotFoundError } from '../util/Errors/NotFoundError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { MessageBroker } from './MessageBroker.js'
@@ -68,7 +69,7 @@ export class PostService {
     try {
       const post = await this.postRepo.getOneMatching(id)
       if (!post) {
-        throw new BadDataError('No post with that id.')
+        throw new NotFoundError('No post with that id.')
       }
       await this.broker.sendMessage(process.env.DELETE_POST_TOPIC, JSON.stringify({ postId: id }))
       await this.postRepo.deleteOneRecord(id)

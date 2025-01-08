@@ -60,6 +60,29 @@ export class PostService {
   }
 
   /**
+   * Deletes a post from the database and sends out Kafka messages to other services to delete it as well.
+   *
+   * @param {number} id - The id of the post to delete.
+   */
+  async deletePost (id) {
+    try {
+      const post = await this.postRepo.getOneMatching({ postId: id })
+      if (!post) {
+        throw new BadDataError('No post with that id.')
+      }
+      await this.broker.sendMessage(process.env.DELETE_POST_TOPIC, JSON.stringify({ postId: id }))
+      await this.postRepo.deleteOneRecord({ postId: id })
+    } catch (e) {
+      if (e instanceof KafkaDeliveryError && id) {
+        logger.error('Failed to send delete notification to other services...')
+        throw e
+      }
+      logger.error(`Error on deleting User Post ${id}`)
+      throw e
+    }
+  }
+
+  /**
    * Performs validation on the expected Post fields.
    *
    * @param {object} postData - Object that should contain the expected Post fields

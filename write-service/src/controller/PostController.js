@@ -3,6 +3,7 @@ import createError from 'http-errors'
 import { TooMuchDataError } from '../util/Errors/TooMuchDataError.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
+import { NotFoundError } from '../util/Errors/NotFoundError.js'
 
 /**
  * Controller for managing the post relevant operations for MongoDB.
@@ -42,6 +43,28 @@ export class PostController {
   }
 
   /**
+   * Handles the operation of deleting a mpost in the database and managing the return error codes.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - The next call function.
+   * @returns {Response} - Returns an express response object with status 201 containign the created user data.
+   */
+  async deletePost (req, res, next) {
+    try {
+      const id = req.params.id
+      if (!id) {
+        throw new NotFoundError('ID is missing')
+      }
+      await this.service.deletePost(Number(id))
+      req.body.status = 203
+      return res.status(req.body.status)
+    } catch (e) {
+      this.#handleError()
+    }
+  }
+
+  /**
    * Returns correct error codes that may occur during the editing or creation of user records.
    *
    * @param {Error} e - The error that occured
@@ -51,6 +74,8 @@ export class PostController {
     let err = e
     if (e instanceof BadDataError) {
       err = createError(400, e.message)
+    } else if (e instanceof NotFoundError) {
+      err = createError(404, e.message)
     } else if (e instanceof TooMuchDataError) {
       err = createError(409, e.message)
     } else if (e instanceof KafkaDeliveryError) {

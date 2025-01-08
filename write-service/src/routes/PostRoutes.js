@@ -13,3 +13,4 @@ const postService = new PostService(postRepo, userRepo, broker)
 const controller = new PostController(postService)
 
 router.post('/create', (req, res, next) => controller.createPost(req, res, next))
+router.delete('/:id', (req, res, next) => controller.deletePost(req, res, next))

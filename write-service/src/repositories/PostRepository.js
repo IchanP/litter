@@ -33,4 +33,16 @@ export class PostRepository {
       }
     }
   }
+
+  /**
+   * Deletes a post from the database.
+   *
+   * @param {number} postId - The id of the post to remove.
+   */
+  async deleteOneRecord (postId) {
+    const result = await PostModel.deleteOne({ postId })
+    if (result.deletedCount === 0) {
+      throw new Error(`No post found to delete with postId ${postId}`)
+    }
+  }
 }

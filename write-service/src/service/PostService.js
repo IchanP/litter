@@ -3,6 +3,7 @@ import { PostRepository } from '../repositories/PostRepository.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
+import { NotFoundError } from '../util/Errors/NotFoundError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { MessageBroker } from './MessageBroker.js'
@@ -55,6 +56,30 @@ export class PostService {
         throw e
       }
       logger.error(`Error on creating User Post: ${e.message}`)
+      throw e
+    }
+  }
+
+  /**
+   * Deletes a post from the database and sends out Kafka messages to other services to delete it as well.
+   *
+   * @param {number} id - The id of the post to delete.
+   */
+  async deletePost (id) {
+    try {
+      const post = await this.postRepo.getOneMatching(id)
+      if (!post) {
+        throw new NotFoundError('No post with that id.')
+      }
+      await this.broker.sendMessage(process.env.DELETE_POST_TOPIC, JSON.stringify({ postId: id }))
+      await this.postRepo.deleteOneRecord(id)
+    } catch (e) {
+      if (e instanceof KafkaDeliveryError && id) {
+        logger.error('Failed to send delete notification to other services...')
+        throw e
+      }
+      logger.error(e.message)
+      logger.error(`Error on deleting User Post ${id}`)
       throw e
     }
   }

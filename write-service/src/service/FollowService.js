@@ -3,6 +3,7 @@ import { FollowRepository } from '../repositories/FollowRepository.js'
 import { logger } from '../config/winston-logger.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
+import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 
 /**
  * Service responsible for sending out messages to the broker and verifying the correctness of the passed data.
@@ -28,8 +29,23 @@ export class FollowService {
   async createFollow (followed, follower) {
     try {
       this.#performFollowValidation(followed, follower)
+      const followedUser = this.userRepo.getOneMatching({ userId: Number(followed) })
+      const followerUser = this.userRepo.getOneMatching({ userId: Number(follower) })
+      if (!followedUser) throw new BadDataError(`The user with id ${followed} does not exist.`)
+      if (!followerUser) throw new BadDataError(`The user with id ${follower} does not exist.`)
+      const relationship = await this.followRepo.createDocument(followed, follower)
     } catch (e) {
+      if (e instanceof KafkaDeliveryError) {
+        try {
+          // TODO delete the follower relationship here.
+          logger.info('Succcesfully cleaned up Followed relationship..')
+        } catch (e) {
+          logger.error('Failed to cleanup Followed relationship...')
+        }
+        throw e
+      }
       logger.error('Something went wrong during the follow request.')
+      throw e
     }
   }
 

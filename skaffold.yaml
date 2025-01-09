@@ -18,6 +18,10 @@ build:
       context: ./api-gateway
       docker:
         dockerfile: Dockerfile.production
+    - image: user-service
+      context: ./user-service
+      docker:
+        dockerfile: Dockerfile.production
 manifests:
   rawYaml:
     # NOTE - Frontend deployments 
@@ -32,8 +36,10 @@ manifests:
     - ./write-service/k8s/write-db.yaml
     # NOTE - Gateway Service
     - ./api-gateway/k8s/api-gateway.yaml
-    # To be removed
-    - ./message-broker/k8s/test-topic.yaml
+    # NOTE - User service
+    - ./user-service/k8s/user-service.yaml
+    - ./user-service/k8s/user-db.yaml
+
 deploy:
   kubectl: {}
 
@@ -49,5 +55,6 @@ profiles:
       - op: replace
         path: /manifests/rawYaml/6
         value: ./write-service/k8s/write-db.prod.yaml
-      - op: remove
-        path: /manifests/rawYaml/8
+      - op: replace
+        path: /manifests/rawYaml/9
+        value: ./user-service/k8s/user-db.prod.yaml

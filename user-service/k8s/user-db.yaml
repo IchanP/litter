@@ -1,0 +1,49 @@
+# Had to reconfigure the volumes for development as it was trying to create all 3 on the same node (minikube)
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db-headless
+  labels:
+    app: user-db
+spec:
+  ports:
+    - port: 27017
+      name: mongo
+  clusterIP: None  # Headless service
+  selector:
+    app: user-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: user-db
+  labels:
+    app: user-db
+spec:
+  serviceName: "user-db-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+        - name: mongodb-user-db
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: userdb-storage
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: userdb-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 500Mi

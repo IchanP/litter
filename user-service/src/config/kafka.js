@@ -1,6 +1,8 @@
 import { Kafka } from 'kafkajs'
 import { logger } from './winston-logger.js'
 
+// TODO - This needs to be a consumer!
+
 let producer
 
 /**
@@ -16,7 +18,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
  *
  * @param {string} connectionString - The DNS of the Kafka service running.
  */
-export async function connectBroker (connectionString) {
+/* export async function connectBroker (connectionString) {
     const brokers = connectionString.includes(',')
         ? connectionString.split(',')
         : [connectionString]
@@ -45,3 +47,4 @@ export async function connectBroker (connectionString) {
 }
 
 export { producer }
+  */

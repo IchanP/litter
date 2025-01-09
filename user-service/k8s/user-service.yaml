@@ -2,35 +2,35 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    service.name: write-service
-  name: write-service
+    service.name: user-service
+  name: user-service
 spec:
   ports:
-    - name: "write-service-port"
+    - name: "user-service-port"
       port: 8888
-      targetPort: "write-svc-http"
+      targetPort: "user-svc-http"
   selector:
-    deployment.name: write-service
+    deployment.name: user-service
 status:
   loadBalancer: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: write-service
+  name: user-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      deployment.name: write-service
+      deployment.name: user-service
   template:
     metadata:
       labels:
-        deployment.name: write-service
+        deployment.name: user-service
     spec:
       containers:
-      - name: write-service
-        image:  write-service # NOTE - This is base one for dev, the "real one" is set in pipeline
+      - name: user-service
+        image: user-service
         resources:
           limits:
             memory: "512Mi"
@@ -41,8 +41,8 @@ spec:
         env:
         - name: PORT
           value: "5000"
-        - name: WRITE_DB_CONNECTION_STRING
-          value: "mongodb://write-db-0.write-db-headless:27017"
+        - name: USER_DB_CONNECTION_STRING
+          value: "mongodb://user-db-0.user-db-headless:27017" 
         - name: MESSAGE_BROKER_CONNECTION_STRING
           valueFrom:
             secretKeyRef:
@@ -53,18 +53,8 @@ spec:
             secretKeyRef:
               name: topic-names
               key: USER_REGISTER_TOPIC
-        - name: NEW_POST_TOPIC
-          valueFrom:
-            secretKeyRef:
-              name: topic-names
-              key: NEW_POST_TOPIC
-        - name: DELETE_POST_TOPIC
-          valueFrom:
-            secretKeyRef:
-              name: topic-names
-              key: DELETE_POST_TOPIC
         ports:
           - containerPort: 5000
-            name: write-svc-http
+            name: user-svc-http
       imagePullSecrets:
       - name: regcred

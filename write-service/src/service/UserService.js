@@ -41,7 +41,7 @@ export class UserService {
         try {
           logger.info('Succesfully cleaned up Kafka registration...')
           await this.userRepo.deleteOneRecord({ userId: registrationData?.userId })
-        } catch (e) {
+        } catch (error) {
           logger.error('Failed to cleanup Kafka registration...')
           throw e
         }

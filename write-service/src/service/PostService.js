@@ -51,7 +51,7 @@ export class PostService {
         try {
           await this.postRepo.deleteOneRecord({ postId: createdPost?.postId })
           logger.info('Successfully cleaned up Post creation...')
-        } catch (e) {
+        } catch (error) {
           logger.error('Failed to cleanup Post creation...')
           throw e
         }

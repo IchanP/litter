@@ -21,6 +21,7 @@
     "kafkajs": "^2.2.4",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
+    "post-service": "file:",
     "winston": "^3.17.0"
   },
   "devDependencies": {

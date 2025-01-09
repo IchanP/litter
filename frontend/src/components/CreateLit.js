@@ -25,7 +25,7 @@ const CreateLit = () => {
                 placeholder="What's up?!"
                 value={litContent}
                 onChange={(e) => setLitContent(e.target.value)}
-                maxlength="42"
+                maxLength="42"
             />
             <button onClick={handleCreateLit}>Create Lit</button>
         </div>

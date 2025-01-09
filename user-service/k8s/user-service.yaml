@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service.name: user-service
+  name: user-service
+spec:
+  ports:
+    - name: "user-service-port"
+      port: 8888
+      targetPort: "user-svc-http"
+  selector:
+    deployment.name: user-service
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment.name: user-service
+  template:
+    metadata:
+      labels:
+        deployment.name: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: user-service
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        env:
+        - name: PORT
+          value: "5000"
+        - name: USER_DB_CONNECTION_STRING
+          value: "mongodb://user-db-0.user-db-headless:27017" 
+        - name: MESSAGE_BROKER_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: kafka-connection
+              key: MESSAGE_BROKER_CONNECTION_STRING
+        - name: USER_REGISTER_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: USER_REGISTER_TOPIC
+        ports:
+          - containerPort: 5000
+            name: user-svc-http
+      imagePullSecrets:
+      - name: regcred

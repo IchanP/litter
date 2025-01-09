@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+ name: topic-names
+type: Opaque
+stringData:
+ USER_REGISTER_TOPIC: ${USER_REGISTER_TOPIC}
+ NEW_POST_TOPIC: ${NEW_POST_TOPIC}
+ DELETE_POST_TOPIC: ${DELETE_POST_TOPIC}

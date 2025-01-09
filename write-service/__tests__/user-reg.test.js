@@ -80,7 +80,7 @@ describe('UserRegistration', () => {
     expect(mockBroker.sendMessage).not.toHaveBeenCalled()
   })
 
-  it('should throw through non-Kafka errors without cleanup', async () => {
+  it('should throw through non-Kafka errors with cleanup', async () => {
     const testData = {
       email: 'test@example.com',
       username: 'testuser',
@@ -93,6 +93,6 @@ describe('UserRegistration', () => {
     await expect(userRegistration.registerUser(testData)).rejects.toThrow(dbError)
 
     // Verify no cleanup was attempted
-    expect(mockUserRepo.deleteOneRecord).not.toHaveBeenCalled()
+    expect(mockUserRepo.deleteOneRecord).toHaveBeenCalled()
   })
 })

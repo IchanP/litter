@@ -63,6 +63,11 @@ spec:
             secretKeyRef:
               name: topic-names
               key: DELETE_POST_TOPIC
+        - name: FOLLOWED_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: FOLLOWED_TOPIC
         ports:
           - containerPort: 5000
             name: write-svc-http

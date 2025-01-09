@@ -2,6 +2,7 @@ import { logger } from '../config/winston-logger.js'
 import { PostRepository } from '../repositories/PostRepository.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
+import { DuplicateError } from '../util/Errors/DuplicateError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { NotFoundError } from '../util/Errors/NotFoundError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
@@ -46,14 +47,14 @@ export class PostService {
       await this.broker.sendMessage(process.env.NEW_POST_TOPIC, JSON.stringify(createdPost))
       return createdPost
     } catch (e) {
-      if (e instanceof KafkaDeliveryError && postData) {
+      if (e instanceof DuplicateError === false) {
         try {
           await this.postRepo.deleteOneRecord({ postId: createdPost?.postId })
           logger.info('Successfully cleaned up Post creation...')
-        } catch (e) {
+        } catch (error) {
           logger.error('Failed to cleanup Post creation...')
+          throw e
         }
-        throw e
       }
       logger.error(`Error on creating User Post: ${e.message}`)
       throw e

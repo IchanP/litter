@@ -7,7 +7,7 @@
 
 import mongoose from 'mongoose'
 import { logger } from './winston-logger.js'
-import { UserModel } from '../model/UserSchema.js'
+import { UserModel } from '../model/userSchema.js'
 
 /**
  * Establishes a connection to a database.

@@ -47,7 +47,7 @@ export class FollowService {
       try {
         await this.followRepo.deleteOneRecord({ followerId: follower, followedId: followed })
         logger.info('Succcesfully cleaned up Followed relationship..')
-      } catch (e) {
+      } catch (error) {
         logger.error('Failed to cleanup Followed relationship...')
       }
       logger.error('Something went wrong during the follow request.')

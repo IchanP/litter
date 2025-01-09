@@ -49,7 +49,7 @@ manifests:
 
 deploy:
   kubectl: {}
-
+# Test?
 profiles:
   - name: production
     patches:
@@ -66,5 +66,5 @@ profiles:
         path: /manifests/rawYaml/9
         value: ./user-service/k8s/user-db.prod.yaml
       - op: replace
-        path: /manifest/rawYaml/11
+        path: /manifests/rawYaml/11
         value: ./post-service/k8s/post-db.prod.yaml

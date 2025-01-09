@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+ name: kafka-connection
+type: Opaque
+stringData:
+ MESSAGE_BROKER_CONNECTION_STRING: ${MESSAGE_BROKER_CONNECTION_STRING}

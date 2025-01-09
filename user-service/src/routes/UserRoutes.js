@@ -1,5 +1,5 @@
 import express from 'express'
-import { UserController } from '../controller/UserController.js'
+import { UserController } from '../controller/userController.js'
 import { UserService } from '../service/UserService.js'
 import { UserRepository } from '../repositories/UserRepository.js'
 // import { MessageBroker } from '../service/MessageBroker.js'

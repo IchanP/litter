@@ -45,7 +45,6 @@ export class FollowController {
     }
   }
 
-  // TODO - Make this better
   /**
    * Returns correct error codes that may occur during the editing or creation of user records.
    *

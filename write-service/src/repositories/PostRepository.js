@@ -60,7 +60,7 @@ export class PostRepository {
   }
 
   /**
-   * Validates that the number is a number and returns it as a number
+   * Validates that the number is a number and returns it as a number.
    *
    * @param {unknown} id - The value to validate
    * @returns {number} - Returns the number version

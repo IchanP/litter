@@ -5,6 +5,7 @@ import { validateNotUndefined } from '../util/validate.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { MessageBroker } from './MessageBroker.js'
+import { DuplicateError } from '../util/Errors/DuplicateError.js'
 
 /**
  * Service responsible for sending out messages to the broker and verifying the correctness of the passed data.
@@ -44,11 +45,14 @@ export class FollowService {
       console.log(relationship)
       return relationship
     } catch (e) {
-      try {
-        await this.followRepo.deleteOneRecord({ followerId: follower, followedId: followed })
-        logger.info('Succcesfully cleaned up Followed relationship..')
-      } catch (error) {
-        logger.error('Failed to cleanup Followed relationship...')
+      if (e instanceof DuplicateError === false) {
+        try {
+          await this.followRepo.deleteOneRecord({ followerId: follower, followedId: followed })
+          logger.info('Succcesfully cleaned up Followed relationship..')
+        } catch (error) {
+          logger.error('Failed to cleanup Followed relationship...')
+          throw e
+        }
       }
       logger.error('Something went wrong during the follow request.')
       throw e

@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service.name: post-service
+  name: post-service
+spec:
+  ports:
+    - name: "post-service-port"
+      port: 8888
+      targetPort: "post-svc-http"
+  selector:
+    deployment.name: post-service
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment.name: post-service
+  template:
+    metadata:
+      labels:
+        deployment.name: post-service
+    spec:
+      containers:
+      - name: post-service
+        image:  post-service # NOTE - This is base one for dev, the "real one" is set in pipeline
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        env:
+        - name: PORT
+          value: "5000"
+        - name: WRITE_DB_CONNECTION_STRING
+          value: "mongodb://post-db-0.post-db-headless:27017"
+        - name: MESSAGE_BROKER_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: kafka-connection
+              key: MESSAGE_BROKER_CONNECTION_STRING
+        - name: NEW_POST_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: NEW_POST_TOPIC
+        - name: DELETE_POST_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: DELETE_POST_TOPIC
+        ports:
+          - containerPort: 5000
+            name: post-svc-http
+      imagePullSecrets:
+      - name: regcred

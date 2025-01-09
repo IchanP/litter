@@ -2,14 +2,16 @@ import createError from 'http-errors'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { NotFoundError } from '../util/Errors/NotFoundError.js'
+import { FollowService } from '../service/FollowService.js'
 
 /**
  * Controller for managing the follow relevant operations for MongoDB.
  */
 export class FollowController {
   /**
+   * Constructs a FollowController object.
    *
-   * @param service - The service responsible for managing follows
+   * @param {FollowService} service - The service responsible for managing follows
    */
   constructor (service) {
     this.service = service
@@ -25,8 +27,12 @@ export class FollowController {
    */
   async followUser (req, res, next) {
     try {
-      const body = req.body
-      const followData = await this.service.createFollow(body)
+      const followerId = req.body?.followerId
+      const followedId = req.params.id
+      if (!followedId || isNaN(Number(followedId))) {
+        throw new NotFoundError('ID is missing')
+      }
+      const followData = await this.service.createFollow(followedId, followerId)
       req.body.status = 201
       req.body.message = 'Follow relationship created successfully'
       // TODO setup followerId and followedId return message

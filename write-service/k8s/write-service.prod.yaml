@@ -44,7 +44,10 @@ spec:
         - name: WRITE_DB_CONNECTION_STRING
           value: "mongodb://write-db-0.write-db-headless:27017"
         - name: MESSAGE_BROKER_CONNECTION_STRING
-          value: my-kafka-cluster-kafka-bootstrap:9092 # TODO - put this as a CI/CD variable?
+          valueFrom:
+            secretKeyRef:
+              name: kafka-connection
+              key: MESSAGE_BROKER_CONNECTION_STRING
         - name: USER_REGISTER_TOPIC
           valueFrom:
             secretKeyRef:

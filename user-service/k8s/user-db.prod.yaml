@@ -1,0 +1,48 @@
+# *mostly* configured using this article:
+# https://naveenkumarjains.medium.com/deploy-mongodb-replica-set-on-aks-using-statefulsets-28bde762e60d
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db-headless
+  labels:
+    app: user-db
+spec:
+  ports:
+    - port: 27017
+      name: mongo
+  clusterIP: None  # Headless service
+  selector:
+    app: user-db
+# Sets up a replica set, chose this over setting up a NFS server caues it seemed easier.
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: user-db
+  labels:
+    app: user-db
+spec:
+  serviceName: "user-db-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+        - name: user-db
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: userdb-storage
+              mountPath: /data/db  # MongoDB data directory
+      volumes:
+        - name: userdb-storage
+          hostPath:
+            path: /mnt/data/writedb-storage  # Path on the node
+            type: DirectoryOrCreate  # Create the directory if it doesn't exist

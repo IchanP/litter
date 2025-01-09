@@ -4,6 +4,8 @@ import { logger } from '../config/winston-logger.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
+import { convertMongoCreateAtToISOdate } from '../util/index.js'
+import { MessageBroker } from './MessageBroker.js'
 
 /**
  * Service responsible for sending out messages to the broker and verifying the correctness of the passed data.
@@ -14,10 +16,12 @@ export class FollowService {
    *
    * @param {FollowRepository} followRepo - The repo responsible for managing the follower relationships.
    * @param {UserRepository} userRepo - The repo responsible for managing Users.
+   * @param {MessageBroker} broker - The message broker that will send async messages to other services.
    */
-  constructor (followRepo, userRepo) {
+  constructor (followRepo, userRepo, broker) {
     this.followRepo = followRepo
     this.userRepo = userRepo
+    this.broker = broker
   }
 
   /**
@@ -25,15 +29,21 @@ export class FollowService {
    *
    * @param {number} followed - The ID of the user to be followed.
    * @param {number} follower - The ID of the user that requested the follow.
+   * @returns {object} - Returns an object with the fields followerId, followedId and createdAt.
    */
   async createFollow (followed, follower) {
     try {
       this.#performFollowValidation(followed, follower)
-      const followedUser = this.userRepo.getOneMatching({ userId: Number(followed) })
-      const followerUser = this.userRepo.getOneMatching({ userId: Number(follower) })
+      const followedUser = await this.userRepo.getOneMatching({ userId: Number(followed) })
+      const followerUser = await this.userRepo.getOneMatching({ userId: Number(follower) })
       if (!followedUser) throw new BadDataError(`The user with id ${followed} does not exist.`)
       if (!followerUser) throw new BadDataError(`The user with id ${follower} does not exist.`)
+
       const relationship = await this.followRepo.createDocument(followed, follower)
+      relationship.createdAt = convertMongoCreateAtToISOdate(relationship.createdAt)
+      await this.broker.sendMessage(process.env.FOLLOWED_TOPIC, JSON.stringify(relationship))
+
+      return relationship
     } catch (e) {
       if (e instanceof KafkaDeliveryError) {
         try {
@@ -44,6 +54,8 @@ export class FollowService {
         }
         throw e
       }
+      console.log(e)
+      console.log(e.message)
       logger.error('Something went wrong during the follow request.')
       throw e
     }
@@ -52,8 +64,8 @@ export class FollowService {
   /**
    * Performs validation on the expected Follow fields.
    *
-   * @param {string} followed - The user requesting the follow.
    * @param {string} follower - The user to be followed.
+   * @param {string} followed - The user requesting the follow.
    */
   #performFollowValidation (follower, followed) {
     validateNotUndefined(followed, 'followerId')

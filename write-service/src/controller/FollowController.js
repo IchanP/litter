@@ -3,6 +3,7 @@ import { BadDataError } from '../util/Errors/BadDataError.js'
 import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { NotFoundError } from '../util/Errors/NotFoundError.js'
 import { FollowService } from '../service/FollowService.js'
+import { DuplicateError } from '../util/Errors/DuplicateError.js'
 
 /**
  * Controller for managing the follow relevant operations for MongoDB.
@@ -29,14 +30,15 @@ export class FollowController {
     try {
       const followerId = req.body?.followerId
       const followedId = req.params.id
-      if (!followedId || isNaN(Number(followedId))) {
-        throw new NotFoundError('ID is missing')
-      }
       const followData = await this.service.createFollow(followedId, followerId)
       req.body.status = 201
       req.body.message = 'Follow relationship created successfully'
+      delete followData.createdAt
       // TODO setup followerId and followedId return message
-      return undefined
+      return res.status(req.body.status).json({
+        message: req.body.message,
+        data: followData
+      })
     } catch (e) {
       this.#handleError(e, next)
       return undefined // ?
@@ -58,6 +60,8 @@ export class FollowController {
       err = createError(404, e.message)
     } else if (e instanceof KafkaDeliveryError) {
       err = createError(500)
+    } else if (e instanceof DuplicateError) {
+      err = createError(409, e.message)
     } else {
       err = createError(500)
     }

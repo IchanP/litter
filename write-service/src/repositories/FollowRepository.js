@@ -17,10 +17,16 @@ export class FollowRepository {
    *
    * @param {number} followed - The followed user.
    * @param {number} follower - The follower.
+   * @returns {object} - Returns an object with the fields followerId, followedId and createdAt.
    */
   async createDocument (followed, follower) {
     try {
-      // TODO save and stuff
+      const relationship = new FollowModel({
+        followerId: follower,
+        followedId: followed
+      })
+      await relationship.save()
+      return relationship.toObject()
     } catch (e) {
       if (e.code === 11000) {
         throw new DuplicateError('This relationship already exists.')

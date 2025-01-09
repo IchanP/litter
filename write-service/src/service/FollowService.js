@@ -3,7 +3,6 @@ import { FollowRepository } from '../repositories/FollowRepository.js'
 import { logger } from '../config/winston-logger.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { BadDataError } from '../util/Errors/BadDataError.js'
-import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { MessageBroker } from './MessageBroker.js'
 
@@ -45,17 +44,12 @@ export class FollowService {
 
       return relationship
     } catch (e) {
-      if (e instanceof KafkaDeliveryError) {
-        try {
-          // TODO delete the follower relationship here.
-          logger.info('Succcesfully cleaned up Followed relationship..')
-        } catch (e) {
-          logger.error('Failed to cleanup Followed relationship...')
-        }
-        throw e
+      try {
+        await this.followRepo.deleteOneRecord({ followerId: follower, followedId: followed })
+        logger.info('Succcesfully cleaned up Followed relationship..')
+      } catch (e) {
+        logger.error('Failed to cleanup Followed relationship...')
       }
-      console.log(e)
-      console.log(e.message)
       logger.error('Something went wrong during the follow request.')
       throw e
     }

@@ -1,6 +1,5 @@
 import { logger } from '../config/winston-logger.js'
 import { UserRepository } from '../repositories/UserRepository.js'
-import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { validateNotUndefined } from '../util/validate.js'
 import { MessageBroker } from './MessageBroker.js'
@@ -37,16 +36,13 @@ export class UserService {
       await this.broker.sendMessage(process.env.USER_REGISTER_TOPIC, JSON.stringify(createdData))
       return createdData
     } catch (e) {
-      if (e instanceof KafkaDeliveryError && registrationData) {
-        try {
-          await this.userRepo.deleteOneRecord({ userId: registrationData?.userId })
-          logger.info('Succesfully cleaned up Kafka registration...')
-        } catch (e) {
-          logger.error('Failed to cleanup Kafka registration...')
-        }
-        throw e
+      try {
+        logger.info('Succesfully cleaned up Kafka registration...')
+        await this.userRepo.deleteOneRecord({ userId: registrationData?.userId })
+      } catch (e) {
+        logger.error('Failed to cleanup Kafka registration...')
       }
-      throw e // Still rethrow the error if it's not KafkaDeliveryError.
+      throw e
     }
   }
 

@@ -1,4 +1,4 @@
-import { UserService } from '../../../user-service/src/service/UserService.js'
+import { UserService } from './UserService.js'
 import { PostRepository } from '../repositories/PostRepository.js'
 
 /**

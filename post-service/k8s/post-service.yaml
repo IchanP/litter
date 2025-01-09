@@ -41,7 +41,7 @@ spec:
         env:
         - name: PORT
           value: "5000"
-        - name: WRITE_DB_CONNECTION_STRING
+        - name: POST_DB_CONNECTION_STRING
           value: "mongodb://post-db-0.post-db-headless:27017"
         - name: MESSAGE_BROKER_CONNECTION_STRING
           valueFrom:

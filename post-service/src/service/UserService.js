@@ -10,7 +10,7 @@ export class UserService {
    */
   async getFollowedUserIds (userId) {
     try {
-      const response = await Fetch(`http://user-service:5000/users/${userId}/following`)
+      const response = await fetch(`http://user-service:5000/users/${userId}/following`)
       return response.data.following // Assuming the user-service returns a `following` array
     } catch (error) {
       console.error('Error fetching followed user IDs:', error.message)

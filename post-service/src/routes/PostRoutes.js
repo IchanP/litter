@@ -2,7 +2,7 @@ import express from 'express'
 import { PostController } from '../controller/PostController.js'
 import { PostService } from '../service/PostService.js'
 import { PostRepository } from '../repositories/PostRepository.js'
-import { UserService } from '../services/UserService.js'
+import { UserService } from '../service/UserService.js'
 // import { MessageBroker } from '../service/MessageBroker.js'
 
 export const router = express.Router()

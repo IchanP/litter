@@ -1,4 +1,4 @@
-import { PostModel } from '../models/PostSchema.js'
+import { PostModel } from '../model/PostSchema.js'
 
 /**
  * Repository for interacting with the Post collection in MongoDB.

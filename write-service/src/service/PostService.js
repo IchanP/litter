@@ -46,14 +46,11 @@ export class PostService {
       await this.broker.sendMessage(process.env.NEW_POST_TOPIC, JSON.stringify(createdPost))
       return createdPost
     } catch (e) {
-      if (e instanceof KafkaDeliveryError && postData) {
-        try {
-          await this.postRepo.deleteOneRecord({ postId: createdPost?.postId })
-          logger.info('Successfully cleaned up Post creation...')
-        } catch (e) {
-          logger.error('Failed to cleanup Post creation...')
-        }
-        throw e
+      try {
+        await this.postRepo.deleteOneRecord({ postId: createdPost?.postId })
+        logger.info('Successfully cleaned up Post creation...')
+      } catch (e) {
+        logger.error('Failed to cleanup Post creation...')
       }
       logger.error(`Error on creating User Post: ${e.message}`)
       throw e

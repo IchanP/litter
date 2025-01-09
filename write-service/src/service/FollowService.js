@@ -41,7 +41,7 @@ export class FollowService {
       const relationship = await this.followRepo.createDocument(followed, follower)
       relationship.createdAt = convertMongoCreateAtToISOdate(relationship.createdAt)
       await this.broker.sendMessage(process.env.FOLLOWED_TOPIC, JSON.stringify(relationship))
-
+      console.log(relationship)
       return relationship
     } catch (e) {
       try {

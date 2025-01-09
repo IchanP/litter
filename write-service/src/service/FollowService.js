@@ -6,6 +6,7 @@ import { BadDataError } from '../util/Errors/BadDataError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { MessageBroker } from './MessageBroker.js'
 import { DuplicateError } from '../util/Errors/DuplicateError.js'
+import { NotFoundError } from '../util/Errors/NotFoundError.js'
 
 /**
  * Service responsible for sending out messages to the broker and verifying the correctness of the passed data.
@@ -36,8 +37,8 @@ export class FollowService {
       this.#performFollowValidation(followed, follower)
       const followedUser = await this.userRepo.getOneMatching({ userId: Number(followed) })
       const followerUser = await this.userRepo.getOneMatching({ userId: Number(follower) })
-      if (!followedUser) throw new BadDataError(`The user with id ${followed} does not exist.`)
-      if (!followerUser) throw new BadDataError(`The user with id ${follower} does not exist.`)
+      if (!followedUser) throw new NotFoundError(`The user with id ${followed} does not exist.`)
+      if (!followerUser) throw new NotFoundError(`The user with id ${follower} does not exist.`)
 
       const relationship = await this.followRepo.createDocument(followed, follower)
       relationship.createdAt = convertMongoCreateAtToISOdate(relationship.createdAt)

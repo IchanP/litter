@@ -1,0 +1,49 @@
+# Had to reconfigure the volumes for development as it was trying to create all 3 on the same node (minikube)
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-db-headless
+  labels:
+    app: post-db
+spec:
+  ports:
+    - port: 27017
+      name: mongo
+  clusterIP: None  # Headless service
+  selector:
+    app: post-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: post-db
+  labels:
+    app: post-db
+spec:
+  serviceName: "post-db-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post-db
+  template:
+    metadata:
+      labels:
+        app: post-db
+    spec:
+      containers:
+        - name: mongodbpost-db
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: postdb-storage
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: postdb-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 500Mi

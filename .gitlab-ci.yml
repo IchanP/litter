@@ -8,7 +8,7 @@ variables:
   STAGING_CONTEXT: $STAGING_AGENT
   PROD_CONTEXT: $PROD_AGENT
 
-.build_image_staging: &build_image_staging |
+.publish_image_staging: &publish_image_staging |
   function build_service_staging() {
     local service_path=$1
     /kaniko/executor \
@@ -18,7 +18,7 @@ variables:
       --destination "${CI_REGISTRY_IMAGE}/${service_path}:${CI_COMMIT_TAG:-staging-latest}"
   }
 
-.build_image_production: &build_image_production |
+.publish_image_production: &publish_image_production |
   function build_service_production() {
     local service_path=$1
     /kaniko/executor \
@@ -26,6 +26,15 @@ variables:
       --dockerfile "${CI_PROJECT_DIR}/${service_path}/Dockerfile.production" \
       --destination "${CI_REGISTRY_IMAGE}/${service_path}:${CI_COMMIT_SHA}" \
       --destination "${CI_REGISTRY_IMAGE}/${service_path}:${CI_COMMIT_TAG:-latest}"
+  }
+
+.build_image: &build_image |
+  function build_image() {
+    local service_path=$1
+    - /kaniko/executor
+     --context "${CI_PROJECT_DIR}/${service_path}"
+     --dockerfile "${CI_PROJECT_DIR}/${service_path}/Dockerfile.production"
+     --no-push
   }
 
 setup_kubectl_dependencies:
@@ -116,12 +125,12 @@ build:
     entrypoint: [""]
   script:
    - echo "Building Image"
-
-   # TODO - Include the other images without pushing
-   - /kaniko/executor
-     --context "${CI_PROJECT_DIR}/frontend"
-     --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile.production"
-     --no-push
+   - *build_image
+   - build_image "frontend"
+   - build_image "write-service"
+   - build_image "api-gateway"
+   - build_image "post-service"
+   - build_image "user-service"
 
 publish_staging:
   stage: build
@@ -131,15 +140,16 @@ publish_staging:
   script:
     - echo "Rebuilding and publishing images for staging"
     # TODO turn this into a function?
-    - *build_image_staging
-    - build_service_staging "frontend"
-    - build_service_staging "write-service"
-    - build_service_staging "api-gateway"
-    - build_service_staging "post-service"
-    - build_service_staging "user-service"
+    - *publish_image_staging
+    - publish_service_staging "frontend"
+    - publish_service_staging "write-service"
+    - publish_service_staging "api-gateway"
+    - publish_service_staging "post-service"
+    - publish_service_staging "user-service"
 
   only:
     - staging
+    - pipeline/staging
   needs:
     - build
 
@@ -150,12 +160,12 @@ publish_production:
     entrypoint: [""]
   script:
     - echo "Rebuilding and publishing images for production"
-    - *build_image_production
-    - build_service_production "frontend"
-    - build_service_production "write-service"
-    - build_service_production "api-gateway"
-    - build_service_production "post-service"
-    - build_service_production "user-service"
+    - *publish_image_production
+    - publish_service_production "frontend"
+    - publish_service_production "write-service"
+    - publish_service_production "api-gateway"
+    - publish_service_production "post-service"
+    - publish_service_production "user-service"
 
   only:
     - main

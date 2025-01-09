@@ -31,9 +31,9 @@ variables:
 .build_image: &build_image |
   function build_image() {
     local service_path=$1
-    - /kaniko/executor
-     --context "${CI_PROJECT_DIR}/${service_path}"
-     --dockerfile "${CI_PROJECT_DIR}/${service_path}/Dockerfile.production"
+    /kaniko/executor \
+     --context "${CI_PROJECT_DIR}/${service_path}" \
+     --dockerfile "${CI_PROJECT_DIR}/${service_path}/Dockerfile.production" \
      --no-push
   }
 
@@ -70,7 +70,6 @@ setup_kubectl_dependencies:
         else
           echo "strimzi operator already exists"
         fi
-    # TODO install operators and other things
 
 write_service_tests:
   stage: test
@@ -139,7 +138,7 @@ publish_staging:
     entrypoint: [""]
   script:
     - echo "Rebuilding and publishing images for staging"
-    # TODO turn this into a function?
+
     - *publish_image_staging
     - publish_service_staging "frontend"
     - publish_service_staging "write-service"

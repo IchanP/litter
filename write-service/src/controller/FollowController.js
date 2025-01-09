@@ -8,6 +8,14 @@ import { NotFoundError } from '../util/Errors/NotFoundError.js'
  */
 export class FollowController {
   /**
+   *
+   * @param service - The service responsible for managing follows
+   */
+  constructor (service) {
+    this.service = service
+  }
+
+  /**
    * Handles the operaiton of creating a new follow relationship and managing the return error codes.
    *
    * @param {object} req - Express request object.
@@ -15,8 +23,13 @@ export class FollowController {
    * @param {Function} next - The next call function.
    * @returns {Response} - Returns an express response object with status 201 containign the created user data.
    */
-  followUser (req, res, next) {
+  async followUser (req, res, next) {
     try {
+      const body = req.body
+      const followData = await this.service.createFollow(body)
+      req.body.status = 201
+      req.body.message = 'Follow relationship created successfully'
+      // TODO setup followerId and followedId return message
       return undefined
     } catch (e) {
       this.#handleError(e, next)

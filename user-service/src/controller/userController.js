@@ -5,7 +5,7 @@ import { UserService } from '../service/UserService.js'
  */
 export class UserController {
   /**
-   * Constructs a UserController object
+   * Constructs a UserController object.
    *
    * @param {UserService} userService - The service responsible for orchestrating user related operations.
    */

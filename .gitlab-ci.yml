@@ -9,7 +9,7 @@ variables:
   PROD_CONTEXT: $PROD_AGENT
 
 .publish_image_staging: &publish_image_staging |
-  function build_service_staging() {
+  function publish_service_staging() {
     local service_path=$1
     /kaniko/executor \
       --context "${CI_PROJECT_DIR}/${service_path}" \
@@ -19,7 +19,7 @@ variables:
   }
 
 .publish_image_production: &publish_image_production |
-  function build_service_production() {
+  function publish_service_production() {
     local service_path=$1
     /kaniko/executor \
       --context "${CI_PROJECT_DIR}/${service_path}" \

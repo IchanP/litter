@@ -18,7 +18,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
  * @param {string} connectionString - The DNS of the Kafka service running.
  * @param {string} clientId - The ID of the client for logging purposes
  * @param {string} groupId - The groupId of the consumer.
- * @returns {Consumer} - A Kafka consumer.
+ * @returns {KafkaJS.Consumer} - A Kafka consumer.
  */
 export async function connectBroker (connectionString, clientId, groupId) {
   const brokers = connectionString.includes(',')

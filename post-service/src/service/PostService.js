@@ -1,5 +1,4 @@
 import { PostRepository } from '../repositories/PostRepository.js'
-import { logger } from '../config/winston-logger.js'
 /**
  * Service for handling post-related business logic.
  */

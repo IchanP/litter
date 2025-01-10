@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     }
 
     const data = await response.json()
-    res.json(data).status(201)
+    return res.status(201).json(data)
   } catch (error) {
     res.status(status || 500).json({ message: error.message })
   }
@@ -53,7 +53,7 @@ router.post('/posts/create', async (req, res) => {
       throw new Error(errData.message)
     }
     const data = await response.json()
-    res.json(data).status(201)
+    return res.status(201).json(data)
   } catch (error) {
     res.status(status || 500).json({ message: error.message })
   }
@@ -76,7 +76,7 @@ router.delete('/posts/:id', async (req, res) => {
       throw new Error(errData.message)
     }
 
-    res.status(203).send()
+    return res.status(203).send()
   } catch (error) {
     res.status(status || 500).json({ message: error.message })
   }
@@ -88,6 +88,9 @@ router.post('/follow/:id', async (req, res) => {
     const response = await fetch(`${process.env.WRITE_SERVICE_URL}/follow/${req.params.id}`,
       {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(req.body)
       }
     )
@@ -99,7 +102,7 @@ router.post('/follow/:id', async (req, res) => {
     }
 
     const data = await response.json()
-    res.json(data).status(201)
+    return res.status(201).json(data)
   } catch (error) {
     res.status(status || 500).json({ message: error.message })
   }

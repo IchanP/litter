@@ -1,5 +1,5 @@
 import express from 'express'
-//import { validateJWT } from '../middleware/authMiddleware.js'
+// import { validateJWT } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
@@ -72,11 +72,34 @@ router.delete('/posts/:id', async (req, res) => {
 
     if (!response.ok) {
       status = response.status
-      const errDAta = await response.json()
-      throw new Error(errDAta.message)
+      const errData = await response.json()
+      throw new Error(errData.message)
     }
 
     res.status(203).send()
+  } catch (error) {
+    res.status(status || 500).json({ message: error.message })
+  }
+})
+
+router.post('/follow/:id', async (req, res) => {
+  let status
+  try {
+    const response = await fetch(`${process.env.WRITE_SERVICE_URL}/follow/${req.params.id}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(req.body)
+      }
+    )
+
+    if (!response.ok) {
+      status = response.status
+      const errData = await response.json()
+      throw new Error(errData.message)
+    }
+
+    const data = await response.json()
+    res.json(data).status(201)
   } catch (error) {
     res.status(status || 500).json({ message: error.message })
   }

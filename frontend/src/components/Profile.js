@@ -1,54 +1,90 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "./Loading";
 
 // style
 import "../style/Profile.css";
 
-// exempeldata
-const followers_count = 112;
-const following_count = 98;
-const user_joined = "August 2024"
-
 const Profile = () => {
     const { user, getAccessTokenSilently } = useAuth0();
-    const [accessToken, setAccessToken] = useState("");
+
+    const [profile, setProfile] = useState({
+        followersCount: 0,
+        followingCount: 0,
+        joinedDate: "",
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchToken = async () => {
+        const fetchProfile = async () => {
             try {
                 const token = await getAccessTokenSilently();
-                setAccessToken(token);
-                // Använd token för att göra API-anrop
-            } catch (error) {
-                console.error("Fel vid hämtning av access token:", error);
+
+                // Fetch profile
+                const response = await fetch(
+                    `${process.env.API_GATEWAY_URL}/users/${user.sub}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch profile: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setProfile({
+                    followersCount: data.followers.length,
+                    followingCount: data.following.length,
+                    joinedDate: new Date(data.createdAt).toLocaleString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                    }),
+                });
+
+            } catch (err) {
+                console.error("Error fetching profile data:", err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
         };
-    
-        fetchToken();
-    }, [getAccessTokenSilently]);
+
+        fetchProfile();
+    }, [getAccessTokenSilently, user.sub]);
 
     const handleLeach = () => {
         alert(`Leash user: ${user.nickname}`);
     };
 
-    console.log(accessToken);
-    console.log(user.sub);
+    if (loading) {
+        return <Loading />;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="profile">
             <div className="top-div">
                 <img src={user.picture} alt={user.name} />
-                <button className="leash-button" onClick={handleLeach}>Leash</button>
+                <button className="leash-button" onClick={handleLeach}>
+                    Leash
+                </button>
             </div>
 
             <div className="middle-div">
                 <span className="user-name">@{user.nickname}</span>
-                <span className="user-joined">Joined in {user_joined}</span>
+                <span className="user-joined">Joined in {profile.joinedDate}</span>
             </div>
 
             <div className="bottom-div">
-                <span>{followers_count} leashers</span>
-                <span>{following_count} leashing</span>
+                <span>{profile.followersCount} leashers</span>
+                <span>{profile.followingCount} leashing</span>
             </div>
         </div>
     );

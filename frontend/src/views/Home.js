@@ -1,6 +1,6 @@
 import React from "react";
 import Menu from "../components/Menu";
-import CreateLit from "../components/CreateLit";
+import CreateLitt from "../components/CreateLitt";
 import LitterBox from "../components/LitterBox";
 import Search from "../components/Search";
 
@@ -16,7 +16,7 @@ const Home = () => {
                 </div>
 
                 <div className="middle-column">
-                    <CreateLit />
+                    <CreateLitt />
                     <LitterBox />
                 </div>
 

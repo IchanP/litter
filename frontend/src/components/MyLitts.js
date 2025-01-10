@@ -2,24 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
 
-
 // style
-import "../style/LitterBox.css";
+import "../style/MyLitts.css";
 
-const LitterBox = () => {
+const MyLitts = () => {
     const { user, getAccessTokenSilently } = useAuth0();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchFeed = async () => {
+        const fetchPosts = async () => {
             try {
                 const token = await getAccessTokenSilently();
 
-                // Fetch feed for current user
+                // Fetch profile posts
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/feed`,
+                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/posts`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -28,20 +27,20 @@ const LitterBox = () => {
                 );
 
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch feed: ${response.status}`);
+                    throw new Error(`Failed to fetch posts: ${response.status}`);
                 }
 
                 const data = await response.json();
                 setPosts(data);
             } catch (err) {
-                console.error("Error fetching feed:", err);
+                console.error("Error fetching posts:", err);
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchFeed();
+        fetchPosts();
     }, [getAccessTokenSilently, user.sub]);
 
     if (loading) {
@@ -53,12 +52,12 @@ const LitterBox = () => {
     }
 
     return (
-        <div className="litter-box">
+        <div className="my-litter-box">
             {posts.map((post) => (
-                <div key={post._id} className="post">
-                    <div className="post-header">
-                        <span className="user">@{post.user}, </span>
-                        <span className="created-at">
+                <div key={post._id} className="my-post">
+                    <div className="my-post-header">
+                        <span className="my-user">@{post.user}, </span>
+                        <span className="my-created-at">
                             {new Date(post.createdAt).toLocaleString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",
@@ -68,7 +67,7 @@ const LitterBox = () => {
                             })}
                         </span>
                     </div>
-                    <div className="post-content">
+                    <div className="my-post-content">
                         <p>{post.content}</p>
                     </div>
                 </div>
@@ -77,4 +76,4 @@ const LitterBox = () => {
     );
 };
 
-export default LitterBox;
+export default MyLitts;

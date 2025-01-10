@@ -58,6 +58,11 @@ spec:
             secretKeyRef:
               name: topic-names
               key: DELETE_POST_TOPIC
+        - name: MESSAGE_BROKER_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: kafka-connection
+              key: MESSAGE_BROKER_CONNECTION_STRING
         ports:
           - containerPort: 5000
             name: post-svc-http

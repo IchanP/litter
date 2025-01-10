@@ -3,14 +3,15 @@ import helmet from 'helmet'
 import morganLogger from 'morgan'
 import { logger } from './config/winston-logger.js'
 import { connectToDatabase } from './config/mongoose.js'
-// import { connectBroker } from './config/kafka.js'
+import { connectBroker, subscribeToTopics } from './config/kafka.js'
 import { router } from './routes/router.js'
+import { UserService } from './service/UserService.js'
 
 try {
   const app = express()
   await connectToDatabase(process.env.USER_DB_CONNECTION_STRING)
-  // TODO - uncommenct this
-  // await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING)
+  const consumer = await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING, 'user-service', 'user-service-group')
+  await subscribeToTopics(consumer, [process.env.USER_REGISTER_TOPIC, process.env.FOLLOWED_TOPIC, process.env.UNFOLLOW_TOPIC], new UserService())
 
   app.use(express.json())
   app.use(helmet())

@@ -36,4 +36,14 @@ export class UserService {
   async searchUsers (query) {
     return this.userRepository.searchUsers(query)
   }
+
+  /**
+   * Handles the messages received from the message broker and forwards them to the correct function.
+   *
+   * @param {object} data - Object containing the topic and message.
+   */
+  async handleMessage (data) {
+    // TODO make a switch for topic and read data value from buffer.
+    console.log(data.message)
+  }
 }

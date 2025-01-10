@@ -89,8 +89,8 @@ export class FollowService {
   /**
    * Performs validation on the expected Follow fields.
    *
-   * @param {string} follower - The user to be followed.
-   * @param {string} followed - The user requesting the follow.
+   * @param {string} followed - The user to be followed.
+   * @param {string} follower - The user requesting the follow.
    */
   #performFollowValidation (followed, follower) {
     validateNotUndefined(follower, 'followerId')

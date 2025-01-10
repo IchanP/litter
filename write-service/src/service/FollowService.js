@@ -7,6 +7,7 @@ import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { MessageBroker } from './MessageBroker.js'
 import { DuplicateError } from '../util/Errors/DuplicateError.js'
 import { NotFoundError } from '../util/Errors/NotFoundError.js'
+import { KafkaDeliveryError } from '../util/Errors/KafkaDeliveryError.js'
 
 /**
  * Service responsible for sending out messages to the broker and verifying the correctness of the passed data.
@@ -43,7 +44,6 @@ export class FollowService {
       const relationship = await this.followRepo.createDocument(followed, follower)
       relationship.createdAt = convertMongoCreateAtToISOdate(relationship.createdAt)
       await this.broker.sendMessage(process.env.FOLLOWED_TOPIC, JSON.stringify(relationship))
-      console.log(relationship)
       return relationship
     } catch (e) {
       if (e instanceof DuplicateError === false) {
@@ -61,14 +61,40 @@ export class FollowService {
   }
 
   /**
+   * Orchestrates the deletion of a follow relationship and sends out event to message broker.
+   *
+   * @param {number} followed - The ID of the user to be unfollowed.
+   * @param {number} follower - The ID of the user that requested the unfollow.
+   */
+  async deleteFollow (followed, follower) {
+    try {
+      this.#performFollowValidation(follower, followed)
+      const relationship = await this.followRepo.getOneMatching(Number(followed), Number(follower))
+      if (!relationship) {
+        throw new NotFoundError('This relationship does not exist.')
+      }
+      await this.broker.sendMessage(process.env.UNFOLLOW_TOPIC, JSON.stringify(relationship))
+      await this.followRepo.deleteOneRecord({ folowerId: follower, followedId: followed })
+    } catch (e) {
+      if (e instanceof KafkaDeliveryError) {
+        logger.error('Failed to send delete notification to other services...')
+        throw e
+      }
+      logger.error(e.message)
+      logger.error(`Error on deleting Follower Relationship for followed User ${followed} and follower ${follower}`)
+      throw e
+    }
+  }
+
+  /**
    * Performs validation on the expected Follow fields.
    *
-   * @param {string} follower - The user to be followed.
-   * @param {string} followed - The user requesting the follow.
+   * @param {string} followed - The user to be followed.
+   * @param {string} follower - The user requesting the follow.
    */
-  #performFollowValidation (follower, followed) {
-    validateNotUndefined(followed, 'followerId')
-    validateNotUndefined(follower, ':id')
+  #performFollowValidation (followed, follower) {
+    validateNotUndefined(follower, 'followerId')
+    validateNotUndefined(followed, ':id')
     if (isNaN(Number(followed))) {
       throw new BadDataError('followerId must be a number.')
     }

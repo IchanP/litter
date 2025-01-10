@@ -34,14 +34,33 @@ export class FollowController {
       req.body.status = 201
       req.body.message = 'Follow relationship created successfully'
       delete followData.createdAt
-      // TODO setup followerId and followedId return message
       return res.status(req.body.status).json({
         message: req.body.message,
         data: followData
       })
     } catch (e) {
       this.#handleError(e, next)
-      return undefined // ?
+    }
+  }
+
+  /**
+   * Handles the operation of removing a follow relationship and managing the return error codes.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - The next call function.
+   * @returns {Response} - Returns an express response object with status 201 containign the created user data.
+   */
+  async unfollow (req, res, next) {
+    try {
+      const followerId = req.body?.followerId
+      const followedId = req.params.id
+      await this.service.deleteFollow(followedId, followerId)
+
+      req.body.status = 203
+      return res.status(req.body.status).send()
+    } catch (e) {
+      this.#handleError(e, next)
     }
   }
 

@@ -68,6 +68,11 @@ spec:
             secretKeyRef:
               name: topic-names
               key: FOLLOWED_TOPIC
+        - name: UNFOLLOW_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: UNFOLLOW_TOPIC
         ports:
           - containerPort: 5000
             name: write-svc-http

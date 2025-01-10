@@ -2,7 +2,7 @@ import React from "react";
 import Menu from "../components/Menu";
 import Profile from "../components/Profile";
 import Search from "../components/Search";
-import MyOwnLitterBox from "../components/MyOwnLitterBox";
+import MyLitts from "../components/MyLitts";
 
 // style
 import "../style/PedigreeChart.css"
@@ -17,7 +17,7 @@ const PedigreeChart = () => {
 
                 <div className="middle-column">
                     <Profile />
-                    <MyOwnLitterBox />
+                    <MyLitts />
                 </div>
 
                 <div className="right-column">

@@ -34,7 +34,6 @@ export class FollowController {
       req.body.status = 201
       req.body.message = 'Follow relationship created successfully'
       delete followData.createdAt
-      // TODO setup followerId and followedId return message
       return res.status(req.body.status).json({
         message: req.body.message,
         data: followData

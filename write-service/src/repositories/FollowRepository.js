@@ -35,6 +35,18 @@ export class FollowRepository {
   }
 
   /**
+   * Finds one follow document matching the specified relationship.
+   *
+   * @param {number} followed - The followed ID.
+   * @param {number} follower - The follower ID.
+   * @returns {object} - Returns an object with the fields followerId, followedId and createdAt.
+   */
+  async getOneMatching (followed, follower) {
+    const relationshiop = await this.model.findOne({ followedId: followed, followerId: follower })
+    return relationshiop?.toObject()
+  }
+
+  /**
    * Attempts to delete one record with the passed filter.
    *
    * @param {object} filter - The filter to use to search for the record to delete.

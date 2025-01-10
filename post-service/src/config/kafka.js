@@ -1,5 +1,8 @@
-import { Kafka, Consumer } from 'kafkajs'
+import KafkaJS from 'kafkajs'
 import { logger } from './winston-logger.js'
+import { PostService } from '../service/PostService.js'
+
+const { Kafka } = KafkaJS
 
 /**
  * General sleep function that waits the specified number of milliseconds.
@@ -50,11 +53,11 @@ export async function connectBroker (connectionString, clientId, groupId) {
 /**
  * Subscribes to topics and assigns the messageHandler function as the callback for new messages.
  *
- * @param {Consumer} consumer - A kafka consumer.
+ * @param {KafkaJS.Consumer} consumer - A kafka consumer.
  * @param {string[]} topics - The list of topics that the consumer will be subscribed to.
- * @param {Function} messageHandler - The callback function for the messages.
+ * @param {PostService} service - The service responsible for handling the message.
  */
-export async function subscribeToTopics (consumer, topics, messageHandler) {
+export async function subscribeToTopics (consumer, topics, service) {
   try {
     await consumer.subscribe({
       topics,
@@ -73,7 +76,7 @@ export async function subscribeToTopics (consumer, topics, messageHandler) {
       eachMessage: async ({ topic, partition, message }) => {
         try {
           logger.info(`Received message from topic: ${topic}, partition: ${partition}`)
-          await messageHandler({
+          await service.handleMessage({
             topic, message
           })
         } catch (e) {

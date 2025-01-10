@@ -14,3 +14,4 @@ const service = new FollowService(followRepo, userRepo, broker)
 const controller = new FollowController(service)
 
 router.post('/:id', (req, res, next) => controller.followUser(req, res, next))
+router.delete(':/id', (req, res, next) => controller.unfollow(req, res, next))

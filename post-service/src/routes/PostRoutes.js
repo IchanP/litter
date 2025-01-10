@@ -4,7 +4,7 @@ import { PostService } from '../service/PostService.js'
 import { PostRepository } from '../repositories/PostRepository.js'
 // import { MessageBroker } from '../service/MessageBroker.js'
 
-const router = express.Router()
+export const router = express.Router()
 
 // NOTE - Should really use inversify but can't set it up using javascript.
 const postRepository = new PostRepository()
@@ -15,5 +15,3 @@ const postController = new PostController(postService)
 // Routes
 router.get('/:id/posts', (req, res, next) => postController.getUserPosts(req, res, next))
 router.post(':id/feed', (req, res, next) => postController.getUserFeed(req, res, next))
-
-export default router;

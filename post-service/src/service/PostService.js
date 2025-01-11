@@ -80,7 +80,6 @@ export class PostService {
   async handleMessage (data) {
     const messageString = data.message.value.toString()
     const message = JSON.parse(messageString)
-    console.log(message)
     switch (data.topic) {
       case process.env.NEW_POST_TOPIC:
         logger.info(`Creating new post with id ${message.postId}`)

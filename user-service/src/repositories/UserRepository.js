@@ -36,7 +36,8 @@ export class UserRepository {
       username: user.username,
       email: user.email,
       followers: [],
-      following: []
+      following: [],
+      registeredAt: user.createdAt
     })
     await newUser.save()
     return newUser

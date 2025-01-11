@@ -48,7 +48,11 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'User'
     }
-  ]
-})
+  ],
+  registeredAt: {
+    type: String,
+    required: true
+  }
+}, {})
 
 export const UserModel = model('User', userSchema)

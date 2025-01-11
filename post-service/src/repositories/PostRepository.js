@@ -39,4 +39,16 @@ export class PostRepository {
     await post.save()
     return post
   }
+
+  /**
+   * Attempts to delete a post matching the ID.
+   *
+   * @param {number} id - The id of the post to delete.
+   */
+  async deletePost (id) {
+    const result = await PostModel.deleteOne({ postId: id })
+    if (result.deletedCount === 0) {
+      throw new Error(`No post found to delete with postId ${id}`)
+    }
+  }
 }

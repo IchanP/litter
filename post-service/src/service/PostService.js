@@ -58,6 +58,21 @@ export class PostService {
   }
 
   /**
+   * Attemps to delete a post by the provided ID.
+   *
+   * @param {object} postData - An object containing the field postId.
+   */
+  async #deletePost (postData) {
+    try {
+      await this.postRepository.deletePost(Number(postData?.postId))
+      logger.info(`Successfully deleted post with id ${postData.postId}`)
+    } catch (e) {
+      logger.error(`Failed to delete post with postId ${postData.postId}`)
+      logger.error(e.message)
+    }
+  }
+
+  /**
    * Handles the messages received from the message broker and forwards them to the correct function.
    *
    * @param {object} data - Object containing the topic and message.
@@ -72,7 +87,8 @@ export class PostService {
         this.#createPost(message)
         break
       case process.env.DELETE_POST_TOPIC:
-        logger.rinfo(`Deleting post with id ${message.postId}`)
+        logger.info(`Deleting post with id ${message.postId}`)
+        this.#deletePost(message)
         break
       default:
         logger.error(`The ${data.topic} is not one of the subscribed topics for user-service.`)

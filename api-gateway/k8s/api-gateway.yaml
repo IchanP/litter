@@ -46,6 +46,16 @@ spec:
             secretKeyRef:
               name: service-dns-secrets
               key: WRITE_SERVICE_URL
+        - name: POST_SERVICE_URL
+          valueFrom:
+            secretKeyRef:
+              name: service-dns-secrets
+              key: POST_SERVICE_URL
+        - name: USER_SERVICE_URL
+          valueFrom:
+            secretKeyRef:
+              name: service-dns-secrets
+              key: USER_SERVICE_URL
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:

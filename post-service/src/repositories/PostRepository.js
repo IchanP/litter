@@ -23,4 +23,32 @@ export class PostRepository {
   async findFeedById (followedUserIds) {
     return PostModel.find({ userId: { $in: followedUserIds } }).sort({ createdAt: -1 })
   }
+
+  /**
+   * Creates a post object with the provided data.
+   *
+   * @param {object} postData - A post object containing the fields: AuthorId, content, postId and createdAt.
+   * @returns {Promise<Document>} Returns a Post document.
+   */
+  async createPost (postData) {
+    const post = new PostModel({
+      userId: postData.authorId,
+      content: postData.content,
+      postId: postData.postId
+    })
+    await post.save()
+    return post
+  }
+
+  /**
+   * Attempts to delete a post matching the ID.
+   *
+   * @param {number} id - The id of the post to delete.
+   */
+  async deletePost (id) {
+    const result = await PostModel.deleteOne({ postId: id })
+    if (result.deletedCount === 0) {
+      throw new Error(`No post found to delete with postId ${id}`)
+    }
+  }
 }

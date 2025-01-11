@@ -23,4 +23,22 @@ export class UserRepository {
   async searchUsers (query) {
     return UserModel.find({ username: new RegExp(query, 'i') })
   }
+
+  /**
+   * Registers a user by writing it to the userModel.
+   *
+   * @param {object} user - A user object containing the fields userId, email and username.
+   * @returns {object} - Returns the new user.
+   */
+  async registerUser (user) {
+    const newUser = new UserModel({
+      userId: user.userId,
+      username: user.username,
+      email: user.email,
+      followers: [],
+      following: []
+    })
+    await newUser.save()
+    return newUser
+  }
 }

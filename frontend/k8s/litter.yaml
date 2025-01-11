@@ -31,6 +31,13 @@ spec:
       containers:
       - name: litter
         image: frontend
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
         env:
         - name: REACT_APP_AUTH0_DOMAIN
           valueFrom:
@@ -42,6 +49,11 @@ spec:
             secretKeyRef:
               name: auth0-litter-secrets
               key: AUTH0_CLIENT_ID
+        - name: API_GATEWAY_URL
+          valueFrom:
+            secretKeyRef:
+              name: service-dns-secrets
+              key: API_GATEWAY_URL
         ports:
           - containerPort: 3000 # TODO - Is this needed?
             name: litter-http

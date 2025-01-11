@@ -68,15 +68,28 @@ export class UserService {
   }
 
   /**
+   * Removes the relationship between two users.
+   *
+   * @param {object} relationship - An object containing the followerId and followedId.
+   */
+  async #unfollowUser (relationship) {
+    try {
+      await this.userRepository.removeRelationship(relationship.followerId, relationship.followedId)
+      logger.info(`Successfully removed relationship between users ${relationship.followerId} and ${relationship.followedId}.`)
+    } catch (e) {
+      logger.error(`Issue removing relationship between users ${relationship.followerId} and ${relationship.followedId}`)
+      logger.error(`error: ${e.message}`)
+    }
+  }
+
+  /**
    * Handles the messages received from the message broker and forwards them to the correct function.
    *
    * @param {object} data - Object containing the topic and message.
    */
   async handleMessage (data) {
-    // TODO make a switch for topic and read data value from buffer.
     const messageString = data.message.value.toString()
     const message = JSON.parse(messageString)
-    console.log(message)
     switch (data.topic) {
       case process.env.USER_REGISTER_TOPIC:
         logger.info(`Registering user ${message.username}`)
@@ -88,6 +101,7 @@ export class UserService {
         break
       case process.env.UNFOLLOW_TOPIC:
         logger.info(`Removing relationship between ${message.followedId} and ${message.followerId}`)
+        await this.#unfollowUser(message)
         break
       default:
         logger.error(`The ${data.topic} is not one of the subscribed topics for user-service.`)

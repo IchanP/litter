@@ -53,6 +53,26 @@ const userSchema = new Schema({
     type: String,
     required: true
   }
-}, {})
+}, {
+  // Ensure unique entries for followers/following
+  indexes: [
+    {
+      fields: {
+        _id: 1,
+        followers: 1
+      },
+      unique: true,
+      sparse: true
+    },
+    {
+      fields: {
+        _id: 1,
+        following: 1
+      },
+      unique: true,
+      sparse: true
+    }
+  ]
+})
 
 export const UserModel = model('User', userSchema)

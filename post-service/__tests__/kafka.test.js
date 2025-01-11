@@ -1,15 +1,5 @@
 import { jest } from '@jest/globals'
 
-const mockLogger = {
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn()
-}
-
-jest.unstable_mockModule('../src/config/winston-logger.js', () => ({
-  logger: mockLogger
-}))
-
 const mockConsumer = {
   connect: jest.fn().mockResolvedValue(),
   disconnect: jest.fn().mockResolvedValue(),

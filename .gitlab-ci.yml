@@ -81,7 +81,16 @@ write_service_tests:
    - npm ci
    - npm run test
 
-
+post_service_tests:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+    - echo "Running post-service tests"
+    - cd post-service
+    - npm ci
+    - npm run test
+    
 setup_staging_secrets:
   stage: setup
   image:

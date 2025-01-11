@@ -25,6 +25,33 @@ export class UserRepository {
   }
 
   /**
+   * Updates one user.
+   *
+   * @param {string} followerId - The user that followed.
+   * @param {string} followedId - The followed user.
+   */
+  async createFollowRelationship (followerId, followedId) {
+    const [followerUser, followedUser] = await Promise.all([
+      UserModel.findOne({ userId: followerId }),
+      UserModel.findOne({ userId: followedId })
+    ])
+    if (!followerUser || !followedUser) {
+      throw new Error('Cannot find one or both users.')
+    }
+
+    await Promise.all([
+      UserModel.findByIdAndUpdate(
+        followerUser._id,
+        { $push: { following: followedUser._id } }
+      ),
+      UserModel.findByIdAndUpdate(
+        followedUser._id,
+        { $push: { followers: followerUser._id } }
+      )
+    ])
+  }
+
+  /**
    * Registers a user by writing it to the userModel.
    *
    * @param {object} user - A user object containing the fields userId, email and username.

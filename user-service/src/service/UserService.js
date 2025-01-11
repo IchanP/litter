@@ -59,7 +59,8 @@ export class UserService {
    */
   async #followUser (relationship) {
     try {
-      console.log(relationship)
+      await this.userRepository.createFollowRelationship(relationship.followerId, relationship.followedId)
+      logger.info(`Successfully created relationship between users ${relationship.followerId} and ${relationship.followedId}.`)
     } catch (e) {
       logger.error(`Issue registering follow relationship between users ${relationship.followerId} and ${relationship.followedId}`)
       logger.error(`error: ${e.message}`)

@@ -2,7 +2,6 @@ import { UserRepository } from '../repositories/UserRepository.js'
 import { FollowRepository } from '../repositories/FollowRepository.js'
 import { logger } from '../config/winston-logger.js'
 import { validateNotUndefined } from '../util/validate.js'
-import { BadDataError } from '../util/Errors/BadDataError.js'
 import { convertMongoCreateAtToISOdate } from '../util/index.js'
 import { MessageBroker } from './MessageBroker.js'
 import { DuplicateError } from '../util/Errors/DuplicateError.js'
@@ -36,8 +35,8 @@ export class FollowService {
   async createFollow (followed, follower) {
     try {
       this.#performFollowValidation(followed, follower)
-      const followedUser = await this.userRepo.getOneMatching({ userId: Number(followed) })
-      const followerUser = await this.userRepo.getOneMatching({ userId: Number(follower) })
+      const followedUser = await this.userRepo.getOneMatching({ userId: followed })
+      const followerUser = await this.userRepo.getOneMatching({ userId: follower })
       if (!followedUser) throw new NotFoundError(`The user with id ${followed} does not exist.`)
       if (!followerUser) throw new NotFoundError(`The user with id ${follower} does not exist.`)
 
@@ -69,7 +68,7 @@ export class FollowService {
   async deleteFollow (followed, follower) {
     try {
       this.#performFollowValidation(follower, followed)
-      const relationship = await this.followRepo.getOneMatching(Number(followed), Number(follower))
+      const relationship = await this.followRepo.getOneMatching(followed, follower)
       if (!relationship) {
         throw new NotFoundError('This relationship does not exist.')
       }
@@ -95,11 +94,5 @@ export class FollowService {
   #performFollowValidation (followed, follower) {
     validateNotUndefined(follower, 'followerId')
     validateNotUndefined(followed, ':id')
-    if (isNaN(Number(followed))) {
-      throw new BadDataError('followerId must be a number.')
-    }
-    if (isNaN(Number(follower))) {
-      throw new BadDataError(':id must be a number.')
-    }
   }
 }

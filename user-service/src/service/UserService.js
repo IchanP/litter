@@ -53,6 +53,20 @@ export class UserService {
   }
 
   /**
+   * Adds the relationship to the two users.
+   *
+   * @param {object} relationship - An object containing the followerId and followedId.
+   */
+  async #followUser (relationship) {
+    try {
+      console.log(relationship)
+    } catch (e) {
+      logger.error(`Issue registering follow relationship between users ${relationship.followerId} and ${relationship.followedId}`)
+      logger.error(`error: ${e.message}`)
+    }
+  }
+
+  /**
    * Handles the messages received from the message broker and forwards them to the correct function.
    *
    * @param {object} data - Object containing the topic and message.
@@ -69,6 +83,7 @@ export class UserService {
         break
       case process.env.FOLLOWED_TOPIC:
         logger.info(`Establishing relationship between ${message.followedId} and ${message.followerId}`)
+        await this.#followUser(message)
         break
       case process.env.UNFOLLOW_TOPIC:
         logger.info(`Removing relationship between ${message.followedId} and ${message.followerId}`)

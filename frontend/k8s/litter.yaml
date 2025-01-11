@@ -54,6 +54,11 @@ spec:
             secretKeyRef:
               name: service-dns-secrets
               key: API_GATEWAY_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: JWT_SECRET
         ports:
           - containerPort: 3000 # TODO - Is this needed?
             name: litter-http

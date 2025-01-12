@@ -5,12 +5,10 @@ const router = express.Router()
 
 // GET: Hämta användares inlägg
 router.get('/:id/posts', validateJWT, async (req, res) => {
-  const { userId } = req.params.id
   let status
-  console.log('fetched?')
   try {
     const response = await fetch(
-            `${process.env.POST_SERVICE_URL}/posts/${userId}/posts`,
+            `${process.env.POST_SERVICE_URL}/posts/${req.params.id}/posts`,
             {
               method: 'GET',
               headers: {
@@ -34,11 +32,10 @@ router.get('/:id/posts', validateJWT, async (req, res) => {
 
 // GET: Hämta användarens feed
 router.get('/:id/feed', async (req, res) => {
-  const { userId } = req.params.id
   let status
   // Steg 1: Hämta följares ID
   try {
-    const followedUserIdsResponse = await fetch(`${process.env.USER_SERVICE_URL}/users/${userId}/following`, {
+    const followedUserIdsResponse = await fetch(`${process.env.USER_SERVICE_URL}/users/${req.params.id}/following`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

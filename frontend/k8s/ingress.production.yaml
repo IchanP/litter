@@ -8,6 +8,13 @@ spec:
   rules:
     - http:
         paths:
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 9000
           - path: /
             pathType: Prefix
             backend:

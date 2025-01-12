@@ -23,14 +23,13 @@ const Profile = () => {
 
                 // Fetch profile
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/users/${user.sub}`,
+                    `${process.env.REACT_APP_API_GATEWAY_URL}/users/${user.sub}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
-
                 if (!response.ok) {
                     throw new Error(`Failed to fetch profile: ${response.status}`);
                 }

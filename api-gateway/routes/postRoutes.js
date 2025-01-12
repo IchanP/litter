@@ -7,6 +7,7 @@ const router = express.Router()
 router.get('/:id/posts', validateJWT, async (req, res) => {
   const { userId } = req.params.id
   let status
+  console.log('fetched?')
   try {
     const response = await fetch(
             `${process.env.POST_SERVICE_URL}/posts/${userId}/posts`,

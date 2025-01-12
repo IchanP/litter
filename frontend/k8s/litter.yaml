@@ -49,12 +49,12 @@ spec:
             secretKeyRef:
               name: auth0-litter-secrets
               key: AUTH0_CLIENT_ID
-        - name: API_GATEWAY_URL
+        - name: REACT_APP_API_GATEWAY_URL
           valueFrom:
             secretKeyRef:
               name: service-dns-secrets
               key: API_GATEWAY_URL
-        - name: JWT_SECRET
+        - name: REACT_APP_JWT_SECRET
           valueFrom:
             secretKeyRef:
               name: jwt-secrets

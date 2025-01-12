@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
-import { url } from '../config';
-
 
 // style
 import "../style/LitterBox.css";
@@ -20,7 +18,7 @@ const LitterBox = () => {
 
                 // Fetch feed for current user
                 const response = await fetch(
-                    `${url}/posts/${user.sub}/feed`,
+                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/feed`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

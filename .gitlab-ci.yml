@@ -90,6 +90,26 @@ post_service_tests:
     - cd post-service
     - npm ci
     - npm run test
+
+user_service_tests:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+    - echo "Running user-service tests"
+    - cd user-service
+    - npm ci
+    - npm run test
+
+api_gateway_tests:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+    - echo "Running api-gateway tests"
+    - cd api-gateway
+    - npm ci
+    - npm run test
     
 setup_staging_secrets:
   stage: setup

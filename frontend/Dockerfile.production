@@ -12,6 +12,10 @@ COPY . .
 
 RUN npm run build
 
+# Fix permissions for the .cache folder inside node_modules
+RUN mkdir -p node_modules/.cache && \
+    chmod -R 777 node_modules/.cache
+
 USER node
 
 CMD ["npm", "start"]

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
+import { url } from '../config.js';
 
 // style
 import "../style/Profile.css";
@@ -23,7 +24,7 @@ const Profile = () => {
 
                 // Fetch profile
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/users/${user.sub}`,
+                    `${url}/users/${user.sub}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

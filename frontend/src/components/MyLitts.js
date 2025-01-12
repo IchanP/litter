@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
+import { url } from '../config.js';
 
 // style
 import "../style/MyLitts.css";
@@ -18,7 +19,7 @@ const MyLitts = () => {
 
                 // Fetch profile posts
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/posts`,
+                    `${url}/posts/${user.sub}/posts`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

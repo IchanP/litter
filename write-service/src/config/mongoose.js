@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
 import { logger } from './winston-logger.js'
 import { UserModel } from '../model/UserSchema.js'
 import { PostModel } from '../model/PostSchema.js'
+import { FollowModel } from '../model/FollowSchema.js'
 
 /**
  * Establishes a connection to a database.
@@ -28,7 +29,7 @@ export const connectToDatabase = async (connectionString) => {
   logger.info('Syncing indexes...')
   UserModel.syncIndexes()
   PostModel.syncIndexes()
-
+  FollowModel.syncIndexes()
   // Bind connection to events (to get notifications).
   connection.on('connected', () => logger.info('Mongoose connected to MongoDB.'))
   connection.on('error', (err) => logger.info(`Mongoose connection error: ${err}`))

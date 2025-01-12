@@ -63,8 +63,38 @@ spec:
             secretKeyRef:
               name: topic-names
               key: DELETE_POST_TOPIC
+        - name: FOLLOWED_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: FOLLOWED_TOPIC
+        - name: UNFOLLOW_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: topic-names
+              key: UNFOLLOW_TOPIC
         ports:
           - containerPort: 5000
             name: write-svc-http
       imagePullSecrets:
       - name: regcred
+---
+# hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: write-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: write-service
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80 # Will start scaling when it hits 80% usage of limit defined above

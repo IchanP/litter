@@ -1,5 +1,4 @@
 import { PostService } from '../service/PostService.js'
-
 /**
  * Controller for handling post-related API requests.
  */
@@ -42,8 +41,8 @@ export class PostController {
    */
   async getUserFeed (req, res, next) {
     try {
-      const userId = req.params.userId // ID för användaren som vill se sitt feed
-      const feed = await this.postService.getUserFeed(userId)
+      const { followedUserIds } = req.body
+      const feed = await this.postService.getUserFeed(followedUserIds)
       res.status(200).json({
         success: true,
         data: feed

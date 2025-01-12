@@ -1,5 +1,5 @@
 # Specifies a base image, a specific version of the Node.js image.
-FROM node:20.8.0-bullseye-slim
+FROM gitlab.lnu.se:5050/2dv013/student/team-2024-04-snorlax/litter-mono/node:20.8.0-bullseye-slim
 
 # Creates a working directory in the Docker image. The application will be placed here.
 WORKDIR /usr/src/app

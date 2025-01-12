@@ -5,19 +5,10 @@ import { Schema, model } from 'mongoose'
  */
 const postSchema = new Schema({
   /**
-   * Unique identifier for the post.
-   */
-  postId: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  /**
    * The ID of the user who created the post.
    */
   userId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User', // Referens till User-modellen
+    type: String,
     required: true
   },
   /**
@@ -34,6 +25,11 @@ const postSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  postId: {
+    type: Number,
+    index: { unique: true, background: true },
+    required: true
   }
 })
 

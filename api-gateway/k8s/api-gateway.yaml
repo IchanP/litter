@@ -46,6 +46,16 @@ spec:
             secretKeyRef:
               name: service-dns-secrets
               key: WRITE_SERVICE_URL
+        - name: POST_SERVICE_URL
+          valueFrom:
+            secretKeyRef:
+              name: service-dns-secrets
+              key: POST_SERVICE_URL
+        - name: USER_SERVICE_URL
+          valueFrom:
+            secretKeyRef:
+              name: service-dns-secrets
+              key: USER_SERVICE_URL
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
@@ -56,3 +66,23 @@ spec:
             name: gateway-http
       imagePullSecrets:
       - name: regcred      
+---
+# hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gateway-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80 # Will start scaling when it hits 80% usage of limit defined above

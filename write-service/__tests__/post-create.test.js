@@ -39,15 +39,12 @@ describe('PostService', () => {
     }
 
     it('should successfully create a post when all conditions are met', async () => {
-      // Arrange
       mockUserRepo.getOneMatching.mockResolvedValue(mockUser)
       mockPostRepo.createDocument.mockResolvedValue(mockCreatedPost)
       mockBroker.sendMessage.mockResolvedValue()
 
-      // Act
       const result = await postService.createPost(validPostData)
 
-      // Assert
       expect(mockUserRepo.getOneMatching).toHaveBeenCalledWith({ userId: validPostData.authorId })
       expect(mockPostRepo.createDocument).toHaveBeenCalledWith(validPostData)
       expect(mockBroker.sendMessage).toHaveBeenCalledWith(
@@ -58,10 +55,8 @@ describe('PostService', () => {
     })
 
     it('should throw BadDataError when user is not found', async () => {
-      // Arrange
       mockUserRepo.getOneMatching.mockResolvedValue(null)
 
-      // Act & Assert
       await expect(postService.createPost(validPostData))
         .rejects
         .toThrow(new BadDataError('No user with that id.'))
@@ -70,13 +65,11 @@ describe('PostService', () => {
     })
 
     it('should cleanup created post when broker fails', async () => {
-      // Arrange
       mockUserRepo.getOneMatching.mockResolvedValue(mockUser)
       mockPostRepo.createDocument.mockResolvedValue(mockCreatedPost)
       mockBroker.sendMessage.mockRejectedValue(new KafkaDeliveryError('Failed to deliver message'))
       mockPostRepo.deleteOneRecord.mockResolvedValue()
 
-      // Act & Assert
       await expect(postService.createPost(validPostData))
         .rejects
         .toThrow(KafkaDeliveryError)
@@ -87,13 +80,11 @@ describe('PostService', () => {
     })
 
     it('should log error when cleanup fails after broker error', async () => {
-      // Arrange
       mockUserRepo.getOneMatching.mockResolvedValue(mockUser)
       mockPostRepo.createDocument.mockResolvedValue(mockCreatedPost)
       mockBroker.sendMessage.mockRejectedValue(new KafkaDeliveryError('Failed to deliver message'))
       mockPostRepo.deleteOneRecord.mockRejectedValue(new Error('Cleanup failed'))
 
-      // Act & Assert
       await expect(postService.createPost(validPostData))
         .rejects
         .toThrow(KafkaDeliveryError)
@@ -104,12 +95,10 @@ describe('PostService', () => {
     })
 
     it('should throw and log error when validation fails', async () => {
-      // Arrange
       const invalidPostData = {
         // Missing required fields
       }
 
-      // Act & Assert
       await expect(postService.createPost(invalidPostData))
         .rejects
         .toThrow()

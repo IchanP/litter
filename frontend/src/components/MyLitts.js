@@ -26,11 +26,9 @@ const MyLitts = () => {
                         },
                     }
                 );
-
                 if (!response.ok) {
                     throw new Error(`Failed to fetch posts: ${response.status}`);
                 }
-
                 const data = await response.json();
                 setPosts(data);
             } catch (err) {

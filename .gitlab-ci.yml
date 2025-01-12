@@ -48,8 +48,10 @@ setup_kubectl_dependencies:
     - |
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
         export K8S_CONTEXT=$PROD_CONTEXT
+        export API_GATEWAY_URL=$API_PROD_URL
       else
         export K8S_CONTEXT=$STAGING_CONTEXT
+        export API_GATEWAY_URL=$API_STAGING_URL
       fi
     # Set the context
     - kubectl config use-context $K8S_CONTEXT
@@ -59,6 +61,7 @@ setup_kubectl_dependencies:
     # Apply shared secrets
     - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
     - envsubst < shared-secrets/topic-names.yaml | kubectl replace --force -f -
+    - echo "API_GATEWAY_URL is $API_GATEWAY_URL"
     - envsubst < shared-secrets/service-dns.yaml | kubectl replace --force -f -
     - envsubst < shared-secrets/kafka-connection.yaml | kubectl replace --force -f -
     # Apply operator
@@ -81,7 +84,36 @@ write_service_tests:
    - npm ci
    - npm run test
 
+post_service_tests:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+    - echo "Running post-service tests"
+    - cd post-service
+    - npm ci
+    - npm run test
 
+user_service_tests:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+    - echo "Running user-service tests"
+    - cd user-service
+    - npm ci
+    - npm run test
+
+api_gateway_tests:
+  stage: test
+  image:
+    name: node:20-slim
+  script:
+    - echo "Running api-gateway tests"
+    - cd api-gateway
+    - npm ci
+    - npm run test
+    
 setup_staging_secrets:
   stage: setup
   image:
@@ -93,7 +125,7 @@ setup_staging_secrets:
     - kubectl config use-context $K8S_CONTEXT
     - envsubst < ./frontend/k8s/secrets/auth0-litter-staging.yaml | kubectl apply -f -
     # TODO - Remove this secret?
-    - envsubst < ./api-gateway/k8s/secrets/jwt-secret-staging.yaml | kubectl apply -f -
+    - envsubst < shared-secrets/jwt-secret-staging.yaml | kubectl apply -f -
   needs:
     - setup_kubectl_dependencies
   only:
@@ -110,8 +142,8 @@ setup_production_secrets:
   script:
     - kubectl config use-context $K8S_CONTEXT
     - envsubst < ./frontend/k8s/secrets/auth0-litter-prod.yaml | kubectl apply -f -
-    # TODO - Remove this secret?
-    - envsubst < ./api-gateway/k8s/secrets/jwt-secret.yaml | kubectl apply -f -
+    - envsubst < shared-secrets/jwt-secret.yaml | kubectl apply -f -
+
   needs:
     - setup_kubectl_dependencies
   only:

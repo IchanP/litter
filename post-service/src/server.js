@@ -6,13 +6,14 @@ import { connectToDatabase } from './config/mongoose.js'
 import { connectBroker, subscribeToTopics } from './config/kafka.js'
 import { router } from './routes/router.js'
 import { PostService } from './service/PostService.js'
+import { PostRepository } from './repositories/PostRepository.js'
 
 try {
   const app = express()
   // TODO connect to database here
   await connectToDatabase(process.env.POST_DB_CONNECTION_STRING)
   const consumer = await connectBroker(process.env.MESSAGE_BROKER_CONNECTION_STRING, 'write-service', 'write-service-group')
-  await subscribeToTopics(consumer, [process.env.NEW_POST_TOPIC, process.env.DELETE_POST_TOPIC], new PostService())
+  await subscribeToTopics(consumer, [process.env.NEW_POST_TOPIC, process.env.DELETE_POST_TOPIC], new PostService(new PostRepository()))
   app.use(express.json())
   app.use(helmet())
   app.use(morganLogger('dev'))

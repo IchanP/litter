@@ -1,4 +1,5 @@
 import { PostRepository } from '../repositories/PostRepository.js'
+import { logger } from '../config/winston-logger.js'
 /**
  * Service for handling post-related business logic.
  */
@@ -39,12 +40,57 @@ export class PostService {
   }
 
   /**
+   * Attempts to create a post with the provided data.
+   *
+   * @param {object} postData - A post object containing the fields: AuthorId, content, postId and createdAt.
+   */
+  async #createPost (postData) {
+    try {
+      const post = await this.postRepository.createPost(postData)
+      if (!post) {
+        throw new Error('Failed to create post.')
+      }
+      logger.info(`Successfully created post with id ${postData.postId}`)
+    } catch (e) {
+      logger.error(`Failed to create post with postId ${postData.postId}`)
+      logger.error(e.message)
+    }
+  }
+
+  /**
+   * Attemps to delete a post by the provided ID.
+   *
+   * @param {object} postData - An object containing the field postId.
+   */
+  async #deletePost (postData) {
+    try {
+      await this.postRepository.deletePost(Number(postData?.postId))
+      logger.info(`Successfully deleted post with id ${postData.postId}`)
+    } catch (e) {
+      logger.error(`Failed to delete post with postId ${postData.postId}`)
+      logger.error(e.message)
+    }
+  }
+
+  /**
    * Handles the messages received from the message broker and forwards them to the correct function.
    *
    * @param {object} data - Object containing the topic and message.
    */
   async handleMessage (data) {
-    // TODO make a switch for topic and read data value from buffer.
-    console.log(data.message)
+    const messageString = data.message.value.toString()
+    const message = JSON.parse(messageString)
+    switch (data.topic) {
+      case process.env.NEW_POST_TOPIC:
+        logger.info(`Creating new post with id ${message.postId}`)
+        this.#createPost(message)
+        break
+      case process.env.DELETE_POST_TOPIC:
+        logger.info(`Deleting post with id ${message.postId}`)
+        this.#deletePost(message)
+        break
+      default:
+        logger.error(`The ${data.topic} is not one of the subscribed topics for user-service.`)
+    }
   }
 }

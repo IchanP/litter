@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node gateway.js",
     "dev": "nodemon gateway.js",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config __tests__/jest.config.mjs"
   },
   "dependencies": {
     "api-gateway": "file:",
@@ -18,7 +19,10 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
     "@lnu/eslint-config": "^1.1.10",
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9"
   },
   "author": "Team Snorlax",

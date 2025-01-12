@@ -15,8 +15,8 @@ export class FollowRepository {
   /**
    * Creates a relationship of following between the passed ids.
    *
-   * @param {number} followed - The followed user.
-   * @param {number} follower - The follower.
+   * @param {string} followed - The followed user.
+   * @param {string} follower - The follower.
    * @returns {object} - Returns an object with the fields followerId, followedId and createdAt.
    */
   async createDocument (followed, follower) {
@@ -37,8 +37,8 @@ export class FollowRepository {
   /**
    * Finds one follow document matching the specified relationship.
    *
-   * @param {number} followed - The followed ID.
-   * @param {number} follower - The follower ID.
+   * @param {string} followed - The followed ID.
+   * @param {string} follower - The follower ID.
    * @returns {object} - Returns an object with the fields followerId, followedId and createdAt.
    */
   async getOneMatching (followed, follower) {

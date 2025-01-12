@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import { url } from '../config';
 
 // style
 import "../style/Search.css";
@@ -31,7 +30,7 @@ const Search = () => {
 
             // Fetch search
             const response = await fetch(
-                `${url}/users/search?query=${encodeURIComponent(input.trim())}`,
+                `${process.env.API_GATEWAY_URL}/users/search?query=${encodeURIComponent(input.trim())}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

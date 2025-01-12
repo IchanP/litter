@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { url } from '../config';
 
 // style
 import "../style/CreateLitt.css";
@@ -25,7 +24,7 @@ const CreateLitt = () => {
 
             // Fetch create litt
             const response = await fetch(
-                `${url}/write/posts/create`,
+                `${process.env.API_GATEWAY_URL}/write/posts/create`,
                 {
                     method: "POST",
                     headers: {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
-import { url } from '../config';
 
 // style
 import "../style/MyLitts.css";
@@ -19,16 +18,18 @@ const MyLitts = () => {
 
                 // Fetch profile posts
                 const response = await fetch(
-                    `${url}/posts/${user.sub}/posts`,
+                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/posts`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
+
                 if (!response.ok) {
                     throw new Error(`Failed to fetch posts: ${response.status}`);
                 }
+
                 const data = await response.json();
                 setPosts(data);
             } catch (err) {

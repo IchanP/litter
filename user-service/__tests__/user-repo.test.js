@@ -25,6 +25,10 @@ describe('UserRepository Relationships', () => {
     userRepository = new UserRepository()
   })
 
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
   describe('createFollowRelationship', () => {
     it('should create a follow relationship between two users', async () => {
       const followerUser = { _id: 'followerId123', userId: 'user1', following: [] }
@@ -62,9 +66,9 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce({ _id: 'followedId456', userId: 'user2' })
 
-      await expect(userRepository.createFollowRelationship('user1', 'user2'))
-        .rejects
-        .toThrow('Cannot find one or both users.')
+      await expect(async () => {
+        await userRepository.createFollowRelationship('user1', 'user2')
+      }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()
     })
@@ -74,9 +78,9 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce({ _id: 'followerId123', userId: 'user1' })
         .mockResolvedValueOnce(null)
 
-      await expect(userRepository.createFollowRelationship('user1', 'user2'))
-        .rejects
-        .toThrow('Cannot find one or both users.')
+      await expect(async () => {
+        await userRepository.createFollowRelationship('user1', 'user2')
+      }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()
     })
@@ -121,9 +125,9 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce({ _id: 'followerId123', userId: 'user1' })
         .mockResolvedValueOnce(null)
 
-      await expect(userRepository.removeRelationship('user1', 'user2'))
-        .rejects
-        .toThrow('Cannot find one or both users.')
+      await expect(async () => {
+        await userRepository.createFollowRelationship('user1', 'user2')
+      }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()
     })

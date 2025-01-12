@@ -46,6 +46,7 @@ export class UserService {
   async #registerUser (user) {
     try {
       await this.userRepository.registerUser(user)
+      logger.info(`Successfully registered user with userId ${user.userId}`)
     } catch (e) {
       logger.error(`Issue registering user ${user.username}.`)
       logger.error(`error: ${e.message}`)

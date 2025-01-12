@@ -48,8 +48,10 @@ setup_kubectl_dependencies:
     - |
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
         export K8S_CONTEXT=$PROD_CONTEXT
+        export API_GATEWAY_URL=$API_PROD_URL
       else
         export K8S_CONTEXT=$STAGING_CONTEXT
+        export API_GATEWAY_URL=$API_STAGING_URL
       fi
     # Set the context
     - kubectl config use-context $K8S_CONTEXT
@@ -59,6 +61,7 @@ setup_kubectl_dependencies:
     # Apply shared secrets
     - envsubst < shared-secrets/docker-registry.yaml | kubectl apply -f -
     - envsubst < shared-secrets/topic-names.yaml | kubectl replace --force -f -
+    - echo "API_GATEWAY_URL is $API_GATEWAY_URL"
     - envsubst < shared-secrets/service-dns.yaml | kubectl replace --force -f -
     - envsubst < shared-secrets/kafka-connection.yaml | kubectl replace --force -f -
     # Apply operator

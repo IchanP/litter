@@ -3,7 +3,7 @@ import { jest } from '@jest/globals'
 const mockFindOne = jest.fn()
 const mockFindByIdAndUpdate = jest.fn()
 
-jest.unstable_mockModule('../src/model/UserSchema.js', () => ({
+jest.unstable_mockModule('../src/model/userSchema.js', () => ({
   UserModel: {
     findOne: mockFindOne,
     findByIdAndUpdate: mockFindByIdAndUpdate

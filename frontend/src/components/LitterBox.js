@@ -18,7 +18,6 @@ const LitterBox = () => {
                 const token = await getAccessTokenSilently();
 
                 // Fetch feed for current user
-                console.log(user.sub)
                 const response = await fetch(
                     `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${user.sub}/feed`,
                     {

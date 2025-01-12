@@ -17,7 +17,6 @@ const MyLitts = () => {
                 const token = await getAccessTokenSilently();
 
                 // Fetch profile posts
-                console.log("API Gateway URL:", process.env.REACT_APP_API_GATEWAY_URL)
                 const response = await fetch(
                     `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${user.sub}/posts`,
                     {   
@@ -26,11 +25,9 @@ const MyLitts = () => {
                         },
                     }
                 );
-                console.log(response)
                 if (!response.ok) {
                     throw new Error(`Failed to fetch posts: ${response.status}`);
                 }
-                console.log(response)
                 const data = await response.json();
                 setPosts(data);
             } catch (err) {

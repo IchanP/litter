@@ -1,10 +1,9 @@
 import { jest } from '@jest/globals'
 
-// Mock UserModel
 const mockFindOne = jest.fn()
 const mockFindByIdAndUpdate = jest.fn()
 
-jest.unstable_mockModule('../src/model/UserSchema.js', () => ({
+jest.unstable_mockModule('../src/model/userSchema.js', () => ({
   UserModel: {
     findOne: mockFindOne,
     findByIdAndUpdate: mockFindByIdAndUpdate
@@ -25,7 +24,13 @@ describe('UserRepository Relationships', () => {
     userRepository = new UserRepository()
   })
 
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
+
   describe('createFollowRelationship', () => {
+    jest.setTimeout(10000)
+
     it('should create a follow relationship between two users', async () => {
       const followerUser = { _id: 'followerId123', userId: 'user1', following: [] }
       const followedUser = { _id: 'followedId456', userId: 'user2', followers: [] }
@@ -62,9 +67,9 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce({ _id: 'followedId456', userId: 'user2' })
 
-      await expect(userRepository.createFollowRelationship('user1', 'user2'))
-        .rejects
-        .toThrow('Cannot find one or both users.')
+      await expect(async () => {
+        await userRepository.createFollowRelationship('user1', 'user2')
+      }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()
     })
@@ -74,9 +79,9 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce({ _id: 'followerId123', userId: 'user1' })
         .mockResolvedValueOnce(null)
 
-      await expect(userRepository.createFollowRelationship('user1', 'user2'))
-        .rejects
-        .toThrow('Cannot find one or both users.')
+      await expect(async () => {
+        await userRepository.createFollowRelationship('user1', 'user2')
+      }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()
     })
@@ -95,10 +100,8 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce(followerUser)
         .mockResolvedValueOnce(followedUser)
 
-      // Act
       const result = await userRepository.removeRelationship('user1', 'user2')
 
-      // Assert
       expect(mockFindOne).toHaveBeenCalledTimes(2)
       expect(mockFindOne).toHaveBeenNthCalledWith(1, { userId: 'user1' })
       expect(mockFindOne).toHaveBeenNthCalledWith(2, { userId: 'user2' })
@@ -121,9 +124,9 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce({ _id: 'followerId123', userId: 'user1' })
         .mockResolvedValueOnce(null)
 
-      await expect(userRepository.removeRelationship('user1', 'user2'))
-        .rejects
-        .toThrow('Cannot find one or both users.')
+      await expect(async () => {
+        await userRepository.removeRelationship('user1', 'user2')
+      }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()
     })

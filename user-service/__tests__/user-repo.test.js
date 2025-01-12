@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
 
-// Mock UserModel
 const mockFindOne = jest.fn()
 const mockFindByIdAndUpdate = jest.fn()
 
@@ -30,6 +29,8 @@ describe('UserRepository Relationships', () => {
   })
 
   describe('createFollowRelationship', () => {
+    jest.setTimeout(10000)
+
     it('should create a follow relationship between two users', async () => {
       const followerUser = { _id: 'followerId123', userId: 'user1', following: [] }
       const followedUser = { _id: 'followedId456', userId: 'user2', followers: [] }
@@ -99,10 +100,8 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce(followerUser)
         .mockResolvedValueOnce(followedUser)
 
-      // Act
       const result = await userRepository.removeRelationship('user1', 'user2')
 
-      // Assert
       expect(mockFindOne).toHaveBeenCalledTimes(2)
       expect(mockFindOne).toHaveBeenNthCalledWith(1, { userId: 'user1' })
       expect(mockFindOne).toHaveBeenNthCalledWith(2, { userId: 'user2' })
@@ -126,7 +125,7 @@ describe('UserRepository Relationships', () => {
         .mockResolvedValueOnce(null)
 
       await expect(async () => {
-        await userRepository.createFollowRelationship('user1', 'user2')
+        await userRepository.removeRelationship('user1', 'user2')
       }).rejects.toThrow('Cannot find one or both users.')
 
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled()

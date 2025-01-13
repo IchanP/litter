@@ -35,7 +35,8 @@ export class UserService {
    * @returns {Promise<Array>} List of matching users.
    */
   async searchUsers (query) {
-    return this.userRepository.searchUsers(query)
+    const users = this.userRepository.searchUsers(query)
+    return users
   }
 
   /**

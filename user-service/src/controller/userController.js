@@ -42,6 +42,7 @@ export class UserController {
    */
   async searchUsers (req, res, next) {
     try {
+      console.log(req.query)
       const query = req.query.query
       const users = await this.userService.searchUsers(query)
       res.status(200).json({

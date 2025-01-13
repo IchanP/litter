@@ -30,7 +30,7 @@ const Search = () => {
 
             // Fetch search
             const response = await fetch(
-                `${process.env.API_GATEWAY_URL}/users/search?query=${encodeURIComponent(input.trim())}`,
+                `${process.env.REACT_APP_API_GATEWAY_URL}/users/search?query=${encodeURIComponent(input.trim())}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -41,9 +41,8 @@ const Search = () => {
             if (!response.ok) {
                 throw new Error(`Failed to search: ${response.status}`);
             }
-
             const data = await response.json();
-            setResults(data);
+            setResults(data.data);
         } catch (err) {
             console.error("Error searching users:", err);
             setError(err.message);

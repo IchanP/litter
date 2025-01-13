@@ -2,13 +2,17 @@ import express from 'express'
 
 const router = express.Router()
 
-// GET: Hämta en användares profil
-router.get('/:id', async (req, res) => {
+// GET: Sök efter användare
+router.get('/search', async (req, res) => {
+  const query = req.query.query
   let status
+  if (!query) {
+    return res.json({ message: 'Query parameter is required' })
+  }
 
   try {
     const response = await fetch(
-            `${process.env.USER_SERVICE_URL}/users/${req.params.id}`,
+            `${process.env.USER_SERVICE_URL}/user/search?query=${encodeURIComponent(query)}`,
             {
               method: 'GET',
               headers: {
@@ -30,18 +34,13 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// GET: Sök efter användare
-router.get('/search', async (req, res) => {
-  const { query } = req.query
+// GET: Hämta en användares profil
+router.get('/:id', async (req, res) => {
+  console.log('yo')
   let status
-
-  if (!query) {
-    return res.json({ message: 'Query parameter is required' })
-  }
-
   try {
     const response = await fetch(
-            `${process.env.USER_SERVICE_URL}/users/search?query=${encodeURIComponent(query)}`,
+            `${process.env.USER_SERVICE_URL}/user/${req.params.id}`,
             {
               method: 'GET',
               headers: {

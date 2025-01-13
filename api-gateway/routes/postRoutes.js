@@ -4,11 +4,11 @@ import { validateJWT } from '../middleware/authMiddleware.js'
 const router = express.Router()
 
 // GET: Hämta användares inlägg
-router.get('/:id/posts', validateJWT, async (req, res) => {
+router.get('/:id/posts', async (req, res) => {
   let status
   try {
     const response = await fetch(
-            `${process.env.POST_SERVICE_URL}/posts/${req.params.id}/posts`,
+            `${process.env.POST_SERVICE_URL}/post/${req.params.id}/posts`,
             {
               method: 'GET',
               headers: {
@@ -16,7 +16,6 @@ router.get('/:id/posts', validateJWT, async (req, res) => {
               }
             }
     )
-    /*  */
     if (!response.ok) {
       status = response.status
       const errData = await response.json()
@@ -35,13 +34,13 @@ router.get('/:id/feed', async (req, res) => {
   let status
   // Steg 1: Hämta följares ID
   try {
-    const followedUserIdsResponse = await fetch(`${process.env.USER_SERVICE_URL}/users/${req.params.id}/following`, {
+    const followedUserIdsResponse = await fetch(`${process.env.USER_SERVICE_URL}/user/${req.params.id}/following`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       }
     })
-
+    console.log(followedUserIdsResponse.ok)
     if (!followedUserIdsResponse.ok) {
       status = followedUserIdsResponse.status
       const errData = await followedUserIdsResponse.json()
@@ -49,10 +48,12 @@ router.get('/:id/feed', async (req, res) => {
     }
 
     const { followedUserIds } = await followedUserIdsResponse.json()
-
+    const jsonData = await followedUserIdsResponse.json()
+    console.log(followedUserIds)
+    console.log(jsonData)
     // Step 2: Hämta inlägg med följares ID
     const feedResponse = await fetch(
-            `${process.env.POST_SERVICE_URL}/posts/${userId}/feed`, {
+            `${process.env.POST_SERVICE_URL}/post/${req.params.id}/feed`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

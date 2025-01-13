@@ -15,8 +15,10 @@
 
 .user {
     font-size: 14px;
-    color: #333
+    color: #375ba7;
+    cursor: pointer
 }
+
 
 .created-at {
     font-size: 14px;

@@ -13,5 +13,5 @@ const userService = new UserService(userRepository)
 const userController = new UserController(userService)
 
 // Routes
-router.get('/:id', (req, res, next) => userController.getUser(req, res, next))
 router.get('/search', (req, res, next) => userController.searchUsers(req, res, next))
+router.get('/:id', (req, res, next) => userController.getUser(req, res, next))

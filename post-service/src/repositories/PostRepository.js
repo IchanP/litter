@@ -34,7 +34,8 @@ export class PostRepository {
     const post = new PostModel({
       userId: postData.authorId,
       content: postData.content,
-      postId: postData.postId
+      postId: postData.postId,
+      username: postData.username
     })
     await post.save()
     return post

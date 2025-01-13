@@ -6,6 +6,7 @@ import Search from "../components/Search";
 
 // style
 import "../style/Home.css"
+import Auth0SignupHandler from "../components/Auth0SignupHandler";
 
 const Home = () => {
     return (
@@ -16,6 +17,7 @@ const Home = () => {
                 </div>
 
                 <div className="middle-column">
+                    <Auth0SignupHandler />
                     <CreateLitt />
                     <LitterBox />
                 </div>

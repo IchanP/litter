@@ -19,6 +19,11 @@ const postSchema = new Schema({
     required: true,
     trim: true
   },
+  username: {
+    type: String,
+    required: true,
+    trim: true
+  },
   /**
    * Date and time when the post was created.
    */

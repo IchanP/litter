@@ -37,14 +37,15 @@ export class PostService {
     try {
       this.#performPostValidation(postData)
       const foundUser = await this.userRepo.getOneMatching({ userId: postData?.authorId })
-
       if (!foundUser) {
         throw new BadDataError('No user with that id.')
       }
       createdPost = await this.postRepo.createDocument(postData)
       createdPost.createdAt = convertMongoCreateAtToISOdate(createdPost.createdAt)
       // TODO might need to pass more data here depending on how we make the post models look.
-      await this.broker.sendMessage(process.env.NEW_POST_TOPIC, JSON.stringify(createdPost))
+      const dataToSend = createdPost
+      dataToSend.username = foundUser.username
+      await this.broker.sendMessage(process.env.NEW_POST_TOPIC, JSON.stringify(dataToSend))
       return createdPost
     } catch (e) {
       if (e instanceof DuplicateError === false) {

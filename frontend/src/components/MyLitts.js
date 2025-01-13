@@ -18,7 +18,7 @@ const MyLitts = () => {
 
                 // Fetch profile posts
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/posts`,
+                    `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${user.sub}/posts`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -31,7 +31,8 @@ const MyLitts = () => {
                 }
 
                 const data = await response.json();
-                setPosts(data);
+                console.log(data.data)
+                setPosts(data.data);
             } catch (err) {
                 console.error("Error fetching posts:", err);
                 setError(err.message);
@@ -54,10 +55,10 @@ const MyLitts = () => {
     return (
         <div className="my-litter-box">
             {posts.map((post) => (
-                <div key={post._id} className="my-post">
+                <div key={post.postId} className="my-post">
                     <div className="my-post-header">
-                        <span className="my-user">@{post.user}, </span>
-                        <span className="my-created-at">
+                        <span className="my-user">@{post.username}</span>
+                        <span className="my-created-at">, 
                             {new Date(post.createdAt).toLocaleString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",

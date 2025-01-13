@@ -5,10 +5,9 @@ const router = express.Router()
 // GET: Hämta en användares profil
 router.get('/:id', async (req, res) => {
   let status
-
   try {
     const response = await fetch(
-            `${process.env.USER_SERVICE_URL}/users/${req.params.id}`,
+            `${process.env.USER_SERVICE_URL}/user/${req.params.id}`,
             {
               method: 'GET',
               headers: {
@@ -41,7 +40,7 @@ router.get('/search', async (req, res) => {
 
   try {
     const response = await fetch(
-            `${process.env.USER_SERVICE_URL}/users/search?query=${encodeURIComponent(query)}`,
+            `${process.env.USER_SERVICE_URL}/user/search?query=${encodeURIComponent(query)}`,
             {
               method: 'GET',
               headers: {

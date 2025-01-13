@@ -22,7 +22,9 @@ export class UserController {
    */
   async getUser (req, res, next) {
     try {
+      console.log('????????')
       const userId = req.params.id
+      console.log(userId)
       const user = await this.userService.getUser(userId)
       res.status(200).json({
         success: true,

@@ -17,7 +17,6 @@ router.post('/register', async (req, res) => {
         body: JSON.stringify(req.body)
       }
     )
-    console.log(response)
     if (!response.ok) {
       status = response.status
       const errDAta = await response.json()
@@ -35,7 +34,6 @@ router.post('/register', async (req, res) => {
 router.post('/posts/create', async (req, res) => {
   let status
   try {
-    console.log(req.body)
     const response = await fetch(
       `${process.env.WRITE_SERVICE_URL}/posts/create`,
       {

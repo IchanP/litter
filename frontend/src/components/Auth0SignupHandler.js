@@ -17,7 +17,7 @@ const Auth0SignupHandler = () => {
               Authorization: `Bearer ${token}`
             }
           });
-
+          console.log(checkResponse)
           // If user is not found (404), register them
           if (checkResponse.status === 404) {
             setIsNewUser(true);

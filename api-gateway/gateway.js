@@ -3,6 +3,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import routes from './routes/index.js'
+import path from 'path'
 
 dotenv.config()
 try {
@@ -12,6 +13,13 @@ try {
   app.use(helmet())
   app.use(morgan('dev'))
   app.use(express.json())
+
+  // Normalize slashes in URLs
+  app.use((req, res, next) => {
+    console.log('Normalizing URL for production.')
+    req.url = path.normalize(req.url)
+    next()
+  })
 
   // Koppla alla routes
   app.use('/', routes)

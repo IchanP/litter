@@ -36,7 +36,7 @@ const MyLitts = ({id}) => {
                 setPosts(data.data);
             } catch (err) {
                 console.error("Error fetching posts:", err);
-                setError(err.message);
+                setPosts([]);
             } finally {
                 setLoading(false);
             }

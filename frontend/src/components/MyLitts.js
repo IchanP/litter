@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 // style
 import "../style/MyLitts.css";
 
-const MyLitts = () => {
-    const { user, getAccessTokenSilently } = useAuth0();
+const MyLitts = ({id}) => {
+    const { getAccessTokenSilently } = useAuth0();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,7 +19,7 @@ const MyLitts = () => {
 
                 // Fetch profile posts
                 const response = await fetch(
-                    `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${user.sub}/posts`,
+                    `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${id}/posts`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ const MyLitts = () => {
         };
 
         fetchPosts();
-    }, [getAccessTokenSilently, user.sub]);
+    }, [getAccessTokenSilently]);
 
     if (loading) {
         return <Loading />;

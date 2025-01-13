@@ -4,10 +4,10 @@ import Search from '../components/Search';
 import { useParams } from 'react-router-dom';
 
 import '../style/PedigreeChart.css'
-import UserProfile from '../components/UserProfile';
-import UserLitts from '../components/UserLitts';
+import MyLitts from '../components/MyLitts';
+import Profile from '../components/Profile';
 
-const Profile = () => {
+const ProfilePage = () => {
     const { id } = useParams()
     console.log(id)
     return (
@@ -18,8 +18,8 @@ const Profile = () => {
                 </div>
 
                 <div className="middle-column">
-                    <UserProfile userId={id} />
-                    <UserLitts id={id} />
+                    <Profile userId={id} />
+                    <MyLitts id={id} />
                 </div>
 
                     <div className='right-column'>
@@ -30,4 +30,4 @@ const Profile = () => {
     )
 }
 
-export default Profile;
+export default ProfilePage;

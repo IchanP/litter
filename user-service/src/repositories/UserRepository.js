@@ -33,6 +33,7 @@ export class UserRepository {
   async registerUser (user) {
     const newUser = new UserModel({
       userId: user.userId,
+      profileId: user.profileId,
       username: user.username,
       email: user.email,
       followers: [],

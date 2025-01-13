@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose'
 import { BASE_SCHEMA } from './BaseSchema.js'
 import validator from 'validator'
+import { Counter } from './Counter.js'
 
 const userSchema = new Schema({
   userId: {
@@ -43,6 +44,10 @@ const userSchema = new Schema({
     maxLength: [40, 'The username must be a maximum length of 40 characters.'],
     trim: true
   },
+  profileId: {
+    type: Number,
+    index: { unique: true, background: true }
+  },
   events: [{
     type: String,
     payload: {
@@ -52,6 +57,18 @@ const userSchema = new Schema({
     timestamp: Date
   }]
 }, {})
+
+userSchema.pre('save', async function (next) {
+  if (this.isNew) { // Check if the document is new
+    const count = await Counter.findByIdAndUpdate(
+      { _id: 'profileId' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    )
+    this.profileId = count.seq
+  }
+  next()
+})
 
 userSchema.add(BASE_SCHEMA)
 

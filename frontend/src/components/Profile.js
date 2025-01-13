@@ -5,7 +5,7 @@ import Loading from "./Loading";
 // style
 import "../style/Profile.css";
 
-const Profile = () => {
+const Profile = (id) => {
     const { user, getAccessTokenSilently } = useAuth0();
 
     const [profile, setProfile] = useState({

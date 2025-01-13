@@ -39,11 +39,12 @@ const Search = () => {
             );
 
             if (!response.ok) {
+                console.log(response)
+
                 throw new Error(`Failed to search: ${response.status}`);
             }
-
             const data = await response.json();
-            setResults(data);
+            setResults(data.data);
         } catch (err) {
             console.error("Error searching users:", err);
             setError(err.message);

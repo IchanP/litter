@@ -7,10 +7,7 @@ const Auth0SignupHandler = () => {
 
   useEffect(() => {
     const checkAndRegisterUser = async () => {
-      console.log(isAuthenticated)
-      console.log(user)
       if (isAuthenticated && user) {
-        console.log('????')
         try {
           const token = await getAccessTokenSilently();
           

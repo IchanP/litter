@@ -4,8 +4,8 @@ import Search from '../components/Search';
 import { useParams } from 'react-router-dom';
 
 import '../style/PedigreeChart.css'
-import MyLitts from '../components/MyLitts';
 import UserProfile from '../components/UserProfile';
+import UserLitts from '../components/UserLitts';
 
 const Profile = () => {
     const { id } = useParams()
@@ -19,7 +19,7 @@ const Profile = () => {
 
                 <div className="middle-column">
                     <UserProfile userId={id} />
-                    <MyLitts />
+                    <UserLitts id={id} />
                 </div>
 
                     <div className='right-column'>

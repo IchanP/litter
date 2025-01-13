@@ -23,7 +23,12 @@ export class PostService {
     if (!userId) {
       throw new Error('User ID is required')
     }
-    return this.postRepository.findPostsById(userId)
+    let result = await this.postRepository.findPostsById(userId)
+    if (result.length === 0) {
+      result = await this.postRepository.findPostsByProfileId(userId)
+    }
+    console.log(result)
+    return result
   }
 
   /**

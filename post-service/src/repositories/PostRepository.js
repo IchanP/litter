@@ -15,6 +15,16 @@ export class PostRepository {
   }
 
   /**
+   * Attempts to find a users posts by their ProfileID.
+   *
+   * @param {number} profileId - The user's unique profileID.
+   * @returns {Promise<object>} - The user's posts.
+   */
+  async findPostsByProfileId (profileId) {
+    return PostModel.find({ profileId }).sort({ createdAt: -1 })
+  }
+
+  /**
    * Fetches the posts from the users and then sorts them by decreasing time.
    *
    * @param {Array<number>} follows - The IDS of the people to get the posts from.

@@ -21,7 +21,6 @@ const UserProfile = ({ userId }) => {
             try {
                 // Get token with Management API permissions
                 const token = await getAccessTokenSilently();
-                console.log("Got access token");
 
                 // First fetch user data from your API
                 const response = await fetch(

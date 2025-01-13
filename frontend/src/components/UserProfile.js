@@ -19,11 +19,11 @@ const UserProfile = ({ userId }) => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const token = await getAccessTokenSilently({
-                    audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/`,
-                    scope: "read:users"
-                });
+                // Get token with Management API permissions
+                const token = await getAccessTokenSilently();
+                console.log("Got access token");
 
+                // First fetch user data from your API
                 const response = await fetch(
                     `${process.env.REACT_APP_API_GATEWAY_URL}/users/${userId}`,
                     {
@@ -34,49 +34,42 @@ const UserProfile = ({ userId }) => {
                 );
                 
                 if (!response.ok) {
-                    console.log("API Response not OK:", response.status); // Log error status
                     throw new Error(`Failed to fetch profile: ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log("User data received:", data); // Check API response
-
+                console.log("Got user data:", data);
                 const oauthId = data.data.userId;
 
-                console.log("Fetching Auth0 profile..."); // Check Auth0 API call
+                // Then fetch the Auth0 profile info using the oauthId
                 const auth0Response = await fetch(
                     `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/users/${oauthId}`,
                     {
-                        method: 'GET',
                         headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
+                            Authorization: `Bearer ${token}`,
                         },
                     }
                 );
 
                 if (!auth0Response.ok) {
                     const errorText = await auth0Response.text();
-                    console.log("Auth0 error response: ", errorText);
-                    console.log("Auth0 Response not OK:", auth0Response.status); // Log Auth0 error
-                    console.log(auth0Response)
+                    console.error("Auth0 error:", errorText);
                     throw new Error(`Failed to fetch Auth0 profile: ${auth0Response.status}`);
                 }
-                console.log(auth0Response)
+
                 const auth0Data = await auth0Response.json();
-                console.log("Auth0 data received:", auth0Data); // Check Auth0 response
+                console.log("Got Auth0 data:", auth0Data);
 
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,
                     joinedDate: data.data.registeredAt,
-                    nickname: auth0Data.nickname,
+                    nickname: auth0Data.nickname || auth0Data.name,
                     name: auth0Data.name,
                     picture: auth0Data.picture
                 });
             } catch (err) {
-                console.error("Error details:", err); // Detailed error logging
+                console.error("Error details:", err);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -84,15 +77,12 @@ const UserProfile = ({ userId }) => {
         };
 
         if (userId) {
-            console.log("UserId present, calling fetchProfile"); // Check if condition met
             fetchProfile();
         } else {
-            console.log("No userId provided"); // Check if userId is missing
             setLoading(false);
         }
     }, [getAccessTokenSilently, userId]);
 
-    // Rest of the component remains the same
     const handleLeash = () => {
         alert(`Leash user: ${profile.nickname}`);
     };

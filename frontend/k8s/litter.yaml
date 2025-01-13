@@ -49,6 +49,11 @@ spec:
             secretKeyRef:
               name: auth0-litter-secrets
               key: AUTH0_CLIENT_ID
+        - name: REACT_APP_AUTH0_AUDIENCE
+          valueFrom:
+            secretKeyRef:
+              name: auth0-litter-secrets
+              key: AUTH0_AUDIENCE
         - name: REACT_APP_API_GATEWAY_URL
           valueFrom:
             secretKeyRef:

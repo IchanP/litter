@@ -9,6 +9,10 @@ class UserRepository {
    * Function to mock.
    */
   async findUserById () {}
+  /**
+   * Mock profileId function.
+   */
+  async findUserByProfileId () {}
 }
 
 describe('UserService', () => {
@@ -35,7 +39,7 @@ describe('UserService', () => {
     it('should throw error when user not found', async () => {
       userRepository.findUserById = jest.fn().mockResolvedValue(null)
 
-      await expect(userService.getUser('123')).rejects.toThrow('User not found')
+      await expect(userService.getUser('123')).rejects.toThrow('Unable to find user.')
       expect(userRepository.findUserById).toHaveBeenCalledWith('123')
       expect(userRepository.findUserById).toHaveBeenCalledTimes(1)
     })

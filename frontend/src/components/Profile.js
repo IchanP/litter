@@ -12,6 +12,9 @@ const Profile = () => {
         followersCount: 0,
         followingCount: 0,
         joinedDate: "",
+        name: "",
+        username: "",
+        picture: ""
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -36,10 +39,14 @@ const Profile = () => {
                 }
 
                 const data = await response.json();
+                console.log(data.data)
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,
-                    joinedDate: data.data.registeredAt
+                    joinedDate: data.data.registeredAt,
+                    name: data.data.name,
+                    username: data.data.username,
+                    picture: data.data.picture
                 });
 
             } catch (err) {
@@ -68,14 +75,14 @@ const Profile = () => {
     return (
         <div className="profile">
             <div className="top-div">
-                <img src={user.picture} alt={user.name} />
+                <img src={profile.picture} alt={profile.name} />
                 <button className="leash-button" onClick={handleLeach}>
                     Leash
                 </button>
             </div>
 
             <div className="middle-div">
-                <span className="user-name">@{user.nickname}</span>
+                <span className="user-name">@{profile.username}</span>
                 <span className="user-joined">Joined on {profile.joinedDate}</span>
             </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
-
+import { useNavigate } from "react-router-dom";
 // style
 import "../style/MyLitts.css";
 
@@ -10,6 +10,7 @@ const MyLitts = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -52,13 +53,17 @@ const MyLitts = () => {
         return <div>Error: {error}</div>;
     }
 
+    const handleResultClick = (userId) => {
+        navigate(`/profile/${userId}`);
+    };
+
     return (
         <div className="my-litter-box">
             {posts.map((post) => (
                 <div key={post.postId} className="my-post">
                     <div className="my-post-header">
-                        <span className="my-user">@{post.username}</span>
-                        <span className="my-created-at">, 
+                    <span className="user" onClick={() => handleResultClick(post.profileId)}>@{post.username} </span>
+                    <span className="my-created-at">
                             {new Date(post.createdAt).toLocaleString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",

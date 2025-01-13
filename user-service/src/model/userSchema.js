@@ -12,6 +12,14 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
+  name: {
+    type: String,
+    required: true
+  },
+  picture: {
+    type: String,
+    required: true
+  },
   profileId: {
     type: Number,
     required: true,

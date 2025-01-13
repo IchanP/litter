@@ -10,7 +10,7 @@ const Search = () => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
     const navigate = useNavigate();
 
     const handleInputChange = async (e) => {
@@ -42,7 +42,13 @@ const Search = () => {
                 throw new Error(`Failed to search: ${response.status}`);
             }
             const data = await response.json();
-            setResults(data.data);
+
+            // Exclude the logged-in user from results
+            const filteredResults = data.data.filter(
+                (result) => result.email !== user.email
+            );
+
+            setResults(filteredResults);
         } catch (err) {
             console.error("Error searching users:", err);
             setError(err.message);
@@ -52,7 +58,8 @@ const Search = () => {
     };
 
     const handleResultClick = (userId) => {
-        navigate(`/profile/${userId}`); // använda id ?
+        navigate(`/profile/${userId}`);
+        window.location.reload();
     };
 
     return (

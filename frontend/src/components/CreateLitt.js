@@ -24,7 +24,7 @@ const CreateLitt = () => {
 
             // Fetch create litt
             const response = await fetch(
-                `${process.env.API_GATEWAY_URL}/write/posts/create`,
+                `${process.env.REACT_APP_API_GATEWAY_URL}/write/posts/create`,
                 {
                     method: "POST",
                     headers: {

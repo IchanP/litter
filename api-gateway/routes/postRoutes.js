@@ -4,7 +4,7 @@ import { validateJWT } from '../middleware/authMiddleware.js'
 const router = express.Router()
 
 // GET: Hämta användares inlägg
-router.get('/:id/posts', validateJWT, async (req, res) => {
+router.get('/:id/posts', async (req, res) => {
   let status
   try {
     const response = await fetch(

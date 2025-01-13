@@ -22,8 +22,9 @@ const Profile = () => {
                 const token = await getAccessTokenSilently();
 
                 // Fetch profile
+                console.log(process.env.REACT_APP_API_GATEWAY_URL)
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/users/${user.sub}`,
+                    `${process.env.REACT_APP_API_GATEWAY_URL}/users/${user.sub}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

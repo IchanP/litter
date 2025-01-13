@@ -30,7 +30,7 @@ const Search = () => {
 
             // Fetch search
             const response = await fetch(
-                `${process.env.API_GATEWAY_URL}/users/search?query=${encodeURIComponent(input.trim())}`,
+                `${process.env.REACT_APP_API_GATEWAY_URL}/users/search?query=${encodeURIComponent(input.trim())}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

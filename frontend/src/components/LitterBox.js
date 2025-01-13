@@ -18,7 +18,7 @@ const LitterBox = () => {
 
                 // Fetch feed for current user
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/feed`,
+                    `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${user.sub}/feed`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

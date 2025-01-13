@@ -18,7 +18,7 @@ const MyLitts = () => {
 
                 // Fetch profile posts
                 const response = await fetch(
-                    `${process.env.API_GATEWAY_URL}/posts/${user.sub}/posts`,
+                    `${process.env.REACT_APP_API_GATEWAY_URL}/posts/${user.sub}/posts`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

@@ -4,7 +4,7 @@ import { validateJWT } from '../middleware/authMiddleware.js'
 const router = express.Router()
 
 // POST: Skapa en ny användare
-router.post('/register', validateJWT, async (req, res) => {
+router.post('/register', async (req, res) => {
   let status
   try {
     const response = await fetch(
@@ -17,7 +17,7 @@ router.post('/register', validateJWT, async (req, res) => {
         body: JSON.stringify(req.body)
       }
     )
-
+    console.log(response)
     if (!response.ok) {
       status = response.status
       const errDAta = await response.json()
@@ -32,7 +32,7 @@ router.post('/register', validateJWT, async (req, res) => {
 })
 
 // POST: Skapa en post
-router.post('/posts/create', validateJWT, async (req, res) => {
+router.post('/posts/create', async (req, res) => {
   let status
   try {
     console.log(req.body)
@@ -60,7 +60,7 @@ router.post('/posts/create', validateJWT, async (req, res) => {
 })
 
 // DELETE: Radera en post
-router.delete('/posts/:id', validateJWT, async (req, res) => {
+router.delete('/posts/:id', async (req, res) => {
   let status
   try {
     const response = await fetch(
@@ -83,7 +83,7 @@ router.delete('/posts/:id', validateJWT, async (req, res) => {
 })
 
 // POST: Följ en användare
-router.post('/follow/:id', validateJWT, async (req, res) => {
+router.post('/follow/:id', async (req, res) => {
   let status
   try {
     const response = await fetch(`${process.env.WRITE_SERVICE_URL}/follow/${req.params.id}`,
@@ -110,7 +110,7 @@ router.post('/follow/:id', validateJWT, async (req, res) => {
 })
 
 // DELETE: Avfölj en användare
-router.delete('/follow/:id', validateJWT, async (req, res) => {
+router.delete('/follow/:id', async (req, res) => {
   let status
   try {
     const response = await fetch(

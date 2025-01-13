@@ -31,7 +31,7 @@ const MyLitts = () => {
                 }
 
                 const data = await response.json();
-                setPosts(data);
+                setPosts(data.data);
             } catch (err) {
                 console.error("Error fetching posts:", err);
                 setError(err.message);
@@ -54,7 +54,7 @@ const MyLitts = () => {
     return (
         <div className="my-litter-box">
             {posts.map((post) => (
-                <div key={post._id} className="my-post">
+                <div key={post.postId} className="my-post">
                     <div className="my-post-header">
                         <span className="my-user">@{post.user}, </span>
                         <span className="my-created-at">

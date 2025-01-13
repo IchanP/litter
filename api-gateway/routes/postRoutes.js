@@ -16,7 +16,6 @@ router.get('/:id/posts', async (req, res) => {
               }
             }
     )
-    /*  */
     if (!response.ok) {
       status = response.status
       const errData = await response.json()

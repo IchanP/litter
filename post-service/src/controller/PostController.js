@@ -21,7 +21,7 @@ export class PostController {
    */
   async getUserPosts (req, res, next) {
     try {
-      const userId = req.params.userId
+      const userId = req.params.id
       const posts = await this.postService.getUserPosts(userId)
       res.status(200).json({
         success: true,

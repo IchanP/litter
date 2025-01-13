@@ -15,7 +15,7 @@ const Auth0SignupHandler = () => {
           const checkResponse = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/users/${user.sub}`, {
             headers: {
               Authorization: `Bearer ${token}`
-            }
+            },
           });
 
           // If user is not found (404), register them
@@ -44,7 +44,9 @@ const Auth0SignupHandler = () => {
         body: JSON.stringify({
           userId: userId,
           email: user.email,
-          username: user.name,
+          name: user.name,
+          username: user.nickname,
+          picture: user.picture
         })
       });
 

@@ -25,7 +25,9 @@ export class UserRepository {
       const user = new UserModel({
         userId: userData.userId,
         email: userData.email,
-        username: userData.username
+        username: userData.username,
+        picture: userData.picture,
+        name: userData.name
       })
       await user.save()
       return user.toObject()

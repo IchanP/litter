@@ -5,10 +5,10 @@ import Loading from "./components/Loading";
 import Landing from "./views/Landing";
 import PedigreeChart from "./views/PedigreeChart";
 import Home from "./views/Home";
-import Profile from "./views/Profile";
 
 // style
 import "./style/App.css"
+import ProfilePage from "./views/Profile";
 
 const App = () => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -45,7 +45,7 @@ const App = () => {
       path="/profile/:id"
       element={
         isAuthenticated ? (
-          <Profile />
+          <ProfilePage />
         ) : (
           <div>You are not authorized to view this page.</div>
         )

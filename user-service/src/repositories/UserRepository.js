@@ -56,6 +56,8 @@ export class UserRepository {
       userId: user.userId,
       profileId: user.profileId,
       username: user.username,
+      name: user.name,
+      picture: user.picture,
       email: user.email,
       followers: [],
       following: [],

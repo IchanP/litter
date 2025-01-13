@@ -22,7 +22,6 @@ const Profile = () => {
                 const token = await getAccessTokenSilently();
 
                 // Fetch profile
-                console.log(process.env.REACT_APP_API_GATEWAY_URL)
                 const response = await fetch(
                     `${process.env.REACT_APP_API_GATEWAY_URL}/users/${user.sub}`,
                     {
@@ -37,13 +36,12 @@ const Profile = () => {
                 }
 
                 const data = await response.json();
+                console.log(data)
+                console.log(data.data)
                 setProfile({
-                    followersCount: data.followers.length,
-                    followingCount: data.following.length,
-                    joinedDate: new Date(data.createdAt).toLocaleString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                    }),
+                    followersCount: data.data.followers.length,
+                    followingCount: data.data.following.length,
+                    joinedDate: data.data.registeredAt
                 });
 
             } catch (err) {
@@ -80,7 +78,7 @@ const Profile = () => {
 
             <div className="middle-div">
                 <span className="user-name">@{user.nickname}</span>
-                <span className="user-joined">Joined in {profile.joinedDate}</span>
+                <span className="user-joined">Joined on {profile.joinedDate}</span>
             </div>
 
             <div className="bottom-div">

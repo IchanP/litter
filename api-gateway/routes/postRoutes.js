@@ -41,7 +41,7 @@ router.get('/:id/feed', async (req, res) => {
         'Content-Type': 'application/json'
       }
     })
-
+    console.log(followedUserIdsResponse.ok)
     if (!followedUserIdsResponse.ok) {
       status = followedUserIdsResponse.status
       const errData = await followedUserIdsResponse.json()
@@ -49,7 +49,9 @@ router.get('/:id/feed', async (req, res) => {
     }
 
     const { followedUserIds } = await followedUserIdsResponse.json()
-
+    const jsonData = await followedUserIdsResponse.json()
+    console.log(followedUserIds)
+    console.log(jsonData)
     // Step 2: Hämta inlägg med följares ID
     const feedResponse = await fetch(
             `${process.env.POST_SERVICE_URL}/post/${req.params.id}/feed`, {

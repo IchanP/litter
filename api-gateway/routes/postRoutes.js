@@ -47,7 +47,6 @@ router.get('/:id/feed', async (req, res) => {
     }
     const followedUserIds = await followedUserIdsResponse.json()
     const followed = followedUserIds.data
-    console.log(followed)
     // Step 2: Hämza inlägg med följares ID
     const feedResponse = await fetch(
             `${process.env.POST_SERVICE_URL}/post/${req.params.id}/feed`, {

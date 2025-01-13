@@ -14,4 +14,4 @@ const postController = new PostController(postService)
 
 // Routes
 router.get('/:id/posts', (req, res, next) => postController.getUserPosts(req, res, next))
-router.post(':id/feed', (req, res, next) => postController.getUserFeed(req, res, next))
+router.post('/:id/feed', (req, res, next) => postController.getUserFeed(req, res, next))

@@ -7,7 +7,10 @@ const Auth0SignupHandler = () => {
 
   useEffect(() => {
     const checkAndRegisterUser = async () => {
+      console.log(isAuthenticated)
+      console.log(user)
       if (isAuthenticated && user) {
+        console.log('????')
         try {
           const token = await getAccessTokenSilently();
           
@@ -17,11 +20,11 @@ const Auth0SignupHandler = () => {
               Authorization: `Bearer ${token}`
             }
           });
-          console.log(checkResponse)
+
           // If user is not found (404), register them
-          if (checkResponse.status === 404) {
+          if (!checkResponse.ok) {
             setIsNewUser(true);
-            await registerUserInDatabase(user, token);
+            await registerUserInDatabase(user.sub, token);
           }
           
         } catch (error) {
@@ -30,39 +33,42 @@ const Auth0SignupHandler = () => {
       }
     };
 
-    const registerUserInDatabase = async (user, token) => {
-        try {
-          const response = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/write/register`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-              userId: user.sub,
-              email: user.email,
-              username: user.name,
-            })
-          });
-    
-          if (!response.ok) {
-            throw new Error('Failed to register user in database');
-          }
-    
-          console.log('User registered successfully');
-        } catch (error) {
-          console.error('Error registering user:', error);
-          // Handle registration error appropriately
-        }
-      };
-
     checkAndRegisterUser();
   }, [isAuthenticated, user, getAccessTokenSilently]);
 
+  const registerUserInDatabase = async (userId, token) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/write/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId: userId,
+          email: user.email,
+          username: user.name,
+        })
+      });
 
-  // You can use isNewUser state to show different UI for new users
+      if (!response.ok) {
+        throw new Error('Failed to register user in database');
+      }
+
+      console.log('User registered successfully');
+    } catch (error) {
+      console.error('Error registering user:', error);
+    }
+  };
+
   return (
-    <></>
+    <div>
+      {isNewUser && (
+        <div className="welcome-message">
+          Welcome! Thanks for signing up.
+        </div>
+      )}
+    </div>
   );
 };
 

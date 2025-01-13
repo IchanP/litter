@@ -57,8 +57,8 @@ const MyLitts = () => {
             {posts.map((post) => (
                 <div key={post.postId} className="my-post">
                     <div className="my-post-header">
-                        <span className="my-user">@{post.username}, </span>
-                        <span className="my-created-at">
+                        <span className="my-user">@{post.username}</span>
+                        <span className="my-created-at">, 
                             {new Date(post.createdAt).toLocaleString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",

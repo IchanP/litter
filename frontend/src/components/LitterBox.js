@@ -56,8 +56,8 @@ const LitterBox = () => {
             {posts.map((post) => (
                 <div key={post._id} className="post">
                     <div className="post-header">
-                        <span className="user">@{post.username}, </span>
-                        <span className="created-at">
+                        <span className="user">@{post.username}</span>
+                        <span className="created-at">, 
                             {new Date(post.createdAt).toLocaleString("en-US", {
                                 hour: "2-digit",
                                 minute: "2-digit",

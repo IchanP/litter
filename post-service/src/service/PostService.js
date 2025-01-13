@@ -27,7 +27,6 @@ export class PostService {
     if (result.length === 0) {
       result = await this.postRepository.findPostsByProfileId(userId)
     }
-    console.log(result)
     return result
   }
 

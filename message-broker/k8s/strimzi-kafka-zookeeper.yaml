@@ -22,11 +22,11 @@ spec:
     # TODO - Might need to lower these...
     resources:
       limits:
-        memory: "1Gi"     
-        cpu: "1000m"      
+        memory: "2Gi"     
+        cpu: "2000m"      
       requests:
-        memory: "512Mi"   
-        cpu: "500m"       
+        memory: "1Gi"   
+        cpu: "1000m"       
     storage:
       type: ephemeral
 
@@ -34,10 +34,10 @@ spec:
     replicas: 1
     resources:
       limits:
-        memory: "512Mi"   
-        cpu: "500m"     
+        memory: "1Gi"   
+        cpu: "100m"     
       requests:
-        memory: "256Mi"
-        cpu: "250m"
+        memory: "512Mi"
+        cpu: "500m"
     storage:
       type: ephemeral

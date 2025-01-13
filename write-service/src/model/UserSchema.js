@@ -9,6 +9,15 @@ const userSchema = new Schema({
     required: true,
     index: { unique: true, background: true }
   },
+  name: {
+    type: String,
+    required: true
+  },
+  picture: {
+    type: String,
+    required: true
+    // TODO add validator that checks that it's a URL.
+  },
   email: {
     type: String,
     required: [true, 'Email address is required'],

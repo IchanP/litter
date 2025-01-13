@@ -9,9 +9,9 @@ const UserProfile = ({ userId }) => {
         followersCount: 0,
         followingCount: 0,
         joinedDate: "",
-        nickname: "",
         name: "",
-        picture: "",
+        username: "",
+        picture: ""
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -38,35 +38,13 @@ const UserProfile = ({ userId }) => {
                 }
 
                 const data = await response.json();
-                console.log("Got user data:", data);
-                const oauthId = data.data.userId;
-
-                // Then fetch the Auth0 profile info using the oauthId
-                const auth0Response = await fetch(
-                    `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/users/${oauthId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                if (!auth0Response.ok) {
-                    const errorText = await auth0Response.text();
-                    console.error("Auth0 error:", errorText);
-                    throw new Error(`Failed to fetch Auth0 profile: ${auth0Response.status}`);
-                }
-
-                const auth0Data = await auth0Response.json();
-                console.log("Got Auth0 data:", auth0Data);
-
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,
                     joinedDate: data.data.registeredAt,
-                    nickname: auth0Data.nickname || auth0Data.name,
-                    name: auth0Data.name,
-                    picture: auth0Data.picture
+                    name: data.data.name,
+                    username: data.data.username,
+                    picture: data.data.picture
                 });
             } catch (err) {
                 console.error("Error details:", err);
@@ -104,7 +82,7 @@ const UserProfile = ({ userId }) => {
                 </button>
             </div>
             <div className="middle-div">
-                <span className="user-name">@{profile.nickname}</span>
+                <span className="user-name">@{profile.username}</span>
                 <span className="user-joined">Joined on {profile.joinedDate}</span>
             </div>
             <div className="bottom-div">

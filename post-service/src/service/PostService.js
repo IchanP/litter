@@ -20,14 +20,19 @@ export class PostService {
    * @returns {Promise<Array>} A list of posts by the user.
    */
   async getUserPosts (userId) {
-    if (!userId) {
-      throw new Error('User ID is required')
+    try {
+      if (!userId) {
+        throw new Error('User ID is required')
+      }
+      let result = await this.postRepository.findPostsById(userId)
+      if (result.length === 0) {
+        result = await this.postRepository.findPostsByProfileId(userId)
+      }
+      return result
+    } catch (e) {
+      console.error('Failed to fetch results...')
+      return []
     }
-    let result = await this.postRepository.findPostsById(userId)
-    if (result.length === 0) {
-      result = await this.postRepository.findPostsByProfileId(userId)
-    }
-    return result
   }
 
   /**

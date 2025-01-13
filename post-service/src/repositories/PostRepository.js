@@ -15,6 +15,30 @@ export class PostRepository {
   }
 
   /**
+   * Fetches the posts from the users and then sorts them by decreasing time.
+   *
+   * @param {Array<number>} follows - The IDS of the people to get the posts from.
+   * @returns {Array<object>} - Returns an array of found posts.
+   */
+  async findFeedByIds (follows) {
+    try {
+      // Initialize posts as empty array
+      const posts = []
+
+      for (const user of follows) {
+        const foundPosts = await PostModel.find({ userId: user })
+        // Use spread operator to add individual posts rather than nested arrays
+        posts.push(...foundPosts)
+      }
+      posts.sort((a, b) => b.createdAt - a.createdAt)
+      return posts
+    } catch (error) {
+      console.error('Error in findFeedByIds:', error)
+      throw error
+    }
+  }
+
+  /**
    * Fetch posts from followed users.
    *
    * @param {Array<string>} followedUserIds - List of user IDs that are followed.
@@ -34,6 +58,7 @@ export class PostRepository {
     const post = new PostModel({
       userId: postData.authorId,
       content: postData.content,
+      profileId: postData.profileId,
       postId: postData.postId,
       username: postData.username
     })

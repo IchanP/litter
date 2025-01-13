@@ -36,7 +36,13 @@ export class PostService {
     if (!Array.isArray(followedUserIds) || followedUserIds.length === 0) {
       return [] // Return an empty feed if there are no followed users
     }
-    return this.postRepository.findFeedByIds(followedUserIds)
+    const foundPosts = await this.postRepository.findFeedByIds(followedUserIds)
+    const formattedPosts = []
+    for (const post of foundPosts) {
+      const fixedPost = { userId: post.userId, profileId: post.profileId, content: post.content, username: post.username, postId: post.postId, createdAt: new Date(post.createdAt).toLocaleString() }
+      formattedPosts.push(fixedPost)
+    }
+    return formattedPosts
   }
 
   /**

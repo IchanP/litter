@@ -5,6 +5,7 @@ import Loading from "./components/Loading";
 import Landing from "./views/Landing";
 import PedigreeChart from "./views/PedigreeChart";
 import Home from "./views/Home";
+import Profile from "./views/Profile";
 
 // style
 import "./style/App.css"
@@ -40,6 +41,16 @@ const App = () => {
             )
           }
         />
+        <Route
+      path="/profile/:id"
+      element={
+        isAuthenticated ? (
+          <Profile />
+        ) : (
+          <div>You are not authorized to view this page.</div>
+        )
+      }
+    />
       </Routes>
     </Router>
   );

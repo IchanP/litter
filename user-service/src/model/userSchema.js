@@ -12,6 +12,11 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
+  profileId: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   /**
    * The user's username.
    */
@@ -36,8 +41,7 @@ const userSchema = new Schema({
    */
   followers: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      type: String
     }
   ],
   /**
@@ -45,8 +49,7 @@ const userSchema = new Schema({
    */
   following: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      type: String
     }
   ],
   registeredAt: {

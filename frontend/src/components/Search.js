@@ -52,7 +52,7 @@ const Search = () => {
     };
 
     const handleResultClick = (userId) => {
-        navigate(`/users/${userId}`); // använda id ?
+        navigate(`/profile/${userId}`); // använda id ?
     };
 
     return (
@@ -71,7 +71,7 @@ const Search = () => {
                         {results.map((result, index) => (
                             <li
                                 key={index}
-                                onClick={() => handleResultClick(result.userId)}
+                                onClick={() => handleResultClick(result.profileId)}
                             >
                                 @{result.username}
                             </li>

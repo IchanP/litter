@@ -11,6 +11,10 @@ const postSchema = new Schema({
     type: String,
     required: true
   },
+  profileId: {
+    type: Number,
+    required: true
+  },
   /**
    * The content of the post.
    */

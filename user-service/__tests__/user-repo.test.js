@@ -52,11 +52,11 @@ describe('UserRepository Relationships', () => {
       expect(mockFindByIdAndUpdate).toHaveBeenCalledTimes(2)
       expect(mockFindByIdAndUpdate).toHaveBeenNthCalledWith(1,
         'followerId123',
-        { $push: { following: 'followedId456' } }
+        { $push: { following: 'user2' } }
       )
       expect(mockFindByIdAndUpdate).toHaveBeenNthCalledWith(2,
         'followedId456',
-        { $push: { followers: 'followerId123' } }
+        { $push: { followers: 'user1' } }
       )
 
       expect(result).toEqual([followerUser, followedUser])

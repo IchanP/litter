@@ -34,6 +34,25 @@ export class UserController {
   }
 
   /**
+   * Fetches the IDs of the passed users followed users.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async getFollowing (req, res, next) {
+    try {
+      const following = await this.userService.getFollowing(req.params.id)
+      res.status(200).json({
+        success: true,
+        data: following
+      })
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  /**
    * Search for users based on a query string.
    *
    * @param {object} req - Express request object.

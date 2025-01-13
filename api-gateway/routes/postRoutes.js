@@ -40,25 +40,21 @@ router.get('/:id/feed', async (req, res) => {
         'Content-Type': 'application/json'
       }
     })
-    console.log(followedUserIdsResponse.ok)
     if (!followedUserIdsResponse.ok) {
       status = followedUserIdsResponse.status
       const errData = await followedUserIdsResponse.json()
       throw new Error(errData.message)
     }
-
-    const { followedUserIds } = await followedUserIdsResponse.json()
-    const jsonData = await followedUserIdsResponse.json()
-    console.log(followedUserIds)
-    console.log(jsonData)
-    // Step 2: Hämta inlägg med följares ID
+    const followedUserIds = await followedUserIdsResponse.json()
+    const followed = followedUserIds.data
+    // Step 2: Hämza inlägg med följares ID
     const feedResponse = await fetch(
             `${process.env.POST_SERVICE_URL}/post/${req.params.id}/feed`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ followedUserIds })
+              body: JSON.stringify({ followed })
             })
 
     if (!feedResponse.ok) {

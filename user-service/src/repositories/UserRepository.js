@@ -15,6 +15,27 @@ export class UserRepository {
   }
 
   /**
+   * Finds a user by their unique profile id.
+   *
+   * @param {number} profileId - The profileID to find the user by.'
+   * @returns {Promise<object>} - The user document.
+   */
+  async findUserByProfileId (profileId) {
+    return UserModel.findOne({ profileId })
+  }
+
+  /**
+   * Finds and returns a users followed userIds.
+   *
+   * @param {string} id - The userId.
+   * @returns {Array<string>} - Returns the IDs of the following users.
+   */
+  async getFollowings (id) {
+    const user = await UserModel.findOne({ userId: id })
+    return user.following
+  }
+
+  /**
    * Search for users by a query string.
    *
    * @param {string} query - The search query.
@@ -33,6 +54,7 @@ export class UserRepository {
   async registerUser (user) {
     const newUser = new UserModel({
       userId: user.userId,
+      profileId: user.profileId,
       username: user.username,
       email: user.email,
       followers: [],
@@ -56,11 +78,11 @@ export class UserRepository {
     await Promise.all([
       UserModel.findByIdAndUpdate(
         followerUser._id,
-        { $push: { following: followedUser._id } }
+        { $push: { following: followedUser.userId } }
       ),
       UserModel.findByIdAndUpdate(
         followedUser._id,
-        { $push: { followers: followerUser._id } }
+        { $push: { followers: followerUser.userId } }
       )
     ])
     return [followerUser, followedUser]

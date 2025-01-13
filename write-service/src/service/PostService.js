@@ -45,6 +45,7 @@ export class PostService {
       // TODO might need to pass more data here depending on how we make the post models look.
       const dataToSend = createdPost
       dataToSend.username = foundUser.username
+      dataToSend.profileId = foundUser.profileId
       await this.broker.sendMessage(process.env.NEW_POST_TOPIC, JSON.stringify(dataToSend))
       return createdPost
     } catch (e) {

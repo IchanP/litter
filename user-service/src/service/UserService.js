@@ -21,11 +21,29 @@ export class UserService {
    * @returns {Promise<object>} The user's profile data.
    */
   async getUser (userId) {
-    const user = await this.userRepository.findUserById(userId)
+    let user
+    user = await this.userRepository.findUserById(userId)
     if (!user) {
-      throw new Error('User not found')
+      user = await this.userRepository.findUserByProfileId(Number(userId))
+    }
+    if (!user) {
+      throw new Error('Unable to find user.')
     }
     return user
+  }
+
+  /**
+   * Fetch a user's followings.
+   *
+   * @param {string} userId - The user's unique ID.
+   * @returns {Promise<object>} The user's profile data.
+   */
+  async getFollowing (userId) {
+    const followings = await this.userRepository.getFollowings(userId)
+    if (!followings) {
+      throw new Error('Unable to find this user')
+    }
+    return followings
   }
 
   /**

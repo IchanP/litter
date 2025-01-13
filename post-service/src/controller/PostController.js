@@ -41,8 +41,8 @@ export class PostController {
    */
   async getUserFeed (req, res, next) {
     try {
-      const { followedUserIds } = req.body
-      const feed = await this.postService.getUserFeed(followedUserIds)
+      const { followed } = req.body
+      const feed = await this.postService.getUserFeed(followed)
       res.status(200).json({
         success: true,
         data: feed

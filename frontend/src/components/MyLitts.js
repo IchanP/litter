@@ -31,6 +31,7 @@ const MyLitts = () => {
                 }
 
                 const data = await response.json();
+                console.log(data.data)
                 setPosts(data.data);
             } catch (err) {
                 console.error("Error fetching posts:", err);
@@ -56,7 +57,7 @@ const MyLitts = () => {
             {posts.map((post) => (
                 <div key={post.postId} className="my-post">
                     <div className="my-post-header">
-                        <span className="my-user">@{post.user}, </span>
+                        <span className="my-user">@{post.username}, </span>
                         <span className="my-created-at">
                             {new Date(post.createdAt).toLocaleString("en-US", {
                                 hour: "2-digit",

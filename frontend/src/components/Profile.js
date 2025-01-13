@@ -36,8 +36,6 @@ const Profile = () => {
                 }
 
                 const data = await response.json();
-                console.log(data)
-                console.log(data.data)
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import '../style/PedigreeChart.css'
 import MyLitts from '../components/MyLitts';
+import UserProfile from '../components/UserProfile';
 
 const Profile = () => {
     const { id } = useParams()
@@ -17,7 +18,7 @@ const Profile = () => {
                 </div>
 
                 <div className="middle-column">
-                    <Profile />
+                    <UserProfile userId={id} />
                     <MyLitts />
                 </div>
 

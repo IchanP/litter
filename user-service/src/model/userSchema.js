@@ -41,8 +41,7 @@ const userSchema = new Schema({
    */
   followers: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      type: String
     }
   ],
   /**
@@ -50,8 +49,7 @@ const userSchema = new Schema({
    */
   following: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      type: String
     }
   ],
   registeredAt: {

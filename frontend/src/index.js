@@ -20,8 +20,11 @@ root.render(
     domain={domain}
     clientId={clientId}
     authorizationParams={{
-      redirect_uri: redirectUri
+      redirect_uri: redirectUri,
+      audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/`,
+      scope: "openid profile email read:users"
     }}
+    
   >
     <App />
   </Auth0Provider>,

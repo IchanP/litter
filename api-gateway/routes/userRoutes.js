@@ -36,7 +36,6 @@ router.get('/search', async (req, res) => {
 
 // GET: Hämta en användares profil
 router.get('/:id', async (req, res) => {
-  console.log('yo')
   let status
   try {
     const response = await fetch(

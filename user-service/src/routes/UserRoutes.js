@@ -14,4 +14,5 @@ const userController = new UserController(userService)
 
 // Routes
 router.get('/search', (req, res, next) => userController.searchUsers(req, res, next))
+router.get('/:id/following', (req, res, next) => userController.getFollowing(req, res, next))
 router.get('/:id', (req, res, next) => userController.getUser(req, res, next))

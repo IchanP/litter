@@ -42,7 +42,6 @@ const CreateLitt = () => {
                 throw new Error(`Failed to create litt: ${response.status}`);
             }
 
-            alert("Litt created successfully!");
             setLittContent("");
         } catch (err) {
             console.error("Error creating litt:", err);

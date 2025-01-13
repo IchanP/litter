@@ -4,7 +4,7 @@ import Loading from "./Loading";
 import "../style/Profile.css";
 
 const Profile = ({ userId }) => {
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
     const [profile, setProfile] = useState({
         followersCount: 0,
         followingCount: 0,
@@ -72,13 +72,18 @@ const Profile = ({ userId }) => {
         return <div>Error: {error}</div>;
     }
 
+    // Check if logged in user to remove leash button
+    const isOwnProfile = user && user.sub === userId;
+
     return (
         <div className="profile">
             <div className="top-div">
                 <img src={profile.picture} alt={profile.name} />
-                <button className="leash-button" onClick={handleLeash}>
-                    Leash
-                </button>
+                {!isOwnProfile && (
+                    <button className="leash-button" onClick={handleLeash}>
+                        Leash
+                    </button>
+                )}
             </div>
             <div className="middle-div">
                 <span className="user-name">@{profile.username}</span>

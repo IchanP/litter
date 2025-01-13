@@ -9,7 +9,6 @@ import Profile from '../components/Profile';
 
 const ProfilePage = () => {
     const { id } = useParams()
-    console.log(id)
     return (
         <div className="container">
             <div className='pedigree-chart'>

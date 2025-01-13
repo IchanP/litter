@@ -32,7 +32,7 @@ const CreateLitt = () => {
                         Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        userId: user.sub,
+                        authorId: user.sub,
                         content: littContent.trim(),
                     }),
                 }

@@ -37,7 +37,6 @@ export class PostService {
     try {
       this.#performPostValidation(postData)
       const foundUser = await this.userRepo.getOneMatching({ userId: postData?.authorId })
-
       if (!foundUser) {
         throw new BadDataError('No user with that id.')
       }

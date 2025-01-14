@@ -102,11 +102,11 @@ export class UserRepository {
     await Promise.all([
       UserModel.findByIdAndUpdate(
         followerUser._id,
-        { $pull: { following: followedUser._id } }
+        { $pull: { following: followedUser.userId } }
       ),
       UserModel.findByIdAndUpdate(
         followedUser._id,
-        { $pull: { followers: followerUser._id } }
+        { $pull: { followers: followerUser.userId } }
       )
     ])
     return [followerUser, followedUser]
@@ -122,7 +122,7 @@ export class UserRepository {
   async #findTwoUsers (idOne, idTwo) {
     const [userOne, userTwo] = await Promise.all([
       UserModel.findOne({ userId: idOne }),
-      UserModel.findOne({ userId: idTwo })
+      UserModel.findOne({ profileId: idTwo })
     ])
     if (!userOne || !userTwo) {
       throw new Error('Cannot find one or both users.')

@@ -15,7 +15,8 @@ const Profile = ({ userId }) => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [isFollowing, setIsFollowing] = useState(false)
+    const [isOwnProfile, setIsOwnProfile] = useState(false)
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -37,7 +38,8 @@ const Profile = ({ userId }) => {
                 }
 
                 const data = await response.json();
-                console.log(data.data)
+                followCheck(data.data.followers)
+                setIsOwnProfile(user && user.sub === data.data.userId)
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,
@@ -61,22 +63,42 @@ const Profile = ({ userId }) => {
         }
     }, [getAccessTokenSilently, userId]);
 
-    const handleLeash = async () => {
-        const token = await getAccessTokenSilently();
-        try {
-        const response = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/write/follow/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+    const followCheck = (followers) => {
+        if (followers.filter(value => value = user.sub).length > 0) {
+            setIsFollowing(true)
+        }
+    }
 
+    const handleLeash = async () => {
+        console.log('Handle leash called, isFollowing:', isFollowing);
+        try {
+            console.log('Getting token...');
+            const token = await getAccessTokenSilently();
+            console.log('Token received');
+            
+            const url = `${process.env.REACT_APP_API_GATEWAY_URL}/write/follow/${userId}`;
+            console.log('Making request to:', url);
+            console.log('Method:', isFollowing ? "DELETE" : "POST");
+    
+            const response = await fetch(url, {
+                method: isFollowing ? "DELETE" : "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    followerId: user.sub
+                }),
+            });
+        console.log('Response:', response);
         if (!response.ok) {
             throw new Error(`Failed to follow user: ${response.status}`);
-        } 
+        }
+        setIsFollowing(!isFollowing)
         const data = await response.json()
         console.log(data)
     } catch (e) {
-        console.error("error")
+        console.error("Error in handleLeash: ", error)
     }
     };
 
@@ -88,16 +110,13 @@ const Profile = ({ userId }) => {
         return <div>Error: {error}</div>;
     }
 
-    // Check if logged in user to remove leash button
-    const isOwnProfile = user && user.sub === userId;
-
     return (
         <div className="profile">
             <div className="top-div">
                 <img src={profile.picture} alt={profile.name} />
                 {!isOwnProfile && (
                     <button className="leash-button" onClick={() => handleLeash()}>
-                        Leash
+                        {isFollowing ? "Unleash" : "Leash"}
                     </button>
                 )}
             </div>

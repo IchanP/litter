@@ -47,7 +47,7 @@ describe('UserRepository Relationships', () => {
 
       expect(mockFindOne).toHaveBeenCalledTimes(2)
       expect(mockFindOne).toHaveBeenNthCalledWith(1, { userId: 'user1' })
-      expect(mockFindOne).toHaveBeenNthCalledWith(2, { userId: 'user2' })
+      expect(mockFindOne).toHaveBeenNthCalledWith(2, { profileId: 'user2' })
 
       expect(mockFindByIdAndUpdate).toHaveBeenCalledTimes(2)
       expect(mockFindByIdAndUpdate).toHaveBeenNthCalledWith(1,
@@ -104,16 +104,16 @@ describe('UserRepository Relationships', () => {
 
       expect(mockFindOne).toHaveBeenCalledTimes(2)
       expect(mockFindOne).toHaveBeenNthCalledWith(1, { userId: 'user1' })
-      expect(mockFindOne).toHaveBeenNthCalledWith(2, { userId: 'user2' })
+      expect(mockFindOne).toHaveBeenNthCalledWith(2, { profileId: 'user2' })
 
       expect(mockFindByIdAndUpdate).toHaveBeenCalledTimes(2)
       expect(mockFindByIdAndUpdate).toHaveBeenNthCalledWith(1,
         'followerId123',
-        { $pull: { following: 'followedId456' } }
+        { $pull: { following: 'user2' } }
       )
       expect(mockFindByIdAndUpdate).toHaveBeenNthCalledWith(2,
         'followedId456',
-        { $pull: { followers: 'followerId123' } }
+        { $pull: { followers: 'user1' } }
       )
 
       expect(result).toEqual([followerUser, followedUser])

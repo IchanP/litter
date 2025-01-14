@@ -36,7 +36,7 @@ const LitterBox = () => {
                 setPosts(data.data);
             } catch (err) {
                 console.error("Error fetching feed:", err);
-                setError(err.message);
+                setPosts([]);
             } finally {
                 setLoading(false);
             }

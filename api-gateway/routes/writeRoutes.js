@@ -1,5 +1,4 @@
 import express from 'express'
-import { validateJWT } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 

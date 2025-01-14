@@ -61,7 +61,7 @@ const Profile = ({ userId }) => {
     }, [getAccessTokenSilently, userId]);
 
     const handleLeash = () => {
-        alert(`Leash user: ${profile.nickname}`);
+        alert(`Leash user: ${profile.username}`);
     };
 
     if (loading) {

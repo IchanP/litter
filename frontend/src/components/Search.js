@@ -59,7 +59,6 @@ const Search = () => {
 
     const handleResultClick = (userId) => {
         navigate(`/profile/${userId}`);
-        window.location.reload();
     };
 
     return (

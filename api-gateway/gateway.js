@@ -26,13 +26,6 @@ try {
   app.use(morgan('dev'))
   app.use(express.json())
 
-  // Normalize slashes in URLs
-  app.use((req, res, next) => {
-    console.log('Normalizing URL for production.')
-    req.url = path.normalize(req.url)
-    next()
-  })
-
   app.options('*', cors())
 
   // Koppla alla routes

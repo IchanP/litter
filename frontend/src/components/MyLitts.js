@@ -15,6 +15,7 @@ const MyLitts = ({id}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log("From litts")
         const fetchPosts = async () => {
             try {
                 const token = await getAccessTokenSilently();
@@ -44,7 +45,7 @@ const MyLitts = ({id}) => {
         };
 
         fetchPosts();
-    }, [getAccessTokenSilently]);
+    }, [getAccessTokenSilently, id]);
 
     const handleDeletePost = (postId) => {
         // Logic to delete the post

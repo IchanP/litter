@@ -71,15 +71,10 @@ const Profile = ({ userId }) => {
     }
 
     const handleLeash = async () => {
-        console.log('Handle leash called, isFollowing:', isFollowing);
         try {
-            console.log('Getting token...');
             const token = await getAccessTokenSilently();
-            console.log('Token received');
             
             const url = `${process.env.REACT_APP_API_GATEWAY_URL}/write/follow/${userId}`;
-            console.log('Making request to:', url);
-            console.log('Method:', isFollowing ? "DELETE" : "POST");
     
             const response = await fetch(url, {
                 method: isFollowing ? "DELETE" : "POST",
@@ -91,7 +86,6 @@ const Profile = ({ userId }) => {
                     followerId: user.sub
                 }),
             });
-        console.log('Response:', response);
         if (!response.ok) {
             throw new Error(`Failed to follow user: ${response.status}`);
         }

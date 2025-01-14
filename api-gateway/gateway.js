@@ -3,7 +3,6 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import routes from './routes/index.js'
-import path from 'path'
 import cors from 'cors'
 
 dotenv.config()

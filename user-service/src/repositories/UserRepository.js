@@ -122,7 +122,7 @@ export class UserRepository {
   async #findTwoUsers (idOne, idTwo) {
     const [userOne, userTwo] = await Promise.all([
       UserModel.findOne({ userId: idOne }),
-      UserModel.findOne({ userId: idTwo })
+      UserModel.findOne({ profileId: idTwo })
     ])
     if (!userOne || !userTwo) {
       throw new Error('Cannot find one or both users.')

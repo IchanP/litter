@@ -35,7 +35,7 @@ export class FollowService {
   async createFollow (followed, follower) {
     try {
       this.#performFollowValidation(followed, follower)
-      const followedUser = await this.userRepo.getOneMatching({ userId: followed })
+      const followedUser = await this.userRepo.getOneMatching({ profileId: Number(followed) })
       const followerUser = await this.userRepo.getOneMatching({ userId: follower })
       if (!followedUser) throw new NotFoundError(`The user with id ${followed} does not exist.`)
       if (!followerUser) throw new NotFoundError(`The user with id ${follower} does not exist.`)

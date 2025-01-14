@@ -63,11 +63,17 @@ const Profile = ({ userId }) => {
 
     const handleLeash = async () => {
         const token = await getAccessTokenSilently();
+        console.log(user)
         try {
         const response = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/write/follow/${userId}`, {
+            method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
+            body: JSON.stringify({
+                followerId: user.sub
+            }),
         })
 
         if (!response.ok) {

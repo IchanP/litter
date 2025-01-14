@@ -37,6 +37,7 @@ const Profile = ({ userId }) => {
                     throw new Error(`Failed to fetch profile: ${response.status}`);
                 }
 
+                console.log("???")
                 const data = await response.json();
                 followCheck(data.data.followers)
                 setIsOwnProfile(user && user.sub === data.data.userId)

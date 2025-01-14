@@ -72,6 +72,7 @@ export class PostController {
    */
   #handleError (e, next) {
     let err = e
+    console.log(e.message)
     if (e instanceof BadDataError) {
       err = createError(400, e.message)
     } else if (e instanceof NotFoundError) {

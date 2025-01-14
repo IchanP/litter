@@ -37,6 +37,7 @@ const Profile = ({ userId }) => {
                 }
 
                 const data = await response.json();
+                console.log(data.data)
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,
@@ -60,8 +61,23 @@ const Profile = ({ userId }) => {
         }
     }, [getAccessTokenSilently, userId]);
 
-    const handleLeash = () => {
-        alert(`Leash user: ${profile.username}`);
+    const handleLeash = async () => {
+        const token = await getAccessTokenSilently();
+        try {
+        const response = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/write/follow/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error(`Failed to follow user: ${response.status}`);
+        } 
+        const data = await response.json()
+        console.log(data)
+    } catch (e) {
+        console.error("error")
+    }
     };
 
     if (loading) {
@@ -80,7 +96,7 @@ const Profile = ({ userId }) => {
             <div className="top-div">
                 <img src={profile.picture} alt={profile.name} />
                 {!isOwnProfile && (
-                    <button className="leash-button" onClick={handleLeash}>
+                    <button className="leash-button" onClick={() => handleLeash()}>
                         Leash
                     </button>
                 )}

@@ -12,7 +12,7 @@ try {
 
   // In your gateway server
   app.use(cors({
-    origin: '*', // For development - be more restrictive in production
+    origin: process.env.FRONTEND_URL || '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     preflightContinue: false,
     optionsSuccessStatus: 204,

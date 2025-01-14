@@ -32,6 +32,7 @@ export class UserRepository {
    */
   async getFollowings (id) {
     const user = await UserModel.findOne({ userId: id })
+    console.log(user)
     return user.following
   }
 

@@ -15,7 +15,7 @@ const Profile = ({ userId }) => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [isFollowing, setIsFollowing] = useState(false)
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -37,7 +37,7 @@ const Profile = ({ userId }) => {
                 }
 
                 const data = await response.json();
-                console.log(data.data)
+                followCheck(data.data.followers)
                 setProfile({
                     followersCount: data.data.followers.length,
                     followingCount: data.data.following.length,
@@ -61,12 +61,18 @@ const Profile = ({ userId }) => {
         }
     }, [getAccessTokenSilently, userId]);
 
+    const followCheck = (followers) => {
+        console.log(followers.filter(value => value = user.sub).length)
+        if (followers.filter(value => value = user.sub).length > 0) {
+            setIsFollowing(true)
+        }
+    }
+
     const handleLeash = async () => {
         const token = await getAccessTokenSilently();
-        console.log(user)
         try {
         const response = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/write/follow/${userId}`, {
-            method: "POST",
+            method:  isFollowing ? "DELETE" : "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -78,7 +84,8 @@ const Profile = ({ userId }) => {
 
         if (!response.ok) {
             throw new Error(`Failed to follow user: ${response.status}`);
-        } 
+        }
+        setIsFollowing(!isFollowing)
         const data = await response.json()
         console.log(data)
     } catch (e) {
@@ -103,7 +110,7 @@ const Profile = ({ userId }) => {
                 <img src={profile.picture} alt={profile.name} />
                 {!isOwnProfile && (
                     <button className="leash-button" onClick={() => handleLeash()}>
-                        Leash
+                        {isFollowing ? "Unleash" : "Leash"}
                     </button>
                 )}
             </div>

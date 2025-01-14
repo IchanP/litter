@@ -4,13 +4,25 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import routes from './routes/index.js'
 import path from 'path'
+import cors from 'cors'
 
 dotenv.config()
 try {
   const app = express()
 
+  // In your gateway server
+  app.use(cors({
+    origin: '*', // For development - be more restrictive in production
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept']
+  }))
+
   // Middleware för säkerhet och loggning
-  app.use(helmet())
+  app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' } // Modify helmet config to work with CORS
+  }))
   app.use(morgan('dev'))
   app.use(express.json())
 
@@ -20,6 +32,8 @@ try {
     req.url = path.normalize(req.url)
     next()
   })
+
+  app.options('*', cors())
 
   // Koppla alla routes
   app.use('/', routes)

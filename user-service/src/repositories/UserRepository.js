@@ -102,11 +102,11 @@ export class UserRepository {
     await Promise.all([
       UserModel.findByIdAndUpdate(
         followerUser._id,
-        { $pull: { following: followedUser._id } }
+        { $pull: { following: followedUser.userId } }
       ),
       UserModel.findByIdAndUpdate(
         followedUser._id,
-        { $pull: { followers: followerUser._id } }
+        { $pull: { followers: followerUser.userId } }
       )
     ])
     return [followerUser, followedUser]

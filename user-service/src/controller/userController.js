@@ -41,7 +41,6 @@ export class UserController {
    * @param {Function} next - Express next middleware function.
    */
   async getFollowing (req, res, next) {
-    console.log('?')
     try {
       const userId = req.params.id
       console.log(userId)
